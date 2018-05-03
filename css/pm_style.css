@@ -1,0 +1,73 @@
+body { font-family: Arial; font-size: 13px; color: #24292e; margin: 0px; text-align: center; background: #fff;}
+a { color: #306eba; text-decoration: underline; }
+a:hover { color: red; text-decoration: none; }
+
+h3 { color: #9e2325; }
+h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9e2325; }
+
+#page { background: #f1f4fb; margin-top: 10px; padding: 0 20px 0 20px; }
+
+#top {}
+#top_menu { overflow: hidden; width: 100%; margin: 10px 0 10px 0; background: #24292e; color: #fff; }
+#top_menu a { color: #fff; }
+#menu_container { padding: 10px; }
+.top_menu_botton { margin: 0 7px 0 7px; }
+
+#footer { overflow: hidden; width: 100%; margin: 10px 0 0 0; background: #24292e; color: #fff; text-align: left; }
+#footer_inner { padding: 10px; font-size: 13px; }
+
+#acc_list { overflow: hidden; text-align: left; }
+
+#one_acc_block { overflow: hidden; width: 100%;  margin: 0 0 5px 0; padding: 3px 10px 3px 10px; }
+#one_acc_block:hover { }
+
+#one_acc_block_banned { overflow: hidden; width: 100%; background: #ffe6e6; margin: 0 0 5px 0; padding: 3px 10px 3px 10px; }
+#one_acc_block_banned:hover { background: #ffcccc; }
+
+#column_name { width: 150px; float: left; }
+#column_phone { width: 120px; float: left; margin-left: 2px; }
+#column_password { width: 120px; float: left; margin-left: 2px; }
+#column_avatars { width: 120px; float: left; margin-left: 2px; }
+#column_reg_date { width: 120px; float: left; margin-left: 2px; }
+#column_edit { width: 50px; float: left; margin-left: 2px; }
+
+.txtfield { width: 100%; padding: 5px; font-family: Arial; font-size: 15px; border: 1px solid #e5e5e5; }
+.date_form { border: 1px solid #e5e5e5; }
+
+.dialog_read { overflow: hidden; border-bottom: 1px solid #cce6ff; text-align: left;  }
+.dialog_unread { overflow: hidden; border-bottom: 1px solid #cce6ff; text-align: left; background: #b3d9ff; font-weight: bold; }
+
+.dialog_read:hover { background: #cce6ff; }
+.dialog_unread:hover { background: #cce6ff; }
+
+.dialog_read a { color: #000; text-decoration: none; }
+.dialog_unread a { color: #000; text-decoration: none; }
+
+
+.interlocutor { width: 140px; height: 40px; float: left; padding: 3px; font-size: 12px; }
+/* in message: */
+.inout0 { margin-left: 140px; padding: 3px; margin-top: 3px; font-size: 12px; }
+/* out message: */
+.inout1 { font-weight: normal; margin-left: 140px; background: #b3d9ff; padding: 3px; margin-top: 3px; font-size: 12px; }
+
+.user_name { text-decoration: underline; }
+.date { text-decoration: none; }
+
+
+#insm { background: #FFF; border: 1px solid #F5F5F5; margin: 3px; }
+#outsm {background: #FFF; border: 1px solid #F5F5F5; margin: 3px; color: #696969;}
+.mynick {color: #BEBEBE;}
+
+.nick {color: #000; font-weight: bold; font-size: 13px;}
+.date_m {font-size: 13px; float: right;}
+.msg_text {}
+#meta {background: #F5F5F5; overflow:hidden; padding: 5px; border-bottom: 1px dotted #F5F5F5; color: #778899;}
+#full_text { padding: 7px; }
+.attach_img {width: 100px; border: 1px solid #ccc; margin: 2px;}
+.attach_img:hover{ border: 1px solid #316eba; }
+#chat { text-align: left; width: 100%; height: 450px; background: #fff; overflow: auto; }
+
+.chat_image { width: 100%; }
+
+.message_box { text-align: left; width: 100%; height: 450px; background: #fff; overflow: auto; }
+.textareavk { width: 100%; height: 60px; padding: 8px; border: 1px dotted #e6e6e6; font-size: 14px; margin-top: 10px; }
