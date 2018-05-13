@@ -28,7 +28,7 @@ $start_time = microtime(true);?><!DOCTYPE html>
 				foreach ( CONFIGURATION::ALL_PAGES AS $menu_url => $menu_title )
 				{
 			?>
-					<li><a href="<?php echo CONFIGURATION::MAIN_URL.'?page='.$menu_url; ?>"><?php echo $menu_title ;?></a></li>
+					<li><a href="<?php echo CONFIGURATION::MAIN_URL.'?page='.$menu_url; ?>" class="headerlink"><?php echo $menu_title ;?></a></li>
 			<?php
 				}
 			?>

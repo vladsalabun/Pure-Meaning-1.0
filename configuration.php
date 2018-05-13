@@ -18,7 +18,11 @@
         */
         
         const ALL_PAGES = array (
+            'projects' => 'Проекты',
             'fonts' => 'Шрифты',
+            'backgrounds' => 'Фоны',
+            'colors' => 'Цвета',
+            'objections' => 'Возражения',
         );
         
         /*
@@ -29,21 +33,92 @@
         
         const SUB_PAGES = array (
             'add_font' => array('Добавить шрифт','fonts'),    // don't change url!
+            'questions' => array('Вопросы и ответы','projects'),    // don't change url!
         );        
                 
         // All tables:
         const MYSQL_TABLES = array(
             
+            // Creating projects table:
+            "pm_projects" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "title" => "VARCHAR( 500 ) NOT NULL",
+                "customer" => "VARCHAR( 500 ) NOT NULL",
+                "skype" => "VARCHAR( 100 ) NULL",
+                "phone1" => "VARCHAR( 100 ) NOT NULL",
+                "phone2" => "VARCHAR( 100 ) NOT NULL",
+                "phone3" => "VARCHAR( 100 ) NOT NULL",
+                "email1" => "VARCHAR( 100 ) NOT NULL",
+                "email2" => "VARCHAR( 100 ) NOT NULL",
+                "vk" => "VARCHAR( 100 ) NOT NULL",
+                "fb" => "VARCHAR( 100 ) NOT NULL",
+                "price" => "INT( 11 ) DEFAULT '0'",
+                "workBegin" => "INT( 11 ) NOT NULL",
+                "workEnd" => "INT( 11 ) NOT NULL"
+            ), 
+
+            // Creating questions table:
+            "pm_questions" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "type" => "INT( 1 ) DEFAULT '1'", // 1 - for me, 2 - for customer
+                "text" => "TEXT NULL",
+                "answerExamples" => "TEXT NULL", // json
+                "required" => "INT( 1 ) DEFAULT '0'"
+            ),            
+            
+            // Creating answers table:
+            "pm_answers" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "projectId" => "INT( 1 ) DEFAULT '0'",
+                "questionId" => "INT( 1 ) DEFAULT '0'",
+                "text" => "TEXT NULL",
+                "addDate" => "INT( 11 ) NOT NULL",
+                "author" => "INT( 1 ) DEFAULT '0'" // 1 - me, 2 - customer
+            ), 
+
+            // Creating objections table:
+            "pm_objections" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "objection" => "TEXT NULL",
+                "answerRu" => "TEXT NULL",
+                "answerUkr" => "TEXT NULL"
+            ), 
+            
+            
             // Creating font table:
             "pm_fonts" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
-                "font_name" => "VARCHAR( 100 ) NOT NULL",
-                "eng" => "INT( 1 ) DEFAULT '1'",
-                "cyr" => "INT( 1 ) DEFAULT '1'",
-                "url" => "VARCHAR( 100 ) NOT NULL",
-                "deleted" => "INT( 1 ) DEFAULT '0'"
-            )
+                "fontFamily" => "VARCHAR( 100 ) NOT NULL", // Arial
+                "fontStyle" => "VARCHAR( 20 ) NOT NULL", // normal, italic, oblique
+                "fontVariant" => "VARCHAR( 20 ) NOT NULL", // smallerCase, upperCase
+                "fontWeight" => "VARCHAR( 20 ) NOT NULL", // normal, bold, what else?
+                "cyryllic" => "INT( 1 ) DEFAULT NULL",
+                "latin" => "INT( 1 ) DEFAULT NULL",
+                "fileName" => "VARCHAR( 100 ) NOT NULL", // Arial.ttf
+                "fileType" => "VARCHAR( 5 ) NOT NULL", // ttf
+                "myFavourite" => "INT( 1 ) DEFAULT '0'", // 1 - yes,
+                "mono" => "INT( 1 ) DEFAULT '0'", // for code, terminal, numbers
+                "sans" => "INT( 1 ) DEFAULT '0'", // for headers
+                "serif" => "INT( 1 ) DEFAULT '0'", // for easy reading text
+                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad, 3 - deleted
+            ),
 
+            // Creating backgrounds table:
+            "pm_backgrounds" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "backgroundColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
+                "textColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
+                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad
+            ),            
+
+            // Creating all colors table:
+            "pm_colors" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "color" => "VARCHAR( 10 ) NOT NULL",
+                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad
+            ), 
+
+            
         );
                 
     }
