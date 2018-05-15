@@ -53,6 +53,12 @@
 
     class model extends database 
     {
-            
+        public function getAllProjects() 
+        {
+            $sql = "SELECT * FROM pm_projects";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($user_id));
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);           
+        }    
         
     } // <- end of class model 

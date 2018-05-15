@@ -23,6 +23,8 @@
             'backgrounds' => 'Фоны',
             'colors' => 'Цвета',
             'objections' => 'Возражения',
+            'preview' => 'Просмотр',
+            'test' => 'Тесты',
         );
         
         /*
@@ -34,6 +36,7 @@
         const SUB_PAGES = array (
             'add_font' => array('Добавить шрифт','fonts'),    // don't change url!
             'questions' => array('Вопросы и ответы','projects'),    // don't change url!
+            'project' => array('Проект','projects'),    // don't change url!
         );        
                 
         // All tables:
@@ -53,14 +56,17 @@
                 "vk" => "VARCHAR( 100 ) NOT NULL",
                 "fb" => "VARCHAR( 100 ) NOT NULL",
                 "price" => "INT( 11 ) DEFAULT '0'",
+                "currency" => "INT( 1 ) DEFAULT '0'", // 0 - usd, 1 - rub, 2 - uah
                 "workBegin" => "INT( 11 ) NOT NULL",
-                "workEnd" => "INT( 11 ) NOT NULL"
+                "workEnd" => "INT( 11 ) NOT NULL",
+                "done" => "INT( 1 ) DEFAULT '0'"
             ), 
 
             // Creating questions table:
             "pm_questions" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
-                "type" => "INT( 1 ) DEFAULT '1'", // 1 - for me, 2 - for customer
+                "type" => "INT( 1 ) DEFAULT '1'", // 1 - for me, 2 - for customer, 3 - only to 1 project
+                "projectId" => "INT( 1 ) DEFAULT '0'", // 1 - for me, 2 - for customer, 3 - only to 1 project
                 "text" => "TEXT NULL",
                 "answerExamples" => "TEXT NULL", // json
                 "required" => "INT( 1 ) DEFAULT '0'"

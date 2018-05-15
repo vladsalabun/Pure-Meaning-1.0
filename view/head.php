@@ -1,6 +1,10 @@
 <?php 
 memory_get_usage(); 
-$start_time = microtime(true);?><!DOCTYPE html>
+$start_time = microtime(true); 
+    if($_GET['page'] === 'preview') {
+        
+    } else {
+?><!DOCTYPE html>
 <html lang="ru">
 <head><?php $title = $pure->generatePageTitle(); if ( strlen($title)> 0 ) { $space = ' | ';} else { $space = ''; } ?>
 <title><?php echo $title.$space; ?>Pure meaning 1.0</title>
@@ -40,3 +44,4 @@ $start_time = microtime(true);?><!DOCTYPE html>
 	<div id="navigation">
 
 	</div>
+    <?php } ?>

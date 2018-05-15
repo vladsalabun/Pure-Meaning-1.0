@@ -99,6 +99,11 @@
             return $sub_pages;
         }
 
+        public function getAllProjects() 
+        {
+            return $this->model->getAllProjects();
+        }
+        
         
     } // class pure end
     

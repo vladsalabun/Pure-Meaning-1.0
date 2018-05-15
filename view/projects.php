@@ -1,5 +1,62 @@
 <div class="row">
-	<div class="col-lg-8" align="left">
+	<div class="col-lg-12" align="left">
+    <table class="table table-striped">
+      <thead >
+        <tr>
+          <th scope="col">ID:</th>
+          <th scope="col">Title:</th>
+          <th scope="col">Customer:</th>
+          <th scope="col">Skype:</th>
+          <th scope="col">Phones,emails:</th>
+          <th scope="col">VK / FB:</th>
+          <th scope="col">Price:</th>
+          <th scope="col">Start / End:</th>
+          <th scope="col">Day:</th>
+        </tr>
+        </thead>
+        <tbody>
+<?php 
+        $projects = $pure->getAllProjects();
+
+        foreach($projects as $project) {
+            
+        //$project['done'] 
+            if ($project['currency'] == 0) {
+                $currency = '$';
+            } elseif ($project['currency'] == 1) {
+                $currency = '₽';
+            } elseif ($project['currency'] == 2) {
+                $currency = '₴';
+            } 
+            
+            $days = $project['workEnd'] - mktime();
+            $days = round(($days / 60 / 60 / 24),2);
+            $hours = floor(($days - floor($days)) * 24);
+?>         
+                <tr>
+                <th scope="row"><?php echo $project['ID']; ?></th>
+                <td><a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $project['ID']; ?>"><?php echo $project['title']; ?></a></td>
+                <td><?php echo $project['customer']; ?></td>
+                <td><?php echo $project['skype']; ?></td>
+                <td>
+                <?php echo strlen($project['phone1']) > 0 ? $project['phone1'].'<br>' : ''; ?>
+                <?php echo strlen($project['phone2']) > 0 ? $project['phone2'].'<br>' : ''; ?>
+                <?php echo strlen($project['phone3']) > 0 ? $project['phone3'].'<br>' : ''; ?>
+                <?php echo strlen($project['email1']) > 0 ? $project['email1'].'<br>' : ''; ?>
+                <?php echo strlen($project['email2']) > 0 ? $project['email2'].'<br>' : ''; ?>
+                </td>
+                <td><a href="<?php echo $project['vk']; ?>" target="_blank">vk</a> / 
+                <a href="<?php echo $project['fb']; ?>" target="_blank">fb</a></td>
+                <td><?php echo $project['price'].$currency; ?></td>
+                <td><?php echo date("Y-m-d", $project['workBegin']); ?><br>
+                <?php echo date("Y-m-d", $project['workEnd']); ?></td>
+                <td><?php echo floor($days); ?> d. <?php echo $hours; ?> h.</td>
+                <tr>
+<?php
+        }
+?>
+        </tbody>
+</table>
         <p align="left">Створюю новий проект і всю інформацію про нього зберігаю туди, включаючи те, 
         що вводить користувач, посилання на відео конференції з клієнтом і телефонні розмови.</p>
         <?php 
@@ -47,9 +104,7 @@
         <p align="left">
         Сума до оплати: 10000 грн
         </p>
-    </div>
-	<div class="col-lg-4">
-    <h3>Сторінка на які клієнт буде записувати свої дані:</h3>
+        <h3>Сторінка на які клієнт буде записувати свої дані:</h3>
     <p>Ця сторінка створеня для того, щоб полегшити нам з вами роботу. Відповідаючи на запитання не поспішайте. 
     Якщо ви не знаєте як відповісти, або не хочете цього робити, то поставте відповідну галочку.
     

@@ -1,4 +1,8 @@
-
+<?php 
+    if($_GET['page'] === 'preview') {
+        
+    } else {
+?>
 <div id="footer">
 	<div id="footer_inner">
 		Чистый смысл.
@@ -51,3 +55,4 @@
 ?>
 </body>
 </html>
+    <?php } ?>
