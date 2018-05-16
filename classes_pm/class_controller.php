@@ -104,7 +104,98 @@
             return $this->model->getAllProjects();
         }
         
+        public function createDocumentTree($array, $str = NULL) 
+        {
+            // TODO: how to buid div, buttons, forms, sliders and other?
+            // TODO: id and class
+            foreach($array as $outer => $inner) {
+                // if there is some object in div:
+                if (is_array($inner)){
+                    // get parent div:
+                    $str .= '<div id="'.$outer.'">';
+                    // and move down:
+                    $str .= $this->createDocumentTree($inner, NULL);
+                } else {
+                    // if div is empty:
+                    $str .= '<div id="'.$inner.'">';
+                }
+                $str .= '</div>'; 
+            }
+            
+            return $str;
+            
+        }
         
+        public function getDocumentTree($projectId) 
+        {
+            return $this->model->getDocumentTree($projectId);
+        }
+        
+        public function createTreeArray($htmlTree) 
+        {   
+        
+            // make root, where parentId = 0:
+            $treeRoot = array();
+            // get roots:
+            foreach($htmlTree as $element) {
+                if ($element['parentId'] == 0) {
+                    $treeRoot += array($element['identifier'] => $element['ID']);
+                }
+            }
+
+            // get branches:
+            foreach($treeRoot as $root => $rootId) {
+                // if root have any branches:
+                if ($rootId > 0) {
+                    // delete root id:
+                    $treeRoot[$root] = array();
+                    $treeRoot[$root] = $this->makeTreeBranches($htmlTree,$rootId);
+                } else {
+                   $treeRoot[$root] = $root;
+                }
+            }
+            
+            // clean brancher without leaves: 
+            
+            return $treeRoot;
+            
+        }
+    
+        public function makeTreeBranches($htmlTree,$rootId) 
+        {
+            
+            // walk throught main $htmlTree:
+            foreach($htmlTree as $elementId => $element) {
+                // and add branches:
+                if ($element['parentId'] == $rootId) {
+                    $branch[$element['identifier']] = $this->makeTreeBranches($htmlTree,$element['ID']);
+                }
+            }
+            return $branch;
+            
+        }
+        
+        public function cleanLeaves($array) 
+        {      
+            
+            $i = 0;
+            foreach($array as $branch => $leaves) {
+                // if there is some object in branch:
+                if (is_array($leaves)){
+                    // move up:
+                    $array[$branch] = $this->cleanLeaves($leaves);
+                } else {
+                    // make string from array: 
+                    array_splice($array, $i, 0, $branch);
+                    unset($array[$branch]);
+                }
+                $i++;
+            }
+            
+            return $array;   
+            
+        }
+
     } // class pure end
     
     require 'class_cron.php';

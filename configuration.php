@@ -23,7 +23,6 @@
             'backgrounds' => 'Фоны',
             'colors' => 'Цвета',
             'objections' => 'Возражения',
-            'preview' => 'Просмотр',
             'test' => 'Тесты',
         );
         
@@ -37,6 +36,7 @@
             'add_font' => array('Добавить шрифт','fonts'),    // don't change url!
             'questions' => array('Вопросы и ответы','projects'),    // don't change url!
             'project' => array('Проект','projects'),    // don't change url!
+            'preview' => array('Просмотр','projects'),
         );        
                 
         // All tables:
@@ -59,7 +59,8 @@
                 "currency" => "INT( 1 ) DEFAULT '0'", // 0 - usd, 1 - rub, 2 - uah
                 "workBegin" => "INT( 11 ) NOT NULL",
                 "workEnd" => "INT( 11 ) NOT NULL",
-                "done" => "INT( 1 ) DEFAULT '0'"
+                "done" => "INT( 1 ) DEFAULT '0'",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ), 
 
             // Creating questions table:
@@ -69,7 +70,8 @@
                 "projectId" => "INT( 1 ) DEFAULT '0'", // 1 - for me, 2 - for customer, 3 - only to 1 project
                 "text" => "TEXT NULL",
                 "answerExamples" => "TEXT NULL", // json
-                "required" => "INT( 1 ) DEFAULT '0'"
+                "required" => "INT( 1 ) DEFAULT '0'",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ),            
             
             // Creating answers table:
@@ -87,7 +89,8 @@
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
                 "objection" => "TEXT NULL",
                 "answerRu" => "TEXT NULL",
-                "answerUkr" => "TEXT NULL"
+                "answerUkr" => "TEXT NULL",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ), 
             
             
@@ -106,7 +109,7 @@
                 "mono" => "INT( 1 ) DEFAULT '0'", // for code, terminal, numbers
                 "sans" => "INT( 1 ) DEFAULT '0'", // for headers
                 "serif" => "INT( 1 ) DEFAULT '0'", // for easy reading text
-                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad, 3 - deleted
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ),
 
             // Creating backgrounds table:
@@ -114,15 +117,28 @@
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
                 "backgroundColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
                 "textColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
-                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ),            
 
             // Creating all colors table:
             "pm_colors" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
                 "color" => "VARCHAR( 10 ) NOT NULL",
-                "moderation" => "INT( 1 ) DEFAULT NULL" // 1 - good, 2 - bad
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ), 
+            
+            // Creating elements table:
+            "pm_elements" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "projectId" => "INT( 1 ) DEFAULT '0'",
+                "parentId" => "INT( 11 ) DEFAULT '0'",
+                "type" => "INT( 1 ) DEFAULT '0'", // 1 - header, 2 - div, 3 - button, 4 - form, 5 - slider
+                "identifier" => "VARCHAR( 200 ) NULL",
+                "class" => "VARCHAR( 200 ) NULL",
+                "style" => "TEXT NULL", // json
+                "priority" => "INT( 11 ) DEFAULT '0'",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),            
 
             
         );

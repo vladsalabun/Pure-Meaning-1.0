@@ -59,6 +59,14 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($user_id));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);           
-        }    
+        }  
+
+        public function getDocumentTree($projectId) 
+        {
+            $sql = "SELECT * FROM pm_elements WHERE projectId = ? AND moderation != 3 ORDER BY priority DESC";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($projectId));
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        }        
         
     } // <- end of class model 
