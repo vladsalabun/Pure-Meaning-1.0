@@ -99,6 +99,11 @@
             return $sub_pages;
         }
 
+        public function fish($max) 
+        {
+            return substr(configuration::FISH,0,$max);
+        }
+        
         public function getAllProjects() 
         {
             return $this->model->getAllProjects();
@@ -106,26 +111,58 @@
         
         public function createDocumentTree($array, $str = NULL) 
         {
-            // TODO: how to buid div, buttons, forms, sliders and other?
-            // TODO: id and class
+            $styles = '';
+            // TODO: how to build div, buttons, forms, sliders and other?
             foreach($array as $outer => $inner) {
                 // if there is some object in div:
                 if (is_array($inner)){
-                    // get parent div:
-                    $str .= '<div id="'.$outer.'">';
+                    // get parent element, and take element params:
+                    $elementInfo = $this->getElementInfo(substr($outer,5));
+                    $str .= '<div id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    if ($elementInfo['style'] != null) {
+                        json_decode($elementInfo['style']);
+                    }
                     // and move down:
                     $str .= $this->createDocumentTree($inner, NULL);
                 } else {
                     // if div is empty:
-                    $str .= '<div id="'.$inner.'">';
+                    $elementInfo = $this->getElementInfo(substr($inner,5));
+                    $str .= '<div id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    
+                    // TODO:
+                    if ($elementInfo['style'] != null) {
+                        $param = json_decode($elementInfo['style'],true);
+                        if (isset($param['css'])) {
+                            $styles .= '
+<style> #'.$elementInfo['identifier'].' { ';
+                            foreach($param['css'] as $styleKey => $styleValue) {
+                                $styles .= $styleKey.': ' .$styleValue.'; ';
+                            }
+                            $styles .= '} </style>
+                            
+';
+                        }
+                        if (isset($param['other'])) {
+                            if (isset($param['other']['fish'])) {
+                                $str .= $this->fish($param['other']['fish']);
+                            }
+                        }
+                        unset($param);
+                    }
+                    
                 }
                 $str .= '</div>'; 
             }
-            
+            echo $styles;
             return $str;
             
         }
-        
+       
+        public function getElementInfo($elementId) 
+        {
+            return $this->model->getElementInfo($elementId);
+        }
+       
         public function getDocumentTree($projectId) 
         {
             return $this->model->getDocumentTree($projectId);
@@ -139,7 +176,9 @@
             // get roots:
             foreach($htmlTree as $element) {
                 if ($element['parentId'] == 0) {
-                    $treeRoot += array($element['identifier'] => $element['ID']);
+                    $blockName = 'block'.$element['ID'];
+                    $treeRoot += array($blockName => $element['ID']);
+                    unset($blockName);
                 }
             }
 
@@ -168,7 +207,9 @@
             foreach($htmlTree as $elementId => $element) {
                 // and add branches:
                 if ($element['parentId'] == $rootId) {
-                    $branch[$element['identifier']] = $this->makeTreeBranches($htmlTree,$element['ID']);
+                    $blockName = 'block'.$element['ID'];
+                    $branch[$blockName] = $this->makeTreeBranches($htmlTree,$element['ID']);
+                    unset($blockName);
                 }
             }
             return $branch;
@@ -196,6 +237,8 @@
             
         }
 
+        
+        
     } // class pure end
     
     require 'class_cron.php';

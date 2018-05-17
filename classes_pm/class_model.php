@@ -67,6 +67,14 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($projectId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);  
-        }        
+        } 
+
+        public function getElementInfo($elementId)
+        {
+            $sql = "SELECT * FROM pm_elements WHERE ID = ? LIMIT 1";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($elementId));
+            return $stmt->fetch(PDO::FETCH_ASSOC);   
+        }
         
     } // <- end of class model 
