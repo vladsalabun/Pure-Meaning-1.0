@@ -77,4 +77,21 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);   
         }
         
+        public function addContentBlock($rows,$projectId)
+        {
+            $class = 'row';
+            $type = 2;
+            $count = 0;
+            
+            for ($i = 0; $i < $rows; $i++) {
+                $sql = "INSERT INTO pm_elements (projectId,type,class) VALUES (?,?,?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$type,$class));    
+                $count = $count + $stmt->rowCount();
+            }
+            
+            return $count;
+            
+        }
+        
     } // <- end of class model 

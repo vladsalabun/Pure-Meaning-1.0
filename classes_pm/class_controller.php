@@ -15,11 +15,8 @@
             if ($_POST) 
             {
                 $allowed_methods = array (
-                    'add_account' => 'addAccount',
-                    'update_account' => 'updateAccount',
-                    'send_private_message' => 'sendPrivateMessage',
-                    'change_group_option' => 'changeGroupOption',
-                    'add_group' => 'addGroup',
+                    'add_content_block' => 'addContentBlock',
+                    'increase_priority' => 'increasePriority'
                 );
                 
                 // check method:
@@ -53,6 +50,11 @@
                 // show the main page:
                 return 'main_page';
             }
+        }
+        
+        public function getPage() 
+        {
+            
         }
         
         public function checkPagesArray($string)
@@ -133,14 +135,11 @@
                     if ($elementInfo['style'] != null) {
                         $param = json_decode($elementInfo['style'],true);
                         if (isset($param['css'])) {
-                            $styles .= '
-<style> #'.$elementInfo['identifier'].' { ';
+                            $styles .= '<style> #'.$elementInfo['identifier'].' { ';
                             foreach($param['css'] as $styleKey => $styleValue) {
                                 $styles .= $styleKey.': ' .$styleValue.'; ';
                             }
-                            $styles .= '} </style>
-                            
-';
+                            $styles .= '} </style>';
                         }
                         if (isset($param['other'])) {
                             if (isset($param['other']['fish'])) {
@@ -236,9 +235,87 @@
             return $array;   
             
         }
-
         
-        
+        public function modalHtml($modalId,$modalTitle,$modalBody) 
+        { 
+            return   '
+            <!-- Modal -->
+                <div class="modal fade" id="'.$modalId.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLongTitle">'.$modalTitle.'</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">'.$modalBody.'</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+                </div>
+            <!-- /Modal -->
+                ';
+        }
+       
+        public function addContentBlock($post) 
+        {
+            $count = $this->model->addContentBlock($post['rows'],$post['id']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'];
+            header ("Location: $redirect_to");
+            exit();  
+        }
+      
+        public function increasePriority($post) 
+        {
+            // get full tree:
+            $tree = $this->getDocumentTree($post['project_id']);
+            
+            // search parent id for current branch:
+            foreach($tree AS $branch) {
+                if ($branch['ID'] == $post['block_id']) {
+                    $rootForWork = $branch['parentId'];
+                }
+            }
+            
+            $branchArray = array();
+            // make current branch array:
+            foreach($tree AS $branch) {
+                if ($branch['parentId'] == $rootForWork) {
+                    $branchArray[$branch['ID']] = $branch['priority'];
+                }
+            }            
+          
+            // reverse array:
+            $newKeys = array_reverse(array_keys($branchArray));
+            $newValues= array_reverse(array_values($branchArray));
+            $branchArray = array_combine($newKeys,$newValues);
+            
+            foreach ($branchArray as $blockId => $priority) {
+                $walk = 0;
+                
+                if ($blockId == $post['block_id']) {
+                    $walk = 1;
+                    $branchArray[$blockId] = $branchArray[$blockId] + 1;
+                }
+                if ($walk == 1) {
+                    
+                } 
+            }
+            
+            echo '<pre>';
+            print_r($branchArray);
+            echo '</pre>'; 
+            echo '<pre>';
+            print_r($post);
+            echo '</pre>';
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['block_id'];
+            //header ("Location: $redirect_to");
+            //exit();
+        }
+      
     } // class pure end
     
     require 'class_cron.php';
