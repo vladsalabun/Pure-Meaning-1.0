@@ -16,7 +16,9 @@
             {
                 $allowed_methods = array (
                     'add_content_block' => 'addContentBlock',
-                    'increase_priority' => 'increasePriority'
+                    'increase_priority' => 'increasePriority',
+                    'decrease_priority' => 'decreasePriority',
+                    'add_new_element' => 'addNewElement'
                 );
                 
                 // check method:
@@ -263,10 +265,20 @@
         public function addContentBlock($post) 
         {
             $count = $this->model->addContentBlock($post['rows'],$post['id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
             header ("Location: $redirect_to");
             exit();  
         }
+      
+        public function addNewElement($post) 
+        {
+            // add:
+            $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['id_name'],$post['class_name']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            header ("Location: $redirect_to");
+            exit(); 
+        }
+      
       
         public function increasePriority($post) 
         {
@@ -292,28 +304,121 @@
             $newKeys = array_reverse(array_keys($branchArray));
             $newValues= array_reverse(array_values($branchArray));
             $branchArray = array_combine($newKeys,$newValues);
+            $changeArray = array();
             
-            foreach ($branchArray as $blockId => $priority) {
-                $walk = 0;
-                
+            $walk = 0;
+            $nextElement = 0;
+            foreach ($branchArray as $blockId => $priority) {    
                 if ($blockId == $post['block_id']) {
                     $walk = 1;
-                    $branchArray[$blockId] = $branchArray[$blockId] + 1;
                 }
                 if ($walk == 1) {
-                    
-                } 
+                    $changeArray[$blockId] = $priority;
+                }
             }
             
+            // increase priority:
+            $elementCount = 0;
+            foreach($changeArray as $bid => $bpriority) {  
+
+                if ($last_block > 0) {
+                    if ($elementCount == 1) {
+                        $changeArray[$last_block] = $bpriority + 1;
+                        $currentPriority = $bpriority + 1;
+                    } else {
+                        if ($changeArray[$bid] <= $currentPriority) {
+                            $changeArray[$bid] = $currentPriority + 1;
+                            $currentPriority = $currentPriority + 1;
+                        }
+                    }
+                }
+                
+                $last_block = $bid; 
+                $last_priority = $bpriority;
+                $elementCount = $elementCount + 1;
+                
+            }
+
+            // insert new priority to DB
+            foreach($changeArray as $blockId => $newPriority) {  
+                $this->model->updateBlockPriority($blockId, $newPriority);
+            }
+ 
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function decreasePriority($post) 
+        {
+            
+            // get full tree:
+            $tree = $this->getDocumentTree($post['project_id']);
+            
+            // search parent id for current branch:
+            foreach($tree AS $branch) {
+                if ($branch['ID'] == $post['block_id']) {
+                    $rootForWork = $branch['parentId'];
+                }
+            }
+            
+            $branchArray = array();
+            // make current branch array:
+            foreach($tree AS $branch) {
+                if ($branch['parentId'] == $rootForWork) {
+                    $branchArray[$branch['ID']] = $branch['priority'];
+                }
+            }
+            
+            // walk:
+            $walk = 0;
+            $nextElement = 0;
+            foreach ($branchArray as $blockId => $priority) {    
+                if ($blockId == $post['block_id']) {
+                    $walk = 1;
+                }
+                if ($walk == 1) {
+                    $changeArray[$blockId] = $priority;
+                }
+            }
+            
+            // decrease priority:
+            $elementCount = 0;
+            foreach($changeArray as $bid => $bpriority) {  
+
+                if ($last_block > 0) {
+                    if ($elementCount == 1) {
+                        $changeArray[$last_block] = $bpriority - 1;
+                        $currentPriority = $bpriority - 1;
+                    } else {
+                        if ($changeArray[$bid] >= $currentPriority) {
+                            $changeArray[$bid] = $currentPriority - 1;
+                            $currentPriority = $currentPriority - 1;
+                        }
+                    }
+                }
+                
+                $last_block = $bid; 
+                $last_priority = $bpriority;
+                $elementCount = $elementCount + 1;
+                
+            }
+            
+            
+            /*
             echo '<pre>';
+            print_r($changeArray);
             print_r($branchArray);
-            echo '</pre>'; 
-            echo '<pre>';
-            print_r($post);
             echo '</pre>';
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['block_id'];
-            //header ("Location: $redirect_to");
-            //exit();
+            */
+            // insert new priority to DB
+            foreach($changeArray as $blockId => $newPriority) {  
+                $this->model->updateBlockPriority($blockId, $newPriority);
+            }
+            
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
+            header ("Location: $redirect_to");
+            exit();
         }
       
     } // class pure end

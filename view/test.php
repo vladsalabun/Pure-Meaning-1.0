@@ -17,7 +17,6 @@
     
         echo json_encode($style);
     
-    
     ?>
     </div>
 </div>

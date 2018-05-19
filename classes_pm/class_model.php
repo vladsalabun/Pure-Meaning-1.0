@@ -82,16 +82,52 @@
             $class = 'row';
             $type = 2;
             $count = 0;
+            $priority = $this->lastLowPriority($projectId,0)['priority']; // <- last low priority
             
             for ($i = 0; $i < $rows; $i++) {
-                $sql = "INSERT INTO pm_elements (projectId,type,class) VALUES (?,?,?)";
+                $sql = "INSERT INTO pm_elements (projectId,type,class,priority) VALUES (?,?,?,?)";
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute(array($projectId,$type,$class));    
+                $stmt->execute(array($projectId,$type,$class,$priority));    
                 $count = $count + $stmt->rowCount();
+                $priority--;
             }
             
             return $count;
             
         }
+        
+        public function addNewElement($rows,$projectId,$branch_id,$identifier,$class) 
+        {
+            // get parentId by ID
+            $elementId = substr($branch_id,5);
+            $parentId = $this->getElementInfo($elementId)['parentId'];
+            $type = 2;
+            $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+            
+            for ($i = 0; $i < $rows; $i++) {
+                $priority = $priority - 1;
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$identifier,$class,$priority));
+            }
+            
+        }
+
+        public function lastLowPriority($projectId,$parentId)
+        {
+            $sql = "SELECT * FROM pm_elements WHERE projectId = ? AND parentId = ? ORDER BY priority ASC LIMIT 1";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($projectId,$parentId));
+            return $stmt->fetch(PDO::FETCH_ASSOC);   
+        }
+        
+        public function updateBlockPriority($blockId, $priority) 
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET priority = :priority WHERE ID = :ID");
+            $stmt->bindParam(':ID', $blockId);
+            $stmt->bindParam(':priority', $priority);
+            $stmt->execute();
+        }
+        
         
     } // <- end of class model 

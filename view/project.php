@@ -15,27 +15,28 @@
 </style>
 <h3>Шаблон:</h3>
 <?php 
-    function upArrow($blockId, $priotiry) {
-        echo '<form method="POST" id="form'.$blockId.'" action="" autocomplete="OFF" style="float: left;">
+    
+    function upArrow($blockId) {
+        echo '<form method="POST" id="form'.$blockId.'up" action="" autocomplete="OFF" style="float: left;">
         <input type="hidden" name="action" value="increase_priority">
         <input type="hidden" name="block_id" value="'.$blockId.'">
         <input type="hidden" name="project_id" value="'.$_GET['id'].'">
         </form>
-        <span onclick = \'document.getElementById("form'.$blockId.'").submit()\' class="glyphicon glyphicon-upload"></span>';
+        <span onclick = \'document.getElementById("form'.$blockId.'up").submit()\' class="glyphicon glyphicon-upload"></span>';
     }
-    function downArrow($blockId, $linkParam) {
-        echo '
-        <a href="'.configuration::MAIN_URL.'?page='.$_GET['page'].'&id='.$_GET['id'].'" class="glyphicona"><span class="glyphicon glyphicon-download"></span></a>';
+    function downArrow($blockId) {
+        echo '<form method="POST" id="form'.$blockId.'down" action="" autocomplete="OFF" style="float: left;">
+        <input type="hidden" name="action" value="decrease_priority">
+        <input type="hidden" name="block_id" value="'.$blockId.'">
+        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
+        </form>
+        <span onclick = \'document.getElementById("form'.$blockId.'down").submit()\' class="glyphicon glyphicon-download"></span>';
     }    
     function extendArrow($blockId, $linkParam) {
         echo '
-        <a href="'.configuration::MAIN_URL.'?page='.$_GET['page'].'&id='.$_GET['id'].'" class="glyphicona"><span class="glyphicon glyphicon-tree-deciduous"></span></a>';
-    } 
-    function intendArrow($blockId, $linkParam) {
-        echo '
         <a href="'.configuration::MAIN_URL.'?page='.$_GET['page'].'&id='.$_GET['id'].'" class="glyphicona"><span class="glyphicon glyphicon-grain"></span></a>';
     }    
-     function editArrow($blockId, $linkParam) {
+    function editArrow($blockId, $linkParam) {
         echo '
         <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
     }
@@ -43,7 +44,16 @@
     
     if ($_GET['new_rows'] > 0) {
 ?>
-        <font color="green">Added <?php echo $_GET['new_rows']; ?> new rows!</font>
+        <font color="green">Added <?php echo $_GET['new_rows']; ?> new elements 
+        <?php 
+            if (strlen($_GET['id_name']) > 0) {
+                echo 'id: <b>' . $_GET['id_name'].'</b> ';
+            }
+            if (strlen($_GET['class_name']) > 0) {
+                echo 'class: <b>'.$_GET['class_name'].'</b> '; 
+            }
+        ?>
+        </font>
 <?php
     }
 ?>
@@ -72,43 +82,44 @@
 ?>   
 
 <ul align="left">
-
+<?php 
+    $keysArray = array_keys($array);
+    if (is_array($array[$keysArray[0]])) {
+        $addId = $keysArray[0];
+    } else {
+        $addId = $array[$keysArray[0]];
+    }
+    
+    $addBody = '
+    <p>How many elements you want: </p>
+    <form method="POST" action="" autocomplete="OFF">
+    <p><select name="type[]">
+    <option selected value="2">div</option>
+    <option value="3">button</option>
+    <option value="4">image</option>
+   </select></p>
+	<input type="hidden" name="action" value="add_new_element">
+	<input type="hidden" name="id" value="'.$_GET['id'].'">
+	<input type="hidden" name="branch_id" value="'.$addId.'">
+	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
+	<p><input type="text" name="id_name" placeholder="id_name" class="txtfield"></p>
+	<p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
+    <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
+    </form>'; 
+?>
+    <li><a href="" data-toggle="modal" data-target="#AddMainRow<?php echo $addId;?>">+ add element</a></li>
 <?php
+        echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
+
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                $elementInfo = $temp->getElementInfo(substr($key,5));
 
-                echo '<li>'.$key.':'; 
-                echo strlen($elementInfo['identifier']) > 0 ? ' id: <b>'.$elementInfo['identifier'].'</b>' : ''; 
-                echo strlen($elementInfo['class']) > 0 ? ' class: <b>'.$elementInfo['class'].'</b>': '';
-                echo ' [ <a href="" data-toggle="modal" data-target="#ModalBlock'.substr($key,5).'">edit</a> | <a href="">add</a> ] </li>';
-
-                // generate title:
-                $modaTittle = 'Block #'.substr($key,5).'<br><h3 class="modal-title" id="exampleModalLongTitle">'; 
-                if (strlen($elementInfo['identifier']) > 0) {
-                    $modaTittle .= ' id: <b>'.$elementInfo['identifier'].'</b><br>';
-                } 
-                if (strlen($elementInfo['class']) > 0) {
-                    $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
-                }
-                $modaTittle .= '</h3>';
-                
-                // TODO: generate body: 
-                $modalBody = 'body';
-                
-                echo $temp->modalHtml('ModalBlock'.substr($key,5),$modaTittle,$modalBody);
-                
-                showDOM($value);
-                
-                
-                
-            } else {
-                $blockId = substr($value,5);
+                $blockId = substr($key,5);
 
                 echo '
                 
                 <!--- Element --->
-                <li>'.$value.':';
+                <li>#'.$blockId.' ';               
                 
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
@@ -120,10 +131,49 @@
                 
                 // navigation buttons:
                 echo ' '
-                .upArrow($blockId, $elementInfo['priority'])
-                .downArrow($blockId,'')
+                .upArrow($blockId)
+                .downArrow($blockId)
                 .extendArrow($blockId,'')
-                .intendArrow($blockId,'')
+                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"').' ]';
+
+                // generate title:
+                $modaTittle = 'Block #'.$blockId.'<br>'; 
+                
+                if (strlen($elementInfo['identifier']) > 0) {
+                    $modaTittle .= ' id: <b>'.$elementInfo['identifier'].'</b><br>';
+                } 
+                if (strlen($elementInfo['class']) > 0) {
+                    $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
+                }
+                
+                // TODO: generate body: 
+                $modalBody = 'body';
+                
+                echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
+                
+                showDOM($value);
+                
+            } else {
+                $blockId = substr($value,5);
+
+                echo '
+                
+                <!--- Element --->
+                <li>#'.$blockId.' ';
+                
+                $elementInfo = $temp->getElementInfo($blockId);
+                if (strlen($elementInfo['identifier']) > 0) {
+                    echo ' id: <b>'.$elementInfo['identifier'].'</b>';
+                }
+                if (strlen($elementInfo['class']) > 0) {
+                    echo ' class: <b>'.$elementInfo['class'].'</b> [';
+                }
+                
+                // navigation buttons:
+                echo ' '
+                .upArrow($blockId)
+                .downArrow($blockId)
+                .extendArrow($blockId,'')
                 .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"').' ]';
 
                 // generate title:
