@@ -96,6 +96,13 @@
             
         }
         
+        public function getAllChildElements($elementId) {
+            $sql = "SELECT * FROM pm_elements WHERE parentId = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($elementId));
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        } 
+        
         public function addNewElement($rows,$projectId,$branch_id,$identifier,$class) 
         {
             // get parentId by ID
@@ -113,6 +120,21 @@
             
         }
 
+        public function addLeaves($parentId,$type,$rows,$identifier,$class,$projectId)
+        {
+            $priority = $this->lastLowPriority($projectId,$parentId)['priority'];
+            if ( $priority == null) {
+                $priority = 0;
+            }
+  
+            for ($i = 0; $i < $rows; $i++) {
+                $priority = $priority - 1;
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$identifier,$class,$priority));
+            }
+        }
+        
         public function lastLowPriority($projectId,$parentId)
         {
             $sql = "SELECT * FROM pm_elements WHERE projectId = ? AND parentId = ? ORDER BY priority ASC LIMIT 1";

@@ -18,7 +18,8 @@
                     'add_content_block' => 'addContentBlock',
                     'increase_priority' => 'increasePriority',
                     'decrease_priority' => 'decreasePriority',
-                    'add_new_element' => 'addNewElement'
+                    'add_new_element' => 'addNewElement',
+                    'add_leaves' => 'addLeaves'
                 );
                 
                 // check method:
@@ -278,6 +279,14 @@
             header ("Location: $redirect_to");
             exit(); 
         }
+        
+        public function addLeaves($post) 
+        {
+            $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['id_name'],$post['class_name'],$post['project_id']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            header ("Location: $redirect_to");
+            exit();
+        }
       
       
         public function increasePriority($post) 
@@ -404,13 +413,6 @@
                 
             }
             
-            
-            /*
-            echo '<pre>';
-            print_r($changeArray);
-            print_r($branchArray);
-            echo '</pre>';
-            */
             // insert new priority to DB
             foreach($changeArray as $blockId => $newPriority) {  
                 $this->model->updateBlockPriority($blockId, $newPriority);

@@ -32,9 +32,28 @@
         </form>
         <span onclick = \'document.getElementById("form'.$blockId.'down").submit()\' class="glyphicon glyphicon-download"></span>';
     }    
-    function extendArrow($blockId, $linkParam) {
-        echo '
-        <a href="'.configuration::MAIN_URL.'?page='.$_GET['page'].'&id='.$_GET['id'].'" class="glyphicona"><span class="glyphicon glyphicon-grain"></span></a>';
+    function extendArrow($blockId) {
+        $test = new pure;
+        echo '<a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'"><span class="glyphicon glyphicon-grain"></span></a>';
+        
+        $formBody = '
+        <p>How many leaves you want?</p>
+        <form method="POST" id="form'.$blockId.'leaves" action="" autocomplete="OFF">
+        <input type="hidden" name="action" value="add_leaves">
+        <input type="hidden" name="block_id" value="'.$blockId.'">
+        <p><select name="type[]">
+        <option selected value="2">div</option>
+        <option value="3">button</option>
+        <option value="4">image</option>
+        </select></p>
+        <p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
+        <p><input type="text" name="id_name" placeholder="id_name" class="txtfield"></p>
+        <p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
+        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
+        <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
+        </form>';
+
+        echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
         echo '
@@ -107,9 +126,7 @@
     <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
     </form>'; 
 ?>
-    <li><a href="" data-toggle="modal" data-target="#AddMainRow<?php echo $addId;?>">+ add element</a></li>
 <?php
-        echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
@@ -128,12 +145,11 @@
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b> [';
                 }
-                
+                                
                 // navigation buttons:
                 echo ' '
                 .upArrow($blockId)
                 .downArrow($blockId)
-                .extendArrow($blockId,'')
                 .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"').' ]';
 
                 // generate title:
@@ -168,6 +184,7 @@
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b> [';
                 }
+
                 
                 // navigation buttons:
                 echo ' '
@@ -191,9 +208,13 @@
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 echo '</li>';
+
             }
         }
-         echo '</ul>';
+        
+        echo '<li><a href="" data-toggle="modal" data-target="#AddMainRow'.$addId.'">+ add element</a></li>';
+        echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
+        echo '</ul>';
     }
 
         showDOM($cleanArray);
