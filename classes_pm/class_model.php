@@ -67,7 +67,7 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($projectId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);  
-        } 
+        }
 
         public function getElementInfo($elementId)
         {
@@ -77,17 +77,20 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);   
         }
         
-        public function addContentBlock($rows,$projectId)
+        public function addContentBlock($rows,$projectId,$type)
         {
             $class = 'row';
-            $type = 2;
             $count = 0;
             $priority = $this->lastLowPriority($projectId,0)['priority']; // <- last low priority
-            
+   
             for ($i = 0; $i < $rows; $i++) {
-                $sql = "INSERT INTO pm_elements (projectId,type,class,priority) VALUES (?,?,?,?)";
+
+                // get next index ID:
+                $identifier = 'pm_element'.$this->getNextAutoIncrement();
+                
+                $sql = "INSERT INTO pm_elements (projectId,type,identifier,class,priority) VALUES (?,?,?,?,?)";
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute(array($projectId,$type,$class,$priority));    
+                $stmt->execute(array($projectId,$type,$identifier,$class,$priority));    
                 $count = $count + $stmt->rowCount();
                 $priority--;
             }
@@ -101,26 +104,36 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($elementId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);  
-        } 
+        }
         
-        public function addNewElement($rows,$projectId,$branch_id,$identifier,$class) 
+        public function addNewElement($rows,$projectId,$branchId,$class,$type) 
         {
             // get parentId by ID
-            $elementId = substr($branch_id,5);
+            $elementId = substr($branchId,5);
             $parentId = $this->getElementInfo($elementId)['parentId'];
-            $type = 2;
             $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
             
             for ($i = 0; $i < $rows; $i++) {
                 $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = 'pm_element'.$this->getNextAutoIncrement();
+                
                 $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute(array($projectId,$parentId,$type,$identifier,$class,$priority));
             }
             
         }
+        
+        public function deleteElement($branchId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $branchId);
+            $stmt->execute();
+        }
 
-        public function addLeaves($parentId,$type,$rows,$identifier,$class,$projectId)
+        public function addLeaves($parentId,$type,$rows,$class,$projectId)
         {
             $priority = $this->lastLowPriority($projectId,$parentId)['priority'];
             if ( $priority == null) {
@@ -128,6 +141,10 @@
             }
   
             for ($i = 0; $i < $rows; $i++) {
+                
+                // get next index ID:
+                $identifier = 'pm_element'.$this->getNextAutoIncrement();
+                
                 $priority = $priority - 1;
                 $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
                 $stmt = $this->conn->prepare($sql);
@@ -140,7 +157,13 @@
             $sql = "SELECT * FROM pm_elements WHERE projectId = ? AND parentId = ? ORDER BY priority ASC LIMIT 1";
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($projectId,$parentId));
-            return $stmt->fetch(PDO::FETCH_ASSOC);   
+            $array = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (is_array($array)) {
+                return $array;
+            }
+            else {
+                return array('priority' => 0);
+            }            
         }
         
         public function updateBlockPriority($blockId, $priority) 
@@ -149,6 +172,12 @@
             $stmt->bindParam(':ID', $blockId);
             $stmt->bindParam(':priority', $priority);
             $stmt->execute();
+        }
+        
+        public function getNextAutoIncrement() {
+            $stmt= $this->conn->query("SHOW TABLE STATUS LIKE 'pm_elements'");
+            $next = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $next['Auto_increment'];
         }
         
         

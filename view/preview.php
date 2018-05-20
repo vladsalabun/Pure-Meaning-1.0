@@ -13,6 +13,9 @@
 </style>
 </head>
 <body>
+
+<!--- START HTML OUTPUT --->
+
 <?php 
 
     // take all elements from database:
@@ -20,10 +23,14 @@
     // clean them to make sure they are goot for use:
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
     
+    $HtmlFormatter = new HtmlFormatter;
     // show template:
-    echo $pure->createDocumentTree($cleanArray, NULL);
+    echo HtmlFormatter::format($pure->createDocumentTree($cleanArray, NULL));
 
 ?>
+
+
+<!--- /END HTML OUTPUT --->
 
 <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="js/bootstrap.js"></script>

@@ -38,6 +38,7 @@
             'project' => array('Проект','projects'),    // don't change url!
             'preview' => array('Просмотр','projects'),
             'template' => array('Редактор','projects'),
+            'edit_element' => array('Редактор елемента','projects'),
         );        
                 
         // All tables:
@@ -153,5 +154,10 @@ Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
 Aenean ultricies ante et neque aliquet, eget molestie libero tincidunt. Etiam nec venenatis turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras non tellus at velit euismod efficitur auctor eu leo. Suspendisse blandit turpis a ligula semper dictum. Vivamus finibus fringilla nibh quis euismod. Curabitur nec porta lacus. Ut sodales libero in ex ullamcorper consectetur eget vel nulla. Mauris hendrerit massa sagittis rutrum luctus. Donec ac vestibulum libero. Mauris nunc augue, porttitor ut porttitor sit amet, vestibulum at libero. Vivamus tempor bibendum ante sed venenatis. Donec non libero a ante tristique fringilla. Nam tincidunt urna vel ante eleifend consequat.
 
 Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus aliquet. Quisque euismod feugiat nunc eget egestas. Sed sagittis dapibus accumsan. Proin malesuada elementum metus placerat tempus. Cras mi ante, tempus vel leo id, lobortis sollicitudin eros. Donec fermentum tortor dui, sed tempor metus tempor vel.';
-           
+        
+        const ELEMENTS = array(
+            2 => 'div',
+            3 => 'button',
+            4 => 'image'
+        );
     }

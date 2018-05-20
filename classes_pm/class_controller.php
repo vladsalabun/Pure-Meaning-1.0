@@ -19,7 +19,8 @@
                     'increase_priority' => 'increasePriority',
                     'decrease_priority' => 'decreasePriority',
                     'add_new_element' => 'addNewElement',
-                    'add_leaves' => 'addLeaves'
+                    'add_leaves' => 'addLeaves',
+                    'delete_element' => 'deleteElement'
                 );
                 
                 // check method:
@@ -123,7 +124,7 @@
                 if (is_array($inner)){
                     // get parent element, and take element params:
                     $elementInfo = $this->getElementInfo(substr($outer,5));
-                    $str .= '<div id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
                     if ($elementInfo['style'] != null) {
                         json_decode($elementInfo['style']);
                     }
@@ -132,7 +133,7 @@
                 } else {
                     // if div is empty:
                     $elementInfo = $this->getElementInfo(substr($inner,5));
-                    $str .= '<div id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
                     
                     // TODO:
                     if ($elementInfo['style'] != null) {
@@ -153,7 +154,7 @@
                     }
                     
                 }
-                $str .= '</div>'; 
+                $str .= '</'.configuration::ELEMENTS[$elementInfo['type']].'>'; 
             }
             echo $styles;
             return $str;
@@ -265,7 +266,7 @@
        
         public function addContentBlock($post) 
         {
-            $count = $this->model->addContentBlock($post['rows'],$post['id']);
+            $count = $this->model->addContentBlock($post['rows'],$post['id'],$post['type'][0]);
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
             header ("Location: $redirect_to");
             exit();  
@@ -274,15 +275,23 @@
         public function addNewElement($post) 
         {
             // add:
-            $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['id_name'],$post['class_name']);
+            $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['class_name'],$post['type'][0]);
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            header ("Location: $redirect_to");
+            exit(); 
+        }
+        
+        public function deleteElement($post)
+        {
+            $this->model->deleteElement($post['branch_id']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&deleted='.$post['branch_id'];
             header ("Location: $redirect_to");
             exit(); 
         }
         
         public function addLeaves($post) 
         {
-            $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['id_name'],$post['class_name'],$post['project_id']);
+            $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['class_name'],$post['project_id']);
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
             header ("Location: $redirect_to");
             exit();
@@ -426,5 +435,6 @@
     } // class pure end
     
     require 'class_cron.php';
+    require 'classes_pm/class_beautifyDom.php';
     
     

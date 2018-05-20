@@ -13,7 +13,8 @@
 .glyphicon:hover {color: #1258DC; cursor: hand; }
 .glyphicona {color: #000;}
 </style>
-<h3>Шаблон:</h3>
+<h4>Шаблон:</h4>
+<p><a href="">Class style editor</a></p>
 <?php 
     
     function upArrow($blockId) {
@@ -41,13 +42,14 @@
         <form method="POST" id="form'.$blockId.'leaves" action="" autocomplete="OFF">
         <input type="hidden" name="action" value="add_leaves">
         <input type="hidden" name="block_id" value="'.$blockId.'">
-        <p><select name="type[]">
-        <option selected value="2">div</option>
-        <option value="3">button</option>
-        <option value="4">image</option>
-        </select></p>
+        <select name="type[]">';
+        
+        foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
+            $formBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+        }
+    
+        $formBody .='</select></p>
         <p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
-        <p><input type="text" name="id_name" placeholder="id_name" class="txtfield"></p>
         <p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
         <input type="hidden" name="project_id" value="'.$_GET['id'].'">
         <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
@@ -56,8 +58,8 @@
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
-        echo '
-        <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
+        echo ' <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
+        echo ' [ <a target="_blank" href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
     }
 
     
@@ -75,6 +77,12 @@
         </font>
 <?php
     }
+    
+    if ($_GET['deleted'] > 0) {
+?>
+        <font color="red">Deleted element <?php echo $_GET['deleted']; ?></font>
+<?php
+    }
 ?>
 <p><a href="" data-toggle="modal" data-target="#ModalFisrtGrid">Add content block</a></p>
 <?php
@@ -83,6 +91,13 @@
     <form method="POST" action="" autocomplete="OFF">
 	<input type="hidden" name="action" value="add_content_block">
 	<input type="hidden" name="id" value="'.$_GET['id'].'">
+    <p><select name="type[]">';
+    
+    foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
+        $fisrtGridBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+    }
+    
+    $fisrtGridBody .='</select></p>
 	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
     <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
     </form>'; 
@@ -112,16 +127,18 @@
     $addBody = '
     <p>How many elements you want: </p>
     <form method="POST" action="" autocomplete="OFF">
-    <p><select name="type[]">
-    <option selected value="2">div</option>
-    <option value="3">button</option>
-    <option value="4">image</option>
-   </select></p>
+    <p>
+    <select name="type[]">';
+    
+    foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
+        $addBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+    }
+    
+    $addBody .='</select></p>
 	<input type="hidden" name="action" value="add_new_element">
 	<input type="hidden" name="id" value="'.$_GET['id'].'">
 	<input type="hidden" name="branch_id" value="'.$addId.'">
 	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
-	<p><input type="text" name="id_name" placeholder="id_name" class="txtfield"></p>
 	<p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
     <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
     </form>'; 
@@ -143,14 +160,14 @@
                     echo ' id: <b>'.$elementInfo['identifier'].'</b>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
-                    echo ' class: <b>'.$elementInfo['class'].'</b> [';
+                    echo ' class: <b>'.$elementInfo['class'].'</b>';
                 }
                                 
                 // navigation buttons:
                 echo ' '
                 .upArrow($blockId)
                 .downArrow($blockId)
-                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"').' ]';
+                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"');
 
                 // generate title:
                 $modaTittle = 'Block #'.$blockId.'<br>'; 
@@ -162,8 +179,21 @@
                     $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
                 }
                 
-                // TODO: generate body: 
-                $modalBody = 'body';
+                $modalBody = '
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="fav_element">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p><input type="submit" name="submit" value="Save to favourite"></p>
+                </form>
+                
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="delete_element">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'"></p>
+                </form>
+                ';
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 
@@ -182,7 +212,7 @@
                     echo ' id: <b>'.$elementInfo['identifier'].'</b>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
-                    echo ' class: <b>'.$elementInfo['class'].'</b> [';
+                    echo ' class: <b>'.$elementInfo['class'].'</b> ';
                 }
 
                 
@@ -191,7 +221,7 @@
                 .upArrow($blockId)
                 .downArrow($blockId)
                 .extendArrow($blockId,'')
-                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"').' ]';
+                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"');
 
                 // generate title:
                 $modaTittle = 'Block #'.$blockId.'<br>'; 
@@ -203,8 +233,21 @@
                     $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
                 }
                 
-                // TODO: generate body: 
-                $modalBody = 'body';
+                $modalBody = '
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="fav_element">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p><input type="submit" name="submit" value="Save to favourite"></p>
+                </form>
+                
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="delete_element">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'"></p>
+                </form>
+                ';
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 echo '</li>';
