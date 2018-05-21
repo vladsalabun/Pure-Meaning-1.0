@@ -20,7 +20,12 @@
                     'decrease_priority' => 'decreasePriority',
                     'add_new_element' => 'addNewElement',
                     'add_leaves' => 'addLeaves',
-                    'delete_element' => 'deleteElement'
+                    'delete_element' => 'deleteElement',
+                    'edit_element' => 'editElement',
+                    'add_other_option' => 'addOtherOption',
+                    'add_css_option' => 'addCssOption',
+                    'delete_other_option' => 'deleteOtherOption',
+                    'delete_css_option' => 'deleteCssOption'
                 );
                 
                 // check method:
@@ -287,6 +292,57 @@
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&deleted='.$post['branch_id'];
             header ("Location: $redirect_to");
             exit(); 
+        }
+        
+        public function editElement($post) {
+            
+            $style = array();
+            $other = array();
+            $css = array();
+            
+            foreach ($post as $key => $value) {
+                
+                if (in_array($key,configuration::STYLE)) {
+                    // TODO: add 'px' and '#' to values
+                    $css[$key] = $value;
+                }
+                if (in_array($key,configuration::OTHER)) {
+                    $other[$key] = $value;
+                }  
+                
+            }
+            
+            if (count($css) > 0 and count($other) > 0) {      
+                $style['css'] = $css;
+                $style['other'] = $other;
+                $this->model->updateElementStyle($post['element_id'],json_encode($style),$post['identifier'],$post['class']);
+            } else {
+                // if all styles deleted:
+               $this->model->updateElementStyle($post['element_id'],NULL,$post['identifier'],$post['class']);
+            }
+            
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['element_id'];
+            header ("Location: $redirect_to");
+            exit();
+            
+        }
+        
+        public function addOtherOption($post)
+        {
+            // TODO
+        }
+        public function addCssOption($post)
+        {
+            // TODO
+        }
+        
+        public function deleteOtherOption($post)
+        {
+            // TODO
+        }
+        public function deleteCssOption($post) 
+        {
+            // TODO
         }
         
         public function addLeaves($post) 

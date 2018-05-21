@@ -140,6 +140,7 @@
                 "style" => "TEXT NULL", // json
                 "priority" => "INT( 11 ) DEFAULT '0'",
                 "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+                // TODO: add my comment to favourite elements
             ),            
 
             
@@ -159,5 +160,29 @@ Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus ali
             2 => 'div',
             3 => 'button',
             4 => 'image'
+        );
+        
+        const OTHER = array(
+            'fish',
+            'text',    
+        );
+        
+        const STYLE = array(
+            'background',
+            'color',
+            'font-size',
+            'font-family',
+            'padding',
+            'margin',     
+            'float',     
+            'text-align',     
+            'width',     
+            'height',     
+        );
+        
+        const STYLEVALUES = array(
+            'font-size' => 'px',
+            'padding' => 'px',
+            'margin'  => 'px'
         );
     }

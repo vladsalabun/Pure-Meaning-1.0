@@ -133,6 +133,16 @@
             $stmt->execute();
         }
 
+        public function updateElementStyle($elementId,$styleJson,$identifier,$class) 
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET style = :style, identifier = :identifier, class = :class WHERE ID = :ID");
+            $stmt->bindParam(':ID', $elementId);
+            $stmt->bindParam(':style', $styleJson);
+            $stmt->bindParam(':identifier', $identifier);
+            $stmt->bindParam(':class', $class);
+            $stmt->execute();
+        }
+        
         public function addLeaves($parentId,$type,$rows,$class,$projectId)
         {
             $priority = $this->lastLowPriority($projectId,$parentId)['priority'];
