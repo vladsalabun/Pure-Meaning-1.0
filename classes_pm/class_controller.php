@@ -25,7 +25,8 @@
                     'add_other_option' => 'addOtherOption',
                     'add_css_option' => 'addCssOption',
                     'delete_other_option' => 'deleteOtherOption',
-                    'delete_css_option' => 'deleteCssOption'
+                    'delete_css_option' => 'deleteCssOption',
+                    'fav_element' => 'favElement'
                 );
                 
                 // check method:
@@ -294,6 +295,14 @@
             exit(); 
         }
         
+        public function favElement($post)
+        {
+            $this->model->favElement($post['branch_id']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit(); 
+        }
+        
         public function editElement($post) {
             
             $style = array();
@@ -327,22 +336,71 @@
             
         }
         
+        public function getAllClasses($projectId)
+        {
+            return $this->model->getAllClasses($projectId);
+        }     
         public function addOtherOption($post)
         {
-            // TODO
+            // get style
+            $style = $this->model->getElementInfo($post['id'])['style'];
+            // make array from json
+            $styleArray = json_decode($style, true);
+            // add new other option:
+            $styleArray['other'][$post['option'][0]] = $post['value'];
+            // save to db:
+            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
+            // and go back:
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit();
         }
         public function addCssOption($post)
         {
-            // TODO
+            // get style
+            $style = $this->model->getElementInfo($post['id'])['style'];
+            // make array from json
+            $styleArray = json_decode($style, true);
+            // add new css option:
+            $styleArray['css'][$post['option'][0]] = $post['value'];
+            // save to db:
+            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
+            // and go back:
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit();
         }
         
         public function deleteOtherOption($post)
         {
-            // TODO
+            // get style
+            $style = $this->model->getElementInfo($post['id'])['style'];
+            // make array from json
+            $styleArray = json_decode($style, true);
+            // delete other option:
+            unset($styleArray['other'][$post['param']]);
+            // save to db:
+            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
+            // and go back:
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit();
         }
+        
         public function deleteCssOption($post) 
         {
-            // TODO
+            // get style
+            $style = $this->model->getElementInfo($post['id'])['style'];
+            // make array from json
+            $styleArray = json_decode($style, true);
+            // delete css option:
+            unset($styleArray['css'][$post['param']]);
+            // save to db:
+            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
+            // and go back:
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit();
         }
         
         public function addLeaves($post) 

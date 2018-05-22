@@ -39,6 +39,7 @@
             'preview' => array('Просмотр','projects'),
             'template' => array('Редактор','projects'),
             'edit_element' => array('Редактор елемента','projects'),
+            'classes_editor' => array('Редактор класов','projects'),
         );        
                 
         // All tables:
@@ -62,7 +63,8 @@
                 "workBegin" => "INT( 11 ) NOT NULL",
                 "workEnd" => "INT( 11 ) NOT NULL",
                 "done" => "INT( 1 ) DEFAULT '0'",
-                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+                "moderation" => "INT( 1 ) DEFAULT '0'", // 1 - good, 2 - bad, 3 - deleted
+                "globalStyles" => "TEXT NULL" // json fo classes
             ), 
 
             // Creating questions table:

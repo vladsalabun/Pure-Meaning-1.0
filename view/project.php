@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-lg-12" align="left">Project: 
+	<div class="col-lg-12" align="left" style="font-size: 17px;">Project: 
 <?php echo $_GET['id'];?>
 <p><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Посилання на готовий шаблон</a></p>
 <p>TODO:</p>
@@ -14,7 +14,8 @@
 .glyphicona {color: #000;}
 </style>
 <h4>Шаблон:</h4>
-<p><a href="">Class style editor</a></p>
+<p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Class style editor</a></p>
+<p><a href="">Insert element from favourite</a></p>
 <?php 
     
     function upArrow($blockId) {

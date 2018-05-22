@@ -132,6 +132,13 @@
             $stmt->bindParam(':ID', $branchId);
             $stmt->execute();
         }
+        
+        public function favElement($branchId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET moderation = 1 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $branchId);
+            $stmt->execute();
+        }
 
         public function updateElementStyle($elementId,$styleJson,$identifier,$class) 
         {
@@ -141,6 +148,22 @@
             $stmt->bindParam(':identifier', $identifier);
             $stmt->bindParam(':class', $class);
             $stmt->execute();
+        }
+        
+        public function deleteElementStyle($elementId,$styleJson) 
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET style = :style WHERE ID = :ID");
+            $stmt->bindParam(':ID', $elementId);
+            $stmt->bindParam(':style', $styleJson);
+            $stmt->execute();
+        }       
+        
+        public function getAllClasses($projectId) 
+        {
+            $sql = "SELECT DISTINCT(class) FROM pm_elements WHERE projectId = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($projectId));
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);  
         }
         
         public function addLeaves($parentId,$type,$rows,$class,$projectId)

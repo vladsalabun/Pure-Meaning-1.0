@@ -18,7 +18,11 @@
             <input type="hidden" name="id" value="'.$element['ID'].'">
             <p align="left"><select name="option[]">';
             
-            $cssKeys = array_keys($style['css']);
+            if (is_array($style['css'])) {
+                $cssKeys = array_keys($style['css']);
+            } else {
+                $cssKeys = array();
+            }
             
             foreach(configuration::STYLE as $styleOption) {
                 if (!in_array($styleOption,$cssKeys)) {
@@ -45,7 +49,11 @@
             <input type="hidden" name="id" value="'.$element['ID'].'">
             <p align="left"><select name="option[]">';
             
-            $otherKeys = array_keys($style['other']);
+            if (is_array($style['other'])) {
+                $otherKeys = array_keys($style['other']);
+            } else {
+                $otherKeys = array();
+            }
             
             foreach(configuration::OTHER as $other) {
                 if (!in_array($other,$otherKeys)) {
