@@ -120,7 +120,12 @@
         {
             return $this->model->getAllProjects();
         }
-        
+ 
+        public function getAllSubProjects($projectId) 
+        {
+            return $this->model->getAllSubProjects($projectId);
+        }
+ 
         public function createDocumentTree($array, $str = NULL) 
         {
             $styles = '';
@@ -301,6 +306,26 @@
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
             header ("Location: $redirect_to");
             exit(); 
+        }
+        
+        public function edit_body_style($post) 
+        {
+           // TODO 
+        } 
+        
+        public function delete_body_option($post)
+        {
+            // TODO 
+        }
+        
+        public function edit_class_style($post)
+        {
+            // TODO 
+        }
+        
+        public function delete_class_option($post)
+        {
+            // TODO
         }
         
         public function editElement($post) {

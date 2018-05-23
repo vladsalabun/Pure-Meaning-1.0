@@ -3,15 +3,18 @@
     <?php 
     
         $style = array(
-            'css' => array(
-                'background' => '#C21460',
-                'color' => '#FFFFFF',
+            'body' => array(
+                'background' => '#306eba',
+                'color' => '#000',
                 'font-size' => '16px',
                 'font-family' => 'Arial',
-                'padding' => '20px'
+                'padding' => '10px'
             ),
-            'other' => array(
-                'fish' => 1000
+            'class1' => array(
+                'padding' => '10px'
+            ),
+            'class2' => array(
+                'padding' => '10px'
             )
         );
     

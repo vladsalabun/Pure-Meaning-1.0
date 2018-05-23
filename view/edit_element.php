@@ -172,6 +172,8 @@
 
 
 ?>
+    <h4>Live preview:</h4>
+    TODO
     </div>
 </div>
 

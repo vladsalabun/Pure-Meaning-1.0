@@ -29,13 +29,20 @@
                 $currency = '₴';
             } 
             
+            $subProjects = $pure->getAllSubProjects($project['ID']);
+            $showSub = '<ul>';
+            foreach($subProjects as $subProject) {
+                $showSub .= '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
+            }
+            $showSub .= '</ul>';
+            
             $days = $project['workEnd'] - mktime();
             $days = round(($days / 60 / 60 / 24),2);
             $hours = floor(($days - floor($days)) * 24);
 ?>         
                 <tr>
                 <th scope="row"><?php echo $project['ID']; ?></th>
-                <td><a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $project['ID']; ?>"><?php echo $project['title']; ?></a></td>
+                <td><a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $project['ID']; ?>"><?php echo $project['title']; ?></a><?php echo $showSub;?></td>
                 <td><?php echo $project['customer']; ?></td>
                 <td><?php echo $project['skype']; ?></td>
                 <td>

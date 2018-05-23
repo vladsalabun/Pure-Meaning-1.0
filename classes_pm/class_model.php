@@ -55,12 +55,20 @@
     {
         public function getAllProjects() 
         {
-            $sql = "SELECT * FROM pm_projects";
+            $sql = "SELECT * FROM pm_projects WHERE parentId = 0";
             $stmt = $this->conn->prepare($sql);    
-            $stmt->execute(array($user_id));
+            $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);           
         }  
 
+        public function getAllSubProjects($parentId) 
+        {
+            $sql = "SELECT * FROM pm_projects WHERE parentId = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($parentId));
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);           
+        }       
+        
         public function getDocumentTree($projectId) 
         {
             $sql = "SELECT * FROM pm_elements WHERE projectId = ? AND moderation != 3 ORDER BY priority DESC";

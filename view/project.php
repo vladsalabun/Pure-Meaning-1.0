@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-lg-12" align="left" style="font-size: 17px;">Project: 
+	<div class="col-lg-12" align="left" style="font-size: 16px;">Project: 
 <?php echo $_GET['id'];?>
 <p><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Посилання на готовий шаблон</a></p>
 <p>TODO:</p>
@@ -7,63 +7,15 @@
     <li>Стандартні запитання і відповіді до клієнта</li>
     <li>Стандартні запитання і відповіді до мене (робочий чек-лист)</li>
     <li>Деталі замовлення</li>
+    <li>Посилання на субпроекти</li>
 </ol>
-<style>
-.glyphicon {text-align: none; float: none;}
-.glyphicon:hover {color: #1258DC; cursor: hand; }
-.glyphicona {color: #000;}
-</style>
+
 <h4>Шаблон:</h4>
 <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Class style editor</a></p>
 <p><a href="">Insert element from favourite</a></p>
-<?php 
-    
-    function upArrow($blockId) {
-        echo '<form method="POST" id="form'.$blockId.'up" action="" autocomplete="OFF" style="float: left;">
-        <input type="hidden" name="action" value="increase_priority">
-        <input type="hidden" name="block_id" value="'.$blockId.'">
-        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
-        </form>
-        <span onclick = \'document.getElementById("form'.$blockId.'up").submit()\' class="glyphicon glyphicon-upload"></span>';
-    }
-    function downArrow($blockId) {
-        echo '<form method="POST" id="form'.$blockId.'down" action="" autocomplete="OFF" style="float: left;">
-        <input type="hidden" name="action" value="decrease_priority">
-        <input type="hidden" name="block_id" value="'.$blockId.'">
-        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
-        </form>
-        <span onclick = \'document.getElementById("form'.$blockId.'down").submit()\' class="glyphicon glyphicon-download"></span>';
-    }    
-    function extendArrow($blockId) {
-        $test = new pure;
-        echo '<a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'"><span class="glyphicon glyphicon-grain"></span></a>';
-        
-        $formBody = '
-        <p>How many leaves you want?</p>
-        <form method="POST" id="form'.$blockId.'leaves" action="" autocomplete="OFF">
-        <input type="hidden" name="action" value="add_leaves">
-        <input type="hidden" name="block_id" value="'.$blockId.'">
-        <select name="type[]">';
-        
-        foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
-            $formBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
-        }
-    
-        $formBody .='</select></p>
-        <p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
-        <p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
-        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
-        <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
-        </form>';
-
-        echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
-    }    
-    function editArrow($blockId, $linkParam) {
-        echo ' <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
-        echo ' [ <a target="_blank" href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
-    }
-
-    
+<?php     
+    // TODO: delete GET params from url after 10 sec, and delete notification: 
+    // Notification:
     if ($_GET['new_rows'] > 0) {
 ?>
         <font color="green">Added <?php echo $_GET['new_rows']; ?> new elements 
@@ -85,31 +37,32 @@
 <?php
     }
 ?>
-<p><a href="" data-toggle="modal" data-target="#ModalFisrtGrid">Add content block</a></p>
+<p><a href="" data-toggle="modal" data-target="#ModalFisrtGrid">Add new row</a></p>
 <?php
-    $fisrtGridBody = '
-    <p>How many content block you want: </p>
+    $addNewRowForm = '
+    <p>How many rows you want: </p>
     <form method="POST" action="" autocomplete="OFF">
 	<input type="hidden" name="action" value="add_content_block">
 	<input type="hidden" name="id" value="'.$_GET['id'].'">
     <p><select name="type[]">';
     
     foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
-        $fisrtGridBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+        $addNewRowForm .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
     }
     
-    $fisrtGridBody .='</select></p>
+    $addNewRowForm .='</select></p>
 	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
     <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
     </form>'; 
 
-    echo $pure->modalHtml('ModalFisrtGrid','Add content:',$fisrtGridBody);
+    echo $pure->modalHtml('ModalFisrtGrid','Add content:',$addNewRowForm);
 ?>
+    <h4>DOM Tree</h4>
 <?php 
     // take all elements from database:
     $htmlTree = $pure->getDocumentTree($_GET['id']);
     if (count($htmlTree) > 0 ) {
-    // clean them to make sure they are goot for use:
+    // clean them to make sure they are good for use:
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
  
     function showDOM($array) {
@@ -181,6 +134,26 @@
                 }
                 
                 $modalBody = '
+                <h4>Change branch:</h4>
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="change_parent">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p>
+                <select name="newparent[]">';
+                
+                for ($i = 0; $i < 3; $i++) {
+                    $modalBody .= '<option value="'.$i.'">'.$i.'</option>';
+                }
+                
+                $modalBody .= '</select></p>
+                <p><input type="submit" name="submit" value="Change parent"></p>
+                ';
+                $modalBody .= '</form>';
+                
+                
+                $modalBody .= '
+                <h4>Other options:</h4>
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="fav_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
@@ -235,6 +208,25 @@
                 }
                 
                 $modalBody = '
+                <h4>Change branch:</h4>
+                <form method="POST" action="" autocomplete="OFF">
+                <input type="hidden" name="action" value="change_parent">
+                <input type="hidden" name="id" value="'.$_GET['id'].'">
+                <input type="hidden" name="branch_id" value="'.$blockId.'">
+                <p>
+                <select name="newparent[]">';
+                
+                for ($i = 0; $i < 3; $i++) {
+                    $modalBody .= '<option value="'.$i.'">'.$i.'</option>';
+                }
+                
+                $modalBody .= '</select></p>
+                <p><input type="submit" name="submit" value="Change parent"></p>
+                ';
+                $modalBody .= '</form>';
+                
+                $modalBody .= '
+                <h4>Other options:</h4>
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="fav_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
@@ -265,8 +257,56 @@
 
     } else {
         // if there is no content blocks:
+        echo 'You need to add some elements.';
     }
 ?>   
     </div>
 </div>
+<?php 
+    
+    ### helpfull functions:
+    function upArrow($blockId) {
+        echo '<form method="POST" id="form'.$blockId.'up" action="" autocomplete="OFF" style="float: left;">
+        <input type="hidden" name="action" value="increase_priority">
+        <input type="hidden" name="block_id" value="'.$blockId.'">
+        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
+        </form>
+        <span onclick = \'document.getElementById("form'.$blockId.'up").submit()\' class="glyphicon glyphicon-upload"></span>';
+    }
+    function downArrow($blockId) {
+        echo '<form method="POST" id="form'.$blockId.'down" action="" autocomplete="OFF" style="float: left;">
+        <input type="hidden" name="action" value="decrease_priority">
+        <input type="hidden" name="block_id" value="'.$blockId.'">
+        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
+        </form>
+        <span onclick = \'document.getElementById("form'.$blockId.'down").submit()\' class="glyphicon glyphicon-download"></span>';
+    }    
+    function extendArrow($blockId) {
+        $test = new pure;
+        echo '<a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'"><span class="glyphicon glyphicon-grain"></span></a>';
+        
+        $formBody = '
+        <p>How many leaves you want?</p>
+        <form method="POST" id="form'.$blockId.'leaves" action="" autocomplete="OFF">
+        <input type="hidden" name="action" value="add_leaves">
+        <input type="hidden" name="block_id" value="'.$blockId.'">
+        <select name="type[]">';
+        
+        foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
+            $formBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+        }
+    
+        $formBody .='</select></p>
+        <p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
+        <p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
+        <input type="hidden" name="project_id" value="'.$_GET['id'].'">
+        <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
+        </form>';
+
+        echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
+    }    
+    function editArrow($blockId, $linkParam) {
+        echo ' <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
+        echo ' [ <a target="_blank" href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
+    }
 
