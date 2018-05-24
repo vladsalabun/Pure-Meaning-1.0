@@ -10,10 +10,10 @@
                 'font-family' => 'Arial',
                 'padding' => '10px'
             ),
-            'class1' => array(
+            'row' => array(
                 'padding' => '10px'
             ),
-            'class2' => array(
+            'subrow' => array(
                 'padding' => '10px'
             )
         );

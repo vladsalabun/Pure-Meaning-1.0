@@ -26,7 +26,13 @@
                     'add_css_option' => 'addCssOption',
                     'delete_other_option' => 'deleteOtherOption',
                     'delete_css_option' => 'deleteCssOption',
-                    'fav_element' => 'favElement'
+                    'fav_element' => 'favElement',
+                    'edit_body_style' => 'editBodyStyle',
+                    'delete_body_option' => 'deleteBodyOption',
+                    'edit_class_style' => 'editClassStyle',
+                    'delete_class_option' => 'deleteClassOption',
+                    'add_new_body_style' => 'addNewBodyStyle',
+                    'add_new_class_style' => 'addNewClassStyle'
                 );
                 
                 // check method:
@@ -71,7 +77,7 @@
         {            
             // check if such page is specified in settings:
             if (array_key_exists($_GET['page'],CONFIGURATION::ALL_PAGES) 
-                OR  array_key_exists($_GET['page'],CONFIGURATION::SUB_PAGES)) {
+                or array_key_exists($_GET['page'],CONFIGURATION::SUB_PAGES)) {
                 return true;
             } else {
                 return false;
@@ -128,24 +134,54 @@
  
         public function createDocumentTree($array, $str = NULL) 
         {
-            $styles = '';
-            // TODO: how to build div, buttons, forms, sliders and other?
+            $styles = '<style>';
+            // TODO: build div, buttons, forms, sliders and other
+            
             foreach($array as $outer => $inner) {
                 // if there is some object in div:
-                if (is_array($inner)){
+                if (is_array($inner)) {
                     // get parent element, and take element params:
                     $elementInfo = $this->getElementInfo(substr($outer,5));
+
                     $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
                     if ($elementInfo['style'] != null) {
-                        json_decode($elementInfo['style']);
+                        // get style array:
+                        $elementStyle = json_decode($elementInfo['style'],true);
+                        // check if there is some styles:
+                        if (isset($elementStyle['css']) and count($elementStyle['css']) > 0) {
+                            $styles .= '#'.$elementInfo['identifier']. '{';
+                            
+                            foreach ($elementStyle['css'] as $styleName => $styleValue) {
+                                $styles .= $styleName.':'.$styleValue.';';
+                            }
+                            $styles .= '}';
+                        }
+                        // TODO: check other options:
+                        
                     }
                     // and move down:
-                    $str .= $this->createDocumentTree($inner, NULL);
+                    $str .= $this->createDocumentTree($inner, NULL); 
                 } else {
+                    
                     // if div is empty:
                     $elementInfo = $this->getElementInfo(substr($inner,5));
                     $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
-                    
+                    if ($elementInfo['style'] != null) {
+                        // get style array:
+                        $elementStyle = json_decode($elementInfo['style'],true);
+                        // check if there is some styles:
+                        if (isset($elementStyle['css']) and count($elementStyle['css']) > 0) {
+                            $styles .= '#'.$elementInfo['identifier']. '{';
+                            
+                            foreach ($elementStyle['css'] as $styleName => $styleValue) {
+                                $styles .= $styleName.':'.$styleValue.';';
+                            }
+                            $styles .= '}';
+                        }
+                        // TODO: check other options:
+                        
+                    }
+                    /*
                     // TODO:
                     if ($elementInfo['style'] != null) {
                         $param = json_decode($elementInfo['style'],true);
@@ -163,13 +199,13 @@
                         }
                         unset($param);
                     }
+                    */
                     
                 }
                 $str .= '</'.configuration::ELEMENTS[$elementInfo['type']].'>'; 
             }
-            echo $styles;
-            return $str;
-            
+            $styles .= '</style>';
+            return array('html' => $str, 'css' => $styles); 
         }
        
         public function getElementInfo($elementId) 
@@ -307,126 +343,207 @@
             header ("Location: $redirect_to");
             exit(); 
         }
-        
-        public function edit_body_style($post) 
-        {
-           // TODO 
-        } 
-        
-        public function delete_body_option($post)
-        {
-            // TODO 
-        }
-        
-        public function edit_class_style($post)
-        {
-            // TODO 
-        }
-        
-        public function delete_class_option($post)
-        {
-            // TODO
-        }
-        
-        public function editElement($post) {
-            
-            $style = array();
-            $other = array();
-            $css = array();
-            
-            foreach ($post as $key => $value) {
-                
-                if (in_array($key,configuration::STYLE)) {
-                    // TODO: add 'px' and '#' to values
-                    $css[$key] = $value;
-                }
-                if (in_array($key,configuration::OTHER)) {
-                    $other[$key] = $value;
-                }  
-                
-            }
-            
-            if (count($css) > 0 and count($other) > 0) {      
-                $style['css'] = $css;
-                $style['other'] = $other;
-                $this->model->updateElementStyle($post['element_id'],json_encode($style),$post['identifier'],$post['class']);
-            } else {
-                // if all styles deleted:
-               $this->model->updateElementStyle($post['element_id'],NULL,$post['identifier'],$post['class']);
-            }
-            
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['element_id'];
-            header ("Location: $redirect_to");
-            exit();
-            
-        }
-        
+
         public function getAllClasses($projectId)
         {
             return $this->model->getAllClasses($projectId);
-        }     
-        public function addOtherOption($post)
-        {
-            // get style
-            $style = $this->model->getElementInfo($post['id'])['style'];
-            // make array from json
-            $styleArray = json_decode($style, true);
-            // add new other option:
-            $styleArray['other'][$post['option'][0]] = $post['value'];
-            // save to db:
-            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
-            // and go back:
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit();
-        }
-        public function addCssOption($post)
-        {
-            // get style
-            $style = $this->model->getElementInfo($post['id'])['style'];
-            // make array from json
-            $styleArray = json_decode($style, true);
-            // add new css option:
-            $styleArray['css'][$post['option'][0]] = $post['value'];
-            // save to db:
-            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
-            // and go back:
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit();
         }
         
-        public function deleteOtherOption($post)
+        public function getProjectStyle($projectId)
         {
-            // get style
-            $style = $this->model->getElementInfo($post['id'])['style'];
-            // make array from json
-            $styleArray = json_decode($style, true);
-            // delete other option:
-            unset($styleArray['other'][$post['param']]);
-            // save to db:
-            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
-            // and go back:
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit();
+             return $this->model->getProjectStyle($projectId);
+        }
+        
+        public function editBodyStyle($post) 
+        {
+            $this->changingStyles('edit','body','body',$post['projectId'],null,$post,$post['param'],'classes_editor',NULL);
+        }
+        
+        public function editClassStyle($post)
+        {
+            $this->changingStyles('edit','body',$post['className'],$post['projectId'],null,$post,$post['param'],'classes_editor',NULL);
+        }   
+        
+        public function editElement($post) 
+        {
+            $this->changingStyles('edit','element','',null,$post['element_id'],$post,null,'edit_element',NULL);
+        } 
+        
+        public function addOtherOption($post)
+        {            
+            $this->changingStyles('add','identifier','other',null,$post['id'],$post['option'][0],$post['value'],'edit_element',NULL);
+        }
+        
+        public function addCssOption($post)
+        {
+            $this->changingStyles('add','identifier','css',null,$post['id'],$post['option'][0],$post['value'],'edit_element',NULL);
+        }
+        
+        public function addNewClassStyle($post)
+        {
+            $this->changingStyles('add','class',$post['className'],$post['projectId'],null,$post['option'][0],$post['value'],'classes_editor',NULL);
+        }
+
+        public function addNewBodyStyle($post)
+        {
+            $this->changingStyles('add','body','body',$post['projectId'],null,$post['option'][0],$post['value'],'classes_editor',NULL);
+        } 
+
+        public function deleteClassOption($post)
+        {            
+            $this->changingStyles('delete','class_style',$post['className'],$post['projectId'],null,$post['className'],$post['param'],'classes_editor',NULL);
+        }
+        
+        public function deleteBodyOption($post)
+        {  
+            $this->changingStyles('delete','body','body',$post['projectId'],null,$post['className'],$post['param'],'classes_editor',NULL);
+        }
+
+        public function deleteOtherOption($post)
+        {            
+            $this->changingStyles('delete','identifier','other',null,$post['id'],$post['param'],$post['value'],'edit_element',NULL);
         }
         
         public function deleteCssOption($post) 
         {
-            // get style
-            $style = $this->model->getElementInfo($post['id'])['style'];
-            // make array from json
-            $styleArray = json_decode($style, true);
-            // delete css option:
-            unset($styleArray['css'][$post['param']]);
-            // save to db:
-            $this->model->deleteElementStyle($post['id'],json_encode($styleArray));
+            $this->changingStyles('delete','identifier','css',null,$post['id'],$post['param'],$post['value'],'edit_element',NULL);
+        }        
+        
+        #
+        #   Method to handling all actions with styles
+        #
+        
+        public function changingStyles($actionType,$actionWith,$whatToAdd,$projectId = null,$elementId = null,$cssName = null ,$cssValue = null,$page,$className = NULL)
+        {
+            if ($actionType == 'add') {
+                if ($actionWith == 'body') {
+                    
+                    # ADD NEW BODY STYLE:
+                    $style = $this->getProjectStyle($projectId)['globalStyles'];
+                    $styleArray = json_decode($style, true);
+                    // add to style array:
+                    $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    // save to db:
+                    $this->model->changeProjectStyle($projectId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
+                    
+                } else if ($actionWith == 'identifier') {
+                    
+                    # ADD NEW IDENTIFIER STYLE:
+                    $style = $this->model->getElementInfo($elementId)['style'];
+                    $styleArray = json_decode($style, true);
+                    $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    // save to db:
+                    $this->model->deleteElementStyle($elementId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                    
+                } else if ($actionWith == 'class') {
+                    
+                    # ADD NEW CLASS STYLE:
+                    $style = $this->getProjectStyle($projectId)['globalStyles'];
+                    $styleArray = json_decode($style, true);
+                    // add to style array:
+                    $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    // save to db:
+                    $this->model->changeProjectStyle($projectId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
+                    
+                }
+            } else if ($actionType == 'delete') {
+                if ($actionWith == 'class_style') {
+                    
+                    # DELETE CLASS CSS STYLE:
+                    $style = $this->getProjectStyle($projectId)['globalStyles'];
+                    $styleArray = json_decode($style, true);
+                    // delete other option:
+                    unset($styleArray[$whatToAdd][$cssValue]);
+                    // save to db:
+                    $this->model->changeProjectStyle($projectId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
+                
+                } else if ($actionWith == 'body') {
+                    
+                    # DELETE BODY CSS STYLE:
+                    $style = $this->getProjectStyle($projectId)['globalStyles'];
+                    $styleArray = json_decode($style, true);
+                    // delete other option:
+                    unset($styleArray[$whatToAdd][$cssValue]);
+                    // save to db:
+                    $this->model->changeProjectStyle($projectId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
+                    
+                } else if ($actionWith == 'identifier') {
+                    
+                    # DELETE IDENTIFIER CSS STYLE:
+                    $style = $this->model->getElementInfo($elementId)['style'];
+                    $styleArray = json_decode($style, true);
+                    // delete other option:
+                    unset($styleArray[$whatToAdd][$cssName]);
+                    // save to db:
+                    $this->model->deleteElementStyle($elementId,json_encode($styleArray));
+                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                    
+                }
+            } else if ($actionType == 'edit') {
+                if ($actionWith == 'body') {
+                    
+                    # EDIT BODY AND CLASS CSS STYLE:
+                    $style = json_decode($this->getProjectStyle($projectId)['globalStyles'],true);
+                    $css = array();
+                    // make new style array:
+                    foreach ($cssName as $key => $value) {
+                        if (in_array($key,configuration::STYLE)) {
+                            // TODO: add 'px' and '#' to values
+                            $css[$key] = $value;
+                        }
+                    }
+                    // put new style to grobalStyle:
+                    $style[$whatToAdd] = $css;
+                    // save:
+                    $this->model->changeProjectStyle($projectId,json_encode($style));
+                    if ($whatToAdd == 'body') {
+                        $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
+                    } else {
+                        $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
+                    }
+                    
+                } else if ($actionWith == 'element') {
+                    
+                        # EDIT ELEMENT CSS STYLE:
+                        $style = array();
+                        $other = array();
+                        $css = array();
+                        
+                        foreach ($cssName as $key => $value) { 
+                            if (in_array($key,configuration::STYLE)) {
+                                // TODO: add 'px' and '#' to values
+                                $css[$key] = $value;
+                            }
+                            if (in_array($key,configuration::OTHER)) {
+                                $other[$key] = $value;
+                            }  
+                        }
+                        
+                        if (count($css) > 0 or count($other) > 0) {      
+                            $style['css'] = $css;
+                            $style['other'] = $other;
+                            $this->model->updateElementStyle($elementId,json_encode($style),$cssName['identifier'],$cssName['class']);
+                        } else {
+                            // if all styles deleted:
+                           $this->model->updateElementStyle($elementId,NULL,$cssName['identifier'],$cssName['class']);
+                        }
+                        
+                        $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                        
+                }
+            }
+            
             // and go back:
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=edit_element&id='.$post['id'];
             header ("Location: $redirect_to");
             exit();
-        }
+        }            
+        
+        ###
         
         public function addLeaves($post) 
         {

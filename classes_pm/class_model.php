@@ -148,6 +148,15 @@
             $stmt->execute();
         }
 
+        public function changeProjectStyle($projectId,$styleJson)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_projects SET globalStyles = :globalStyles WHERE ID = :ID");
+            $stmt->bindParam(':ID', $projectId);
+            $stmt->bindParam(':globalStyles', $styleJson);
+            $stmt->execute();
+        }
+        
+        
         public function updateElementStyle($elementId,$styleJson,$identifier,$class) 
         {
             $stmt = $this->conn->prepare("UPDATE pm_elements SET style = :style, identifier = :identifier, class = :class WHERE ID = :ID");
@@ -172,6 +181,14 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($projectId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        }
+
+        public function getProjectStyle($projectId)
+        {
+            $sql = "SELECT globalStyles FROM pm_projects WHERE ID = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($projectId));
+            return $stmt->fetch(PDO::FETCH_ASSOC);  
         }
         
         public function addLeaves($parentId,$type,$rows,$class,$projectId)

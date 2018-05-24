@@ -25,7 +25,10 @@
     
     $HtmlFormatter = new HtmlFormatter;
     // show template:
-    echo HtmlFormatter::format($pure->createDocumentTree($cleanArray, NULL));
+    $documentArray = $pure->createDocumentTree($cleanArray, NULL);
+
+    echo $documentArray['css'];
+    echo HtmlFormatter::format($documentArray['html']);
 
 ?>
 

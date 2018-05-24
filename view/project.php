@@ -307,6 +307,6 @@
     }    
     function editArrow($blockId, $linkParam) {
         echo ' <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
-        echo ' [ <a target="_blank" href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
+        echo ' [ <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
     }
 
