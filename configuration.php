@@ -18,12 +18,12 @@
         */
         
         const ALL_PAGES = array (
-            'projects' => 'Проекты',
-            'fonts' => 'Шрифты',
-            'backgrounds' => 'Фоны',
-            'colors' => 'Цвета',
-            'objections' => 'Возражения',
-            'test' => 'Тесты',
+            'projects' => 'Projects',
+            'fonts' => 'Fonts',
+            'backgrounds' => 'Backgrounds',
+            'colors' => 'Colors',
+            'objections' => 'Objections',
+            'test' => 'Test',
         );
         
         /*

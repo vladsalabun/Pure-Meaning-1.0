@@ -138,12 +138,13 @@
             // TODO: build div, buttons, forms, sliders and other
             
             foreach($array as $outer => $inner) {
-                // if there is some object in div:
+                // if div have inner elements: 
                 if (is_array($inner)) {
                     // get parent element, and take element params:
                     $elementInfo = $this->getElementInfo(substr($outer,5));
 
                     $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    
                     if ($elementInfo['style'] != null) {
                         // get style array:
                         $elementStyle = json_decode($elementInfo['style'],true);
@@ -152,20 +153,28 @@
                             $styles .= '#'.$elementInfo['identifier']. '{';
                             
                             foreach ($elementStyle['css'] as $styleName => $styleValue) {
-                                $styles .= $styleName.':'.$styleValue.';';
+                                $styles .= $styleName.':'.$styleValue.'; ';
                             }
                             $styles .= '}';
                         }
-                        // TODO: check other options:
-                        
+                        // check other options:
+                        if (isset($elementStyle['other']) and count($elementStyle['other']) > 0) {
+                            if (isset($elementStyle['other']['fish'])) {
+                                $str .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
+                            }
+                            if (isset($elementStyle['other']['text'])) {
+                                $str .= $elementStyle['other']['text'];
+                            }
+                        }
                     }
+                    
                     // and move down:
                     $str .= $this->createDocumentTree($inner, NULL); 
                 } else {
-                    
                     // if div is empty:
                     $elementInfo = $this->getElementInfo(substr($inner,5));
                     $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    
                     if ($elementInfo['style'] != null) {
                         // get style array:
                         $elementStyle = json_decode($elementInfo['style'],true);
@@ -174,38 +183,53 @@
                             $styles .= '#'.$elementInfo['identifier']. '{';
                             
                             foreach ($elementStyle['css'] as $styleName => $styleValue) {
-                                $styles .= $styleName.':'.$styleValue.';';
+                                $styles .= $styleName.':'.$styleValue.'; ';
                             }
                             $styles .= '}';
                         }
-                        // TODO: check other options:
-                        
-                    }
-                    /*
-                    // TODO:
-                    if ($elementInfo['style'] != null) {
-                        $param = json_decode($elementInfo['style'],true);
-                        if (isset($param['css'])) {
-                            $styles .= '<style> #'.$elementInfo['identifier'].' { ';
-                            foreach($param['css'] as $styleKey => $styleValue) {
-                                $styles .= $styleKey.': ' .$styleValue.'; ';
+                        // check other options:
+                        if (isset($elementStyle['other']) and count($elementStyle['other']) > 0) {
+                            if (isset($elementStyle['other']['fish'])) {
+                                $str .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
                             }
-                            $styles .= '} </style>';
-                        }
-                        if (isset($param['other'])) {
-                            if (isset($param['other']['fish'])) {
-                                $str .= $this->fish($param['other']['fish']);
+                            if (isset($elementStyle['other']['text'])) {
+                                $str .= $elementStyle['other']['text'];
                             }
                         }
-                        unset($param);
                     }
-                    */
                     
                 }
                 $str .= '</'.configuration::ELEMENTS[$elementInfo['type']].'>'; 
             }
             $styles .= '</style>';
-            return array('html' => $str, 'css' => $styles); 
+            return $str.$styles; 
+        }
+       
+        public function globalStyles($projectId) 
+        {
+            $globalStylesJson = $this->model->globalStyles($projectId)['globalStyles'];
+            $globalStylesArray = json_decode($globalStylesJson, true);
+            
+            $str = '<style>';
+            
+            foreach($globalStylesArray as $class => $styleArray) {
+                if ($class == 'body') {
+                    $str .= $class.' {';
+                    foreach ($styleArray as $styleName => $styleValue) {
+                        $str .= $styleName . ': ' . $styleValue . '; ';
+                    }
+                    $str .= '} ';
+                } else {
+                    $str .= '.' . $class.' {';
+                    foreach ($styleArray as $styleName => $styleValue) {
+                        $str .= $styleName . ': ' . $styleValue. '; ';
+                    }
+                    $str .= '} ';
+                }
+            }
+            
+            $str .= '</style>';
+            return $str;
         }
        
         public function getElementInfo($elementId) 
@@ -314,7 +338,7 @@
         public function addContentBlock($post) 
         {
             $count = $this->model->addContentBlock($post['rows'],$post['id'],$post['type'][0]);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
             header ("Location: $redirect_to");
             exit();  
         }
@@ -323,7 +347,7 @@
         {
             // add:
             $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['class_name'],$post['type'][0]);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
             header ("Location: $redirect_to");
             exit(); 
         }
@@ -331,7 +355,7 @@
         public function deleteElement($post)
         {
             $this->model->deleteElement($post['branch_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&deleted='.$post['branch_id'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
             header ("Location: $redirect_to");
             exit(); 
         }
@@ -548,7 +572,7 @@
         public function addLeaves($post) 
         {
             $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['class_name'],$post['project_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
             header ("Location: $redirect_to");
             exit();
         }

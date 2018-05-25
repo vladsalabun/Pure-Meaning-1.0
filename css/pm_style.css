@@ -1,5 +1,5 @@
 body { font-family: Arial; font-size: 13px; color: #24292e; margin: 0px; text-align: center; background: #fff;}
-a { color: #306eba; text-decoration: underline; }
+a { color: #009aff; text-decoration: underline; }
 a:hover { color: red; text-decoration: none; }
 
 h3 { color: #9e2325; }
@@ -71,3 +71,5 @@ h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9
 
 .message_box { text-align: left; width: 100%; height: 450px; background: #fff; overflow: auto; }
 .textareavk { width: 100%; height: 60px; padding: 8px; border: 1px dotted #e6e6e6; font-size: 14px; margin-top: 10px; }
+
+.submit_btn { background: #009aff; color: #fff; border: 1px; padding: 3px; min-width: 40px;}

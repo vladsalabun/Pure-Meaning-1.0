@@ -102,7 +102,7 @@
 ?>
     <tr>
         <td><?php echo $otherParam ; ?></td>
-        <td><input type="text" name="<?php echo $otherParam; ?>" value="<?php echo $otherValue; ?>" class="txtfield"></td>
+        <td><input type="text" name="<?php echo $otherParam; ?>" value="<?php echo htmlentities($otherValue); ?>" class="txtfield"></td>
         <td><a href="" data-toggle="modal" data-target="#<?php echo 'delete_'.$otherParam; ?>">delete</a></td>
     </tr>
 <?php 

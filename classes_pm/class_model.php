@@ -87,7 +87,8 @@
         
         public function addContentBlock($rows,$projectId,$type)
         {
-            $class = 'row';
+            // TODO:
+            $class = 'container';
             $count = 0;
             $priority = $this->lastLowPriority($projectId,0)['priority']; // <- last low priority
    
@@ -238,5 +239,12 @@
             return $next['Auto_increment'];
         }
         
+        public function globalStyles($projectId) 
+        {
+            $sql = "SELECT globalStyles FROM pm_projects WHERE ID = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($projectId));
+            return $stmt->fetch(PDO::FETCH_ASSOC);  
+        }
         
     } // <- end of class model 

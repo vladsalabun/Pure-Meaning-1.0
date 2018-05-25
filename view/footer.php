@@ -40,9 +40,9 @@
     $background1 = array_search($color1, $backgroundColors);
             
     echo '<style>
-    .navbar {background: '.$background1.';} 
-    .navbar-inverse .navbar-nav > li > a  {color: '.$color1.'; }
-    .navbar-inverse .navbar-brand  {color: '.$color1.'; }
+    .navbar {background: #222222;} 
+    .navbar-inverse .navbar-nav > li > a  {color: #c6c6c6; }
+    .navbar-inverse .navbar-brand  {color: #ededed; }
     .navbar { border: none;}
     
     #footer {background: '.$background1.';} 

@@ -36,9 +36,14 @@
             }
             $showSub .= '</ul>';
             
-            $days = $project['workEnd'] - mktime();
-            $days = round(($days / 60 / 60 / 24),2);
-            $hours = floor(($days - floor($days)) * 24);
+            if ($project['done'] == 0) {
+                $days = $project['workEnd'] - mktime();
+                $days = round(($days / 60 / 60 / 24),2);
+                $hours = floor(($days - floor($days)) * 24);
+                $done = floor($days).' d. '.$hours.' h.';
+            } else if ($project['done'] == 1) {
+                $done = '<font color="green">Готово</font>';
+            }
 ?>         
                 <tr>
                 <th scope="row"><?php echo $project['ID']; ?></th>
@@ -57,7 +62,7 @@
                 <td><?php echo $project['price'].$currency; ?></td>
                 <td><?php echo date("Y-m-d", $project['workBegin']); ?><br>
                 <?php echo date("Y-m-d", $project['workEnd']); ?></td>
-                <td><?php echo floor($days); ?> d. <?php echo $hours; ?> h.</td>
+                <td><?php echo $done; ?></td>
                 <tr>
 <?php
         }

@@ -1,67 +1,23 @@
 <div class="row">
-	<div class="col-lg-12" align="left" style="font-size: 16px;">Project: 
+	<div class="col-lg-12" align="left" style="font-size: 16px;">
+    Project ID: 
 <?php echo $_GET['id'];?>
-<p><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Посилання на готовий шаблон</a></p>
-<p>TODO:</p>
-<ol align="left">
-    <li>Стандартні запитання і відповіді до клієнта</li>
-    <li>Стандартні запитання і відповіді до мене (робочий чек-лист)</li>
-    <li>Деталі замовлення</li>
-    <li>Посилання на субпроекти</li>
-</ol>
+<br><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Live preview</a> 
+| todo: <a href="" target="blank">Client answers</a>
+| todo: <a href="" target="blank">My checklist</a>
+| todo: <a href="" target="blank">subPage 1</a>
 
-<h4>Шаблон:</h4>
-<p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Class style editor</a></p>
-<p><a href="">Insert element from favourite</a></p>
-<?php     
-    // TODO: delete GET params from url after 10 sec, and delete notification: 
-    // Notification:
-    if ($_GET['new_rows'] > 0) {
-?>
-        <font color="green">Added <?php echo $_GET['new_rows']; ?> new elements 
-        <?php 
-            if (strlen($_GET['id_name']) > 0) {
-                echo 'id: <b>' . $_GET['id_name'].'</b> ';
-            }
-            if (strlen($_GET['class_name']) > 0) {
-                echo 'class: <b>'.$_GET['class_name'].'</b> '; 
-            }
-        ?>
-        </font>
-<?php
-    }
-    
-    if ($_GET['deleted'] > 0) {
-?>
-        <font color="red">Deleted element <?php echo $_GET['deleted']; ?></font>
-<?php
-    }
-?>
-<p><a href="" data-toggle="modal" data-target="#ModalFisrtGrid">Add new row</a></p>
-<?php
-    $addNewRowForm = '
-    <p>How many rows you want: </p>
-    <form method="POST" action="" autocomplete="OFF">
-	<input type="hidden" name="action" value="add_content_block">
-	<input type="hidden" name="id" value="'.$_GET['id'].'">
-    <p><select name="type[]">';
-    
-    foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
-        $addNewRowForm .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
-    }
-    
-    $addNewRowForm .='</select></p>
-	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
-    <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
-    </form>'; 
-
-    echo $pure->modalHtml('ModalFisrtGrid','Add content:',$addNewRowForm);
-?>
-    <h4>DOM Tree</h4>
 <?php 
+    // TODO: log actions
     // take all elements from database:
     $htmlTree = $pure->getDocumentTree($_GET['id']);
     if (count($htmlTree) > 0 ) {
+?> 
+    <h4>Template:</h4>
+        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Class style editor</a></p>
+        <p><a href="">Insert element from favourite</a></p>
+    <h4>DOM Tree</h4>
+<?php       
     // clean them to make sure they are good for use:
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
  
@@ -69,7 +25,7 @@
         $temp = new pure;
 ?>   
 
-<ul align="left">
+<ul align="left" style="list-style-type: none; line-height: 180%;">
 <?php 
     $keysArray = array_keys($array);
     if (is_array($array[$keysArray[0]])) {
@@ -111,7 +67,7 @@
                 
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo ' id: <b>'.$elementInfo['identifier'].'</b>';
+                    echo '<a href="" data-toggle="modal" data-target="#ModalBlock'.$blockId.'"><b>'.$elementInfo['identifier'].'</b></a>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b>';
@@ -121,7 +77,7 @@
                 echo ' '
                 .upArrow($blockId)
                 .downArrow($blockId)
-                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"');
+                .editArrow($blockId, '');
 
                 // generate title:
                 $modaTittle = 'Block #'.$blockId.'<br>'; 
@@ -183,7 +139,7 @@
                 
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo ' id: <b>'.$elementInfo['identifier'].'</b>';
+                    echo '<a data-toggle="modal" data-target="#ModalBlock'.$blockId.'" href="" class="glyphicona"><b>'.$elementInfo['identifier'].'</b></a>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b> ';
@@ -195,7 +151,7 @@
                 .upArrow($blockId)
                 .downArrow($blockId)
                 .extendArrow($blockId,'')
-                .editArrow($blockId, 'data-toggle="modal" data-target="#ModalBlock'.$blockId.'"');
+                .editArrow($blockId, '');
 
                 // generate title:
                 $modaTittle = 'Block #'.$blockId.'<br>'; 
@@ -248,7 +204,7 @@
             }
         }
         
-        echo '<li><a href="" data-toggle="modal" data-target="#AddMainRow'.$addId.'">+ add element</a></li>';
+        echo '<li><a href="" data-toggle="modal" data-target="#AddMainRow'.$addId.'">++</a></li>';
         echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
         echo '</ul>';
     }
@@ -256,8 +212,27 @@
         showDOM($cleanArray);
 
     } else {
-        // if there is no content blocks:
-        echo 'You need to add some elements.';
+?>
+<p>DOM is empty. You can <a href="" data-toggle="modal" data-target="#ModalFisrtGrid">add new element</a>.</p>
+<?php
+    // if there is no content blocks:
+    $addNewRowForm = '
+    <p>How many rows you want: </p>
+    <form method="POST" action="" autocomplete="OFF">
+	<input type="hidden" name="action" value="add_content_block">
+	<input type="hidden" name="id" value="'.$_GET['id'].'">
+    <p><select name="type[]">';
+    
+    foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
+        $addNewRowForm .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
+    }
+    
+    $addNewRowForm .='</select></p>
+	<p><input type="number" name="rows" placeholder="0" class="txtfield"></p>
+    <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
+    </form>'; 
+
+    echo $pure->modalHtml('ModalFisrtGrid','Add content:',$addNewRowForm);
     }
 ?>   
     </div>
@@ -306,7 +281,6 @@
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
-        echo ' <a '.$linkParam.' href="" class="glyphicona"><span class="glyphicon glyphicon-edit"></span></a>';
         echo ' [ <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
     }
 
