@@ -415,6 +415,10 @@
             exit(); 
         }
 
+        #
+        #   All actions:
+        #
+        
         public function getAllClasses($projectId)
         {
             return $this->model->getAllClasses($projectId);
@@ -619,18 +623,17 @@
         public function addLeaves($post) 
         {
             $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['class_name'],$post['project_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
             header ("Location: $redirect_to");
             exit();
         }
         
         public function changeParent($post)
         {
-            // get all new tree branch, 0 - tree root
-            // delete all branch ids, that are in current branch
-            
-            // get branch root
-            // change root parent
+            $this->model->changeParent($post['branch_id'],$post['newparent'][0]) ;           
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
+            header ("Location: $redirect_to");
+            exit();
         }
       
       

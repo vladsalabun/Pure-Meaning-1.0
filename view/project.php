@@ -9,13 +9,13 @@
 
 <?php 
     // TODO: log actions
+    
     // take all elements from database:
     $htmlTree = $pure->getDocumentTree($_GET['id']);
 
     foreach ($htmlTree AS $singleElement) {
         $branchArray[] = $singleElement['ID'];
     }
-    var_dump($branchArray);
     
     if (count($htmlTree) > 0 ) {
 ?> 
@@ -27,13 +27,13 @@
     // clean them to make sure they are good for use:
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
  
-    function showDOM($array) {
+    function showDOM($array,$branchArray) {
        
         
         $temp = new pure;
 ?>   
 
-<ul align="left" style="list-style-type: none; line-height: 180%;">
+<ul align="left" style="list-style-type: none; line-height: 160%;">
 <?php 
     $keysArray = array_keys($array);
     if (is_array($array[$keysArray[0]])) {
@@ -99,50 +99,50 @@
                 }
                 
                 $modalBody = '
-                <h4>Change branch:</h4>
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="change_parent">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p>
+                <p align="left">Change branch:
                 <select name="newparent[]">';
                 
                 $result = $temp->getBranch($array, 'block'.$blockId);
                 $branchIDs = $temp->getBranchIDs($result);
-                //$document = $temp->createDocumentTree($result, NULL);
                 
-                // TODO: 
+                $result = array_diff($branchArray, $branchIDs);
+                asort($result);
                 
-                for ($i = 0; $i < 3; $i++) {
-                    $modalBody .= '<option value="'.$i.'">'.$i.'</option>';
+                $modalBody .= '<option value="0">0</option>';
+                foreach ($result as $newParent) {
+                    $modalBody .= '<option value="'.$newParent.'">'.$newParent.'</option>';
                 }
                 
-                $modalBody .= '</select></p>
-                <p><input type="submit" name="submit" value="Change parent"></p>
+                $modalBody .= '</select>
+                <input type="submit" name="submit" value="Change parent" class="submit_btn"></p>
                 ';
                 $modalBody .= '</form>';
                 
                 
                 $modalBody .= '
-                <h4>Other options:</h4>
+                <p>Other options:
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="fav_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Save to favourite"></p>
+                <p align="left"><input type="submit" name="submit" value="Save to favourite" class="submit_btn">
                 </form>
                 
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="delete_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'"></p>
+                <p align="left"><input type="submit" name="submit" value="Delete branch #'.$blockId.'" class="submit_btn"></a>
                 </form>
                 ';
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 
-                showDOM($value);
+                showDOM($value,$branchArray);
                 
             } else {
                 $blockId = substr($value,5);
@@ -179,37 +179,44 @@
                 }
                 
                 $modalBody = '
-                <h4>Change branch:</h4>
+                <p align="left">Change branch:
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="change_parent">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p>
                 <select name="newparent[]">';
                 
-                for ($i = 0; $i < 3; $i++) {
-                    $modalBody .= '<option value="'.$i.'">'.$i.'</option>';
+                
+                $result = $temp->getBranch($array, 'block'.$blockId);
+                $branchIDs = $temp->getBranchIDs($result);
+                 
+                $result = array_diff($branchArray, $branchIDs);
+                asort($result);
+                
+                $modalBody .= '<option value="0">0</option>';
+                foreach ($result as $newParent) {
+                    $modalBody .= '<option value="'.$newParent.'">'.$newParent.'</option>';
                 }
                 
-                $modalBody .= '</select></p>
-                <p><input type="submit" name="submit" value="Change parent"></p>
+                $modalBody .= '</select>
+                <input type="submit" name="submit" value="Change parent" class="submit_btn"></p>
                 ';
                 $modalBody .= '</form>';
                 
                 $modalBody .= '
-                <h4>Other options:</h4>
+                <p>Other options:</p>
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="fav_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Save to favourite"></p>
+                <p><input type="submit" name="submit" value="Save to favourite" class="submit_btn"></p>
                 </form>
                 
                 <form method="POST" action="" autocomplete="OFF">
                 <input type="hidden" name="action" value="delete_element">
                 <input type="hidden" name="id" value="'.$_GET['id'].'">
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'"></p>
+                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'" class="submit_btn"></p>
                 </form>
                 ';
                 
@@ -224,7 +231,7 @@
         echo '</ul>';
     }
 
-        showDOM($cleanArray);
+        showDOM($cleanArray,$branchArray);
 
     } else {
 ?>

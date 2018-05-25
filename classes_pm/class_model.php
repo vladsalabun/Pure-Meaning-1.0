@@ -247,4 +247,12 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);  
         }
         
+        public function changeParent($branchId,$newParent)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_elements SET parentId = :parentId WHERE ID = :ID");
+            $stmt->bindParam(':parentId', $newParent);
+            $stmt->bindParam(':ID', $branchId);
+            $stmt->execute();
+        }
+        
     } // <- end of class model 
