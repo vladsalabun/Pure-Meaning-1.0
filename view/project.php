@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-lg-12" align="left" style="font-size: 16px;">
+	<div class="col-lg-12" align="left" style="font-size: 15px;">
     Project ID: 
 <?php echo $_GET['id'];?>
 <br><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Live preview</a> 
@@ -11,6 +11,12 @@
     // TODO: log actions
     // take all elements from database:
     $htmlTree = $pure->getDocumentTree($_GET['id']);
+
+    foreach ($htmlTree AS $singleElement) {
+        $branchArray[] = $singleElement['ID'];
+    }
+    var_dump($branchArray);
+    
     if (count($htmlTree) > 0 ) {
 ?> 
     <h4>Template:</h4>
@@ -22,6 +28,8 @@
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
  
     function showDOM($array) {
+       
+        
         $temp = new pure;
 ?>   
 
@@ -65,6 +73,7 @@
                 <!--- Element --->
                 <li>#'.$blockId.' ';               
                 
+                
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
                     echo '<a href="" data-toggle="modal" data-target="#ModalBlock'.$blockId.'"><b>'.$elementInfo['identifier'].'</b></a>';
@@ -97,6 +106,12 @@
                 <input type="hidden" name="branch_id" value="'.$blockId.'">
                 <p>
                 <select name="newparent[]">';
+                
+                $result = $temp->getBranch($array, 'block'.$blockId);
+                $branchIDs = $temp->getBranchIDs($result);
+                //$document = $temp->createDocumentTree($result, NULL);
+                
+                // TODO: 
                 
                 for ($i = 0; $i < 3; $i++) {
                     $modalBody .= '<option value="'.$i.'">'.$i.'</option>';
@@ -258,7 +273,7 @@
     }    
     function extendArrow($blockId) {
         $test = new pure;
-        echo '<a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'"><span class="glyphicon glyphicon-grain"></span></a>';
+        echo ' <a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'">child</a>';
         
         $formBody = '
         <p>How many leaves you want?</p>
@@ -281,6 +296,6 @@
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
-        echo ' [ <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a> ]';
+        echo '  / <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'">edit</a>';
     }
 

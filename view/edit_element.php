@@ -1,6 +1,8 @@
 <?php 
     // get element info: 
     $element = $pure->getElementInfo($_GET['id']);
+    // get projectId:
+    $projectId = $element['projectId'];
     // make style array:
     $style = json_decode($element['style'],true);
 ?>
@@ -75,6 +77,7 @@
     <form method="POST" id="edit_element" action="" autocomplete="OFF">
     <input type="hidden" name="action" value="edit_element">
     <input type="hidden" name="element_id" value="<?php echo $element['ID']; ?>">
+    <input type="hidden" name="id" value="<?php echo $_GET['projectId']; ?>">
     <table class="table table-striped">
     <thead><tr><th scope="col">Option</th><th scope="col">Value:</th></tr></thead>
     <tbody>
@@ -172,8 +175,44 @@
 
 
 ?>
+
+<!--- LIVE PREVIEW --->
+
     <h4>Live preview:</h4>
-    TODO
+    
+<?php 
+
+    // take all elements from database:
+    $htmlTree = $pure->getDocumentTree($projectId);
+    
+    if (count($htmlTree) > 0 ) {
+        // clean them to make sure they are goot for use:
+        $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
+
+        // element array 
+        $result = $pure->getBranch($cleanArray, 'block'.$_GET['id']);
+
+        $HtmlFormatter = new HtmlFormatter;
+        $document = $pure->createDocumentTree($result, NULL);
+        
+        // show template:
+        echo HtmlFormatter::format($document);
+        
+    }
+   
+
+    
+    
+
+    
+
+
+   
+?>
+
+    
+<!--- /LIVE PREVIEW --->  
+ 
     </div>
 </div>
 

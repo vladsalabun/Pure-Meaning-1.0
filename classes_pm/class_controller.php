@@ -32,7 +32,8 @@
                     'edit_class_style' => 'editClassStyle',
                     'delete_class_option' => 'deleteClassOption',
                     'add_new_body_style' => 'addNewBodyStyle',
-                    'add_new_class_style' => 'addNewClassStyle'
+                    'add_new_class_style' => 'addNewClassStyle',
+                    'change_parent' => 'changeParent'
                 );
                 
                 // check method:
@@ -236,7 +237,53 @@
         {
             return $this->model->getElementInfo($elementId);
         }
-       
+        
+        public function getBranch($array, $value) 
+        { 
+        
+            $branch = array();
+        
+            foreach ($array as $arrayKey => $arrayValue) {
+                
+                if ($arrayKey === $value) {
+                    //echo "[ $arrayKey === $value ] <br>";                
+                    $branch[$arrayKey] = $arrayValue;
+                } else {
+                    if (is_array($arrayValue)) {
+                        //echo "[ $arrayKey: recursion ] <br>";  
+                        $temp = $this->getBranch($arrayValue, $value);
+                        if (count($temp) > 0) {
+                            $branch += $temp;
+                        }
+                    } else if ($arrayValue === $value) {
+                        //echo "[ add:  array(0 => $arrayValue)] <br>";  
+                        $branch = array(0 => $arrayValue);
+                    } else {
+                        //echo "$arrayKey : smth else <br>";  
+                    }
+                }
+            }
+            
+            return $branch;
+        }       
+ 
+        public function getBranchIDs($array) 
+        { 
+            $IDs = array() ;
+            foreach ($array as $key => $value) {
+                if(is_array($value)) {
+                    $IDs[] = substr($key,5);
+                    $tmp = $this->getBranchIDs($value);
+                    foreach ($tmp as $block) {
+                        $IDs[] = $block;
+                    }
+                } else {
+                    $IDs[] = substr($value,5);
+                }
+            }
+            return $IDs;
+        }
+ 
         public function getDocumentTree($projectId) 
         {
             return $this->model->getDocumentTree($projectId);
@@ -347,7 +394,7 @@
         {
             // add:
             $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['class_name'],$post['type'][0]);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
             header ("Location: $redirect_to");
             exit(); 
         }
@@ -355,7 +402,7 @@
         public function deleteElement($post)
         {
             $this->model->deleteElement($post['branch_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&deleted='.$post['branch_id'];
             header ("Location: $redirect_to");
             exit(); 
         }
@@ -572,9 +619,18 @@
         public function addLeaves($post) 
         {
             $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['class_name'],$post['project_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
             header ("Location: $redirect_to");
             exit();
+        }
+        
+        public function changeParent($post)
+        {
+            // get all new tree branch, 0 - tree root
+            // delete all branch ids, that are in current branch
+            
+            // get branch root
+            // change root parent
         }
       
       

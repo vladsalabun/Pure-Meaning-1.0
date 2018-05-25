@@ -26,6 +26,7 @@ setInterval("fresh()",10000);
 
     // take all elements from database:
     $htmlTree = $pure->getDocumentTree($_GET['projectId']);
+
     if (count($htmlTree) > 0 ) {
     // clean them to make sure they are goot for use:
     $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
