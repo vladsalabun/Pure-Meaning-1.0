@@ -73,3 +73,45 @@ h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9
 .textareavk { width: 100%; height: 60px; padding: 8px; border: 1px dotted #e6e6e6; font-size: 14px; margin-top: 10px; }
 
 .submit_btn { background: #009aff; color: #fff; border: 1px; padding: 3px; min-width: 40px;}
+
+.glyphicon {color: #ebebe0;}
+.glyphicon:hover { cursor: pointer;}
+.glyphicon-upload:hover { color: #5cd65c; }
+.glyphicon-download:hover { color: #ff704d; }
+.glyphicon-heart {color: #ff1a1a;}
+.glyphicon-edit { color: #4d94ff; }
+.glyphicon-menu-down { color: #4d94ff; }
+.glyphicon-edit:hover { color: #0066ff; }
+.glyphicon-menu-down:hover { color: #0066ff; }
+
+.identifierLink {text-decoration: none;}
+
+
+.ulBranch {}
+
+ul.tree, ul.tree ul {
+    list-style: none;
+     margin: 0;
+     padding: 0;
+   } 
+   ul.tree ul {
+     margin-left: 17px;
+   }
+   ul.tree li {
+     margin: 0;
+     padding: 0 7px;
+     color: #000;
+     border-left:1px solid #d1e0e0;
+   }
+   ul.tree li:last-child {
+       border-left:none;
+   }
+   ul.tree li:before {
+      position:relative;
+      top:-0.3em;
+      width:15px;
+      border-bottom:1px solid #d1e0e0;
+      content:"";
+      display:inline-block;
+      left:-7px;
+   }

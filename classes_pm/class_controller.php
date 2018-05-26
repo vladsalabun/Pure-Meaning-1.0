@@ -33,7 +33,8 @@
                     'delete_class_option' => 'deleteClassOption',
                     'add_new_body_style' => 'addNewBodyStyle',
                     'add_new_class_style' => 'addNewClassStyle',
-                    'change_parent' => 'changeParent'
+                    'change_parent' => 'changeParent',
+                    'current_tree_copy' => 'currentTreeCopy'
                 );
                 
                 // check method:
@@ -366,7 +367,7 @@
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle">'.$modalTitle.'</h3>
+                        <p class="modal-title" id="exampleModalLongTitle">'.$modalTitle.'</p>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -633,6 +634,12 @@
             $this->model->changeParent($post['branch_id'],$post['newparent'][0]) ;           
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
             header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function currentTreeCopy($post)
+        {
+            var_dump($post);
             exit();
         }
       
