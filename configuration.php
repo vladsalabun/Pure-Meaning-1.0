@@ -186,6 +186,10 @@ Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus ali
         const STYLEVALUES = array(
             'font-size' => 'px',
             'padding' => 'px',
-            'margin'  => 'px'
+            'margin'  => 'px',
+            'height'  => 'px',
+            'width'  => 'px',
+            'color'  => '#',
+            'background'  => '#'
         );
     }

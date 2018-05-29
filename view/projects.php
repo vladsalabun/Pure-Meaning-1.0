@@ -1,5 +1,39 @@
 <div class="row">
 	<div class="col-lg-12" align="left">
+    <a href="" data-toggle="modal" data-target="#AddNewProject" title="Add new project"><span class="glyphicon glyphicon-plus" ></span> Add new project</a>
+<?php 
+    $formBody = '
+    <form method="POST" action="" autocomplete="OFF">
+        <input type="hidden" name="action" value="add_new_project">
+        <table class="table table-striped">
+      <thead >
+        <tr>
+          <th scope="col">Question:</th>
+          <th scope="col">Answer:</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>Title:</td><td><input type="text" name="title" value="" class="txtfield"></td></tr>
+        <tr><td>Customer:</td><td><input type="text" name="customer" value="" class="txtfield"></td></tr>
+        <tr><td>Skype:</td><td><input type="text" name="skype" value="" class="txtfield"></td></tr>
+        <tr><td>Phone1:</td><td><input type="text" name="phone1" value="" class="txtfield"></td></tr>
+        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
+        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
+        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
+        <tr><td>e-mail 1:</td><td><input type="text" name="email1" value="" class="txtfield"></td></tr>
+        <tr><td>e-mail 2:</td><td><input type="text" name="email2" value="" class="txtfield"></td></tr>
+        <tr><td>VK:</td><td><input type="text" name="vk" value="" class="txtfield"></td></tr>
+        <tr><td>FB:</td><td><input type="text" name="fb" value="" class="txtfield"></td></tr>
+        <tr>
+        <td>Price:</td><td><input type="text" name="price" value="" class="txtfield"></td>
+        </tr>
+        </tbody>
+        </table>
+        <p><input type="submit" name="submit" value="Add new project" class="submit_btn"></p>
+        </form>';
+
+    echo $pure->modalHtml('AddNewProject','Add new project:',$formBody);
+?>
     <table class="table table-striped">
       <thead >
         <tr>
@@ -34,8 +68,10 @@
             foreach($subProjects as $subProject) {
                 $showSub .= '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
             }
+            $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject" title="Add new subproject"><span class="glyphicon glyphicon-plus" ></span></a></li>';
             $showSub .= '</ul>';
-            
+
+
             if ($project['done'] == 0) {
                 $days = $project['workEnd'] - mktime();
                 $days = round(($days / 60 / 60 / 24),2);
@@ -69,6 +105,10 @@
 ?>
         </tbody>
 </table>
+
+<?php 
+        echo $pure->modalHtml('AddNewSubProject','Add new subproject:','sub sub');
+?>
         <p align="left">Створюю новий проект і всю інформацію про нього зберігаю туди, включаючи те, 
         що вводить користувач, посилання на відео конференції з клієнтом і телефонні розмови.</p>
         <?php 
