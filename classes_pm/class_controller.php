@@ -34,7 +34,8 @@
                     'add_new_body_style' => 'addNewBodyStyle',
                     'add_new_class_style' => 'addNewClassStyle',
                     'change_parent' => 'changeParent',
-                    'current_tree_copy' => 'currentTreeCopy'
+                    'current_tree_copy' => 'currentTreeCopy',
+                    'generate_pdo' => 'generatePDO'
                 );
                 
                 // check method:
@@ -778,9 +779,14 @@
             exit();
         }
       
+        public function generatePDO($post) 
+        {
+            include 'view/generator.php';
+            exit();
+        }
+      
     } // class pure end
     
     require 'class_cron.php';
     require 'classes_pm/class_beautifyDom.php';
-    
     

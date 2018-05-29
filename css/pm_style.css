@@ -115,3 +115,6 @@ ul.tree, ul.tree ul {
       display:inline-block;
       left:-7px;
    }
+   
+.col-lg-8 { text-align: left;}
+.col-lg-12 { text-align: left;}
