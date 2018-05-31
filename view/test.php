@@ -18,7 +18,37 @@
             )
         );
     
-        echo json_encode($style);
+        $form = array(
+            'method' => 'POST',
+            'action' => '',
+            'autocomplete' => 'off',
+            'elements' => array(
+                0 => array(
+                    'text' => array(
+                        'name' => 'name1',
+                        'value' => 'value1',
+                        'placeholder' => 'place1',
+                        'class' => 'textarea'
+                    )
+                ),
+                1 => array(
+                    'text' => array(
+                        'name' => 'name1',
+                        'value' => 'value1',
+                        'placeholder' => 'place1',
+                        'class' => 'textarea'
+                    )
+                ),
+                2 => array(
+                    'hidden' => array(
+                        'name' => 'hihi',
+                        'value' => 'vava'
+                    )
+                ),
+            )
+        );
+    
+        echo json_encode($form);
         
     /*
         Копіювання блоку і його вмісту:

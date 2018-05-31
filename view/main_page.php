@@ -11,6 +11,9 @@
         <p>Суть проекту в тому, щоб створити базу для накопичення хороших візуальних даних.</p>
     </div>
 	<div class="col-lg-4">
-    
+    <p>TODO:</p>
+    <ol>
+        <li>json,html,php beautofier</li>
+    </ol>
     </div>
 </div>

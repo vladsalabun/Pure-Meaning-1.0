@@ -35,7 +35,8 @@
                     'add_new_class_style' => 'addNewClassStyle',
                     'change_parent' => 'changeParent',
                     'current_tree_copy' => 'currentTreeCopy',
-                    'generate_pdo' => 'generatePDO'
+                    'generate_pdo' => 'generatePDO',
+                    'add_new_form' => 'addNewForm'
                 );
                 
                 // check method:
@@ -784,9 +785,52 @@
             include 'view/generator.php';
             exit();
         }
+
+        public function getForms() 
+        {
+            return $this->model->getForms();
+        } 
+        
+        public function getFormById($formId) 
+        {
+            return $this->model->getFormById($formId);
+        }
+        
+        public function addNewForm($post) 
+        {
+            //var_dump($post);
+            
+            $form = array(
+            'method' => $post['method'],
+            'action' => $post['action'],
+            'autocomplete' => $post['autocomplete']);
+            
+            $elements = array();
+
+            for ($i = 0; $i < $post['element_count']; $i++ ) {
+                
+                $elements[] = array(
+                    $post['type'.$i] => array(
+                        'name' => $post['name'.$i],
+                        'value' => $post['value'.$i],
+                        'placeholder' => $post['placeholder'.$i],
+                        'class' => $post['class'.$i]
+                    )
+                );
+            }
+            
+            $form['elements'] = $elements;
+            
+            $this->model->addNewForm($post['projectId'],json_encode($form));
+
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
+            header ("Location: $redirect_to");
+            exit();
+        }
       
     } // class pure end
     
     require 'class_cron.php';
     require 'classes_pm/class_beautifyDom.php';
+    require 'classes_pm/class_form.php';
     

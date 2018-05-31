@@ -255,4 +255,27 @@
             $stmt->execute();
         }
         
+        public function getFormById($formId)
+        {
+            $sql = "SELECT * FROM pm_forms WHERE ID = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($formId));
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+        }
+        
+        public function getForms() 
+        {
+            $sql = "SELECT * FROM pm_forms ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($formId));
+            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+        
+        public function addNewForm($projectId,$formJson) 
+        {
+            $sql = "INSERT INTO pm_forms (projectID,formJson) VALUES (?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($projectId,$formJson));    
+        }
+        
     } // <- end of class model 

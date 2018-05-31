@@ -1,6 +1,7 @@
 <div class="row">
 	<div class="col-lg-12">
     <a href="<?php echo configuration::MAIN_URL?>?page=pdo_query">Генератор запросов PDO</a><br>
+    <a href="<?php echo configuration::MAIN_URL?>?page=form_generator">Генератор форм</a><br>
     <h4>Notepad++ shortkeys:</h4>
     
     F11 - на весь экран<br>

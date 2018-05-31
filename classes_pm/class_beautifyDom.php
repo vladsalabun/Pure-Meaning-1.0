@@ -10,7 +10,7 @@
          * @param string $tagsWithoutIndentation Comma-separated list of HTML tags that should not be indented (default = html,link,img,meta)
          * @return string Re-indented HTML.
          */
-        public static function format($html, $indentWith = '    ', $tagsWithoutIndentation = 'html,link,img,meta')
+        public static function format($html, $indentWith = '    ', $tagsWithoutIndentation = 'html,link,img,meta,input,br')
         {
             // replace newlines (CRLF and LF), followed by a non-whitespace character, with a space
             $html = preg_replace('/\\r?\\n([^\s])/', ' $1', $html);

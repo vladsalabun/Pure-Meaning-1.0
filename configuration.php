@@ -21,7 +21,9 @@
             'fonts' => 'Fonts',
             'backgrounds' => 'Backgrounds',
             'colors' => 'Colors',
-            'objections' => 'Objections',
+            //'objections' => 'Objections',
+            'forms' => 'Forms',
+            'tables' => 'Tables',
             'test' => 'Test',
             'helper' => '<span class="glyphicon glyphicon-question-sign" title="Help"></span>',
         );
@@ -41,6 +43,8 @@
             'edit_element' => array('Редактор елемента','projects'),
             'classes_editor' => array('Редактор класов','projects'),
             'pdo_query' => array('Генератор запросов PDO',''),
+            'form_generator' => array('Генератор форм',''),
+            'new_form' => array('Создать новую форму',''),
         );        
                 
         // All tables:
@@ -145,7 +149,16 @@
                 "priority" => "INT( 11 ) DEFAULT '0'",
                 "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
                 // TODO: add my comment to favourite elements
-            ),            
+            ),
+
+            // Creating forms:
+            "pm_forms" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "projectID" => "INT( 11 ) DEFAULT '0'",
+                "formJson" => "TEXT NULL",
+                "info" => "TEXT NULL", // form description
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),             
 
             
         );
@@ -183,6 +196,64 @@
             'color'  => '#',
             'background'  => '#'
         );
+        
+        const FORM = array(
+            'action' => null,
+            'autocomplete' => 'off',
+            'method' => array(
+                'get',
+                'post'
+            ),
+            'type' => array(
+                'hidden' => array(
+                    'name' => '',
+                    'value' => ''
+                ),
+                'text' => array(
+                    'name' => '',
+                    'value' => '',
+                    'placeholder' => '',
+                    'class' => ''
+                ),
+                'textarea' => array(
+                    'name' => '',
+                    'value' => '',
+                    'placeholder' => '',
+                    'class' => ''
+                ),
+                'number' => array(
+                    'name' => '',
+                    'value' => '',
+                    'placeholder' => '',
+                    'class' => ''
+                ),
+                'select' => array(
+                    'name' => '',
+                    'value' => '',
+                    'class' => ''
+                ),
+                'radio' => array(
+                    'name' => '',
+                    'value' => ''
+                ),
+                'checkbox' => array(
+                    'name' => '',
+                    'value' => ''
+                ),
+                'date' => array(
+                    'name' => ''
+                ),
+                'file' => array(
+                    'name' => ''
+                ),
+                'submit' => array(
+                    'name' => '',
+                    'value' => '',
+                    'class' => ''
+                )
+            )
+        );
+        
         
          const FISH = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat fermentum augue a accumsan. Ut est sapien, malesuada eget convallis eu, mattis nec eros. Suspendisse suscipit vehicula augue, nec commodo mi interdum ac. Etiam id sem venenatis, hendrerit purus eu, auctor metus. Quisque lacinia nisi eu pellentesque pharetra. Phasellus malesuada id sapien ut sagittis. Nam eget dui nec dui tristique commodo at vitae nibh. In imperdiet odio ut lorem aliquam varius. Aenean facilisis tempus dui, et posuere sapien vulputate faucibus. Integer pharetra leo non leo aliquet, vitae ullamcorper dui rutrum. Duis vestibulum facilisis rhoncus. Nam ligula nunc, sagittis sed purus in, tincidunt finibus magna. Vivamus laoreet massa eu rhoncus tempus. Quisque tincidunt hendrerit metus sed vehicula. Sed iaculis mauris nec nunc suscipit hendrerit. Cras at scelerisque tellus, ut dignissim lorem.
 
