@@ -39,7 +39,8 @@
                     'add_new_form' => 'addNewForm',
                     'delete_form' => 'deleteForm',
                     'fav_form' => 'favForm',
-                    'add_new_color' => 'addNewColor'
+                    'add_new_color' => 'addNewColor',
+                    'add_new_font' => 'addNewFont'
                 );
                 
                 // check method:
@@ -860,6 +861,37 @@
         public function getAllColors()
         {
             return $this->model->getAllColors();
+        }
+        
+        public function addNewFont($post) 
+        {
+            $fileName = $_FILES['file']['name'];
+            // check extension: 
+            $fileType = substr($fileName,-3);
+            // if ext is allowed:
+            if (in_array($fileType,configuration::FONTS_TYPES)){
+                if ($_FILES['file']['tmp_name'] != '') {
+                    // convert cyrillic:
+                    $uploadfile = configuration::FONTS_DIR . basename(iconv("UTF-8", "windows-1251",$fileName));
+                    if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+                        // TODO: save info to db
+                        $this->model->addNewFont($fileName,$fileType);
+                    } 
+                }
+            }
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function getAllFonts() 
+        {
+            return $this->model->getAllFonts();
+        }
+        
+        public function getFont($fontId)
+        {
+            return $this->model->getFont($fontId);
         }
       
     } // class pure end

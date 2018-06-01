@@ -10,6 +10,8 @@
         const MAIN_URL = 'http://test1.ru/drive/pure_meaning/';
         const REINSTALL = 0; // set 1 to create database, set 2 to wipe database
         
+        const FONTS_DIR = 'uploads/fonts/';
+        const FONTS_TYPES = array('ttf','otf','woff','woff2');
         /*  
             For each key you need to create *.php file in folder /view
             These pages will be displayed in the main menu:
@@ -45,6 +47,7 @@
             'pdo_query' => array('Генератор запросов PDO',''),
             'form_generator' => array('Генератор форм',''),
             'new_form' => array('Создать новую форму',''),
+            'font' => array('Шрифт',''),
         );        
                 
         // All tables:
@@ -107,10 +110,10 @@
             // Creating font table:
             "pm_fonts" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
-                "fontFamily" => "VARCHAR( 100 ) NOT NULL", // Arial
-                "fontStyle" => "VARCHAR( 20 ) NOT NULL", // normal, italic, oblique
-                "fontVariant" => "VARCHAR( 20 ) NOT NULL", // smallerCase, upperCase
-                "fontWeight" => "VARCHAR( 20 ) NOT NULL", // normal, bold, what else?
+                "fontFamily" => "VARCHAR( 100 ) DEFAULT NULL", // Arial
+                "fontStyle" => "VARCHAR( 20 ) DEFAULT NULL", // normal, italic, oblique
+                "fontVariant" => "VARCHAR( 20 ) DEFAULT NULL", // smallerCase, upperCase
+                "fontWeight" => "VARCHAR( 20 ) DEFAULT NULL", // normal, bold, what else?
                 "cyryllic" => "INT( 1 ) DEFAULT NULL",
                 "latin" => "INT( 1 ) DEFAULT NULL",
                 "fileName" => "VARCHAR( 100 ) NOT NULL", // Arial.ttf

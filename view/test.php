@@ -60,7 +60,13 @@
   
     */
     
-    
+    $model = new model;
+    echo $model->insert('table',
+            array(
+            'pm_elem' => 'val1',
+            'pm_color' => 'val2'
+            )
+        );
     
     ?>
     </div>

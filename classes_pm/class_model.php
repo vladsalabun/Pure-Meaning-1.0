@@ -306,5 +306,43 @@
             return $stmt->fetchALL(PDO::FETCH_ASSOC); 
         }
         
+        public function addNewFont($fileName,$fileType)
+        {
+            $sql = "INSERT INTO pm_fonts (fileName,fileType) VALUES (?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($fileName,$fileType));
+        }
+        
+        public function getAllFonts()
+        {
+            $sql = "SELECT * FROM pm_fonts WHERE moderation < 3 ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array());
+            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+        
+        public function getFont($fontId)
+        {
+            $sql = "SELECT * FROM pm_fonts WHERE moderation < 3 AND ID = ?";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($fontId));
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+        }
+        
+        /*
+        public function insert($table,$values) 
+        {
+            foreach ($values as $columnName => $columnValue) {
+                $columnArray[] = $columnName;
+                $valueArray[] = $columnValue;
+                $questionMark[] = '?';
+            }
+            
+            $sql = "INSERT INTO $table (".implode($columnArray,',').") VALUES (".implode($questionMark,',').")";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($valueArray));
+        }
+        */
+        
         
     } // <- end of class model 
