@@ -1,4 +1,8 @@
 <?php 
+    $form = new formGenerator;    
+    $table = new tableGenerator;    
+?>
+<?php 
     
     if (isset($_GET['font_family'])) {
         $fontFamily = $_GET['font_family'];
@@ -38,13 +42,11 @@
 ?>
 <div class="row">
 	<div class="col-lg-8">
-    <p>На цій сторінці модерація шрифтів. Я закидую шрифти у папку uploads/fonts. Тут дивлюсь що з них вийшло, і видаляю, або додаю у базу даних. Тоді файл переноситься у спеціальну папку.</p>
-    <p align="left">В чому суть шрифтів?
+    <p align="left">Суть шрифтів:
     <ol align="left">
     <li>Щоб на ньому текст був читабельним</li>
     <li>Щоб виділити важливу інформацію</li>
     <li>Щоб оку приємно було читати</li>
-    <li>Що ще?</li>
     </ol>
     
     <style>
@@ -75,16 +77,51 @@
     
     </div>
 	<div class="col-lg-4">
+    <h4>Add new font:</h4>
+<?php
+ echo 
+     $form->formStart()
+    .$table->tableStart(array('class'=>'table table-striped','th'=> array('#','#')))
+    .$form->hidden(array('name' => 'action','value' => 'add_new_font'))
+    .$table->tr(
+            array(
+                'color',
+                $form->text(array('name' => 'color','placeholder' => '#000'))
+            )
+        )
+    .$table->tr(
+            array(
+                'Тон',
+                $form->text(array('name' => 'ton'))
+            )
+        )        
+    .$table->tr(
+            array(
+                'Асоциации:',
+                $form->text(array('name' => 'assoc',))
+            )
+        )
+    .$table->tr(
+            array(
+                'Категория:',
+                $form->text(array('name' => 'category',))
+            )
+        )
+     .$table->tr(
+            array(
+                '',
+                $form->submit(array('name' => 'submit','value' => 'Add font','class' => 'submit_btn'))
+            )
+        )
+       
+    .$table->tableEnd()
+    .$form->formEnd();
+    
+?>
     <ol align="left">
-        <li>Шрифти завантажуй по 1. Інакше не вийде. Загрузим, побачив превю, і якщо все ок - додав опис і зберіг.</li>
-        <li>Зберігай усі добре згенеровані дизайни у базу</li>
-        <li>Історія змін</li>
-        <li>Можна генерувати повністю всі CSS стилі, і називати їх нормально: "Ширина, фон, шрифт"</li>
-        <li>Попередній перегляд згенерованого коду</li>
-        <li>Чи можливо генерувати окремо хедер, окремо футер, окремо боді, окремо різні сторінки? А потім зберегти у відповідні файли</li>
-        <li>Правила веб-типографіки можна вивчити по вікіпедії і книжкам</li>
+        <li>Шрифти завантажуй по 1.</li>
+        <li>Веб-типографіку книжкам</li>
         <li>Багато шрифтів не треба. Штук 20 вистачить, бо їх можна комбінувати. Головне, щоб якісні були.</li>
-        
     </ol>
     
     </div>

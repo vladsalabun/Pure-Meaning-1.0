@@ -8,9 +8,12 @@
 
     // get form from database:
     $formId = $pure->getFormById($_GET['formID']);
+    
     if ($formId != null) {
         // convert params to array:
         $formArray = json_decode($formId['formJson'], true);
+        
+        // TODO: show error if form elements have same names
 
         $formHtml = null;
         // make form code:

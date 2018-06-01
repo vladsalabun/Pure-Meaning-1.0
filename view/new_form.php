@@ -13,6 +13,7 @@
     <input type="hidden" name="action" value="add_new_form">
     <input type="hidden" name="element_count" value="<?php echo $_GET['elements']; ?>">
     <input type="hidden" name="method" value="<?php echo $_GET['method']; ?>">
+    <input type="hidden" name="form_action" value="<?php echo $_GET['form_action']; ?>">
     <input type="hidden" name="autocomplete" value="<?php echo $_GET['autocomplete']; ?>">
     <input type="hidden" name="projectId" value="<?php echo $_GET['projectId']; ?>">
     <table class="table table-striped">

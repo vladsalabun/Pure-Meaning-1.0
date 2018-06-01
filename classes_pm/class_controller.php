@@ -36,7 +36,10 @@
                     'change_parent' => 'changeParent',
                     'current_tree_copy' => 'currentTreeCopy',
                     'generate_pdo' => 'generatePDO',
-                    'add_new_form' => 'addNewForm'
+                    'add_new_form' => 'addNewForm',
+                    'delete_form' => 'deleteForm',
+                    'fav_form' => 'favForm',
+                    'add_new_color' => 'addNewColor'
                 );
                 
                 // check method:
@@ -802,7 +805,7 @@
             
             $form = array(
             'method' => $post['method'],
-            'action' => $post['action'],
+            'action' => $post['form_action'],
             'autocomplete' => $post['autocomplete']);
             
             $elements = array();
@@ -827,10 +830,42 @@
             header ("Location: $redirect_to");
             exit();
         }
+        
+        public function deleteForm($post)
+        {
+            $this->model->deleteForm($post['formId']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function favForm($post)
+        {
+            $this->model->favForm($post['formId']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function addNewColor($post)
+        {
+            if (strlen($post['color']) > 0) {
+                $this->model->addNewColor($post['color']);
+            }
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=colors';
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function getAllColors()
+        {
+            return $this->model->getAllColors();
+        }
       
     } // class pure end
     
     require 'class_cron.php';
     require 'classes_pm/class_beautifyDom.php';
     require 'classes_pm/class_form.php';
+    require 'classes_pm/class_table.php';
     

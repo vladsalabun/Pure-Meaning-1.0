@@ -265,7 +265,7 @@
         
         public function getForms() 
         {
-            $sql = "SELECT * FROM pm_forms ORDER BY ID desc";
+            $sql = "SELECT * FROM pm_forms WHERE moderation < 3 ORDER BY ID desc";
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($formId));
             return $stmt->fetchALL(PDO::FETCH_ASSOC); 
@@ -277,5 +277,34 @@
             $stmt = $this->conn->prepare($sql);
             $stmt->execute(array($projectId,$formJson));    
         }
+        
+        public function deleteForm($formId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_forms SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $formId);
+            $stmt->execute();
+        }
+        
+        public function favForm($formId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_forms SET moderation = 1 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $formId);
+            $stmt->execute();
+        }    
+
+        public function addNewColor($color) 
+        {
+            $sql = "INSERT INTO pm_colors (color) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($color));  
+        }
+        public function getAllColors() 
+        {
+            $sql = "SELECT * FROM pm_colors WHERE moderation < 3 ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array());
+            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+        
         
     } // <- end of class model 

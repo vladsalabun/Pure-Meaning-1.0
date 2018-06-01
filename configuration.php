@@ -19,11 +19,11 @@
         const ALL_PAGES = array (
             'projects' => 'Projects',
             'fonts' => 'Fonts',
-            'backgrounds' => 'Backgrounds',
+            //'backgrounds' => 'Backgrounds',
             'colors' => 'Colors',
-            //'objections' => 'Objections',
-            'forms' => 'Forms',
-            'tables' => 'Tables',
+            'objections' => 'Objections',
+            //'forms' => 'Forms',
+            //'tables' => 'Tables',
             'test' => 'Test',
             'helper' => '<span class="glyphicon glyphicon-question-sign" title="Help"></span>',
         );

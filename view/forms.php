@@ -9,7 +9,7 @@
         <td>method:</td><td><select name="method"><option selected value="post">POST</option><option value="get">GET</option></select></td>
     </tr>
     <tr>
-        <td>action:</td><td><input type="text" name="action" value=""></td>
+        <td>action:</td><td><input type="text" name="form_action" value=""></td>
     </tr>
     <tr>
         <td>autocomplete:</td><td><select name="autocomplete"><option selected value="off">off</option><option value="on">on</option></select></td>
@@ -31,10 +31,13 @@
     <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">Form ID:</th>
+            <th scope="col">ID:</th>
+            <th scope="col">Fav:</th>
             <th scope="col">ProjectID:</th>
             <th scope="col">Form info:</th>
-            <th scope="col">Actions:</th>
+            <th scope="col">Edit:</th>
+            <th scope="col">Fav:</th>
+            <th scope="col">Delete:</th>
         </tr>
     </thead>
     <tbody>
@@ -42,12 +45,37 @@
     // show form list, desc
     $formsArray = $pure->getForms();
     foreach ($formsArray as $n => $form) {
+        
+        // TODO: show favourive forms, moderation = 1
 ?>
     <tr>
-        <td><?php echo $form['ID']?></td>
-        <td><a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $form['projectID']?>"><?php echo $form['projectID']?></a></td>
-        <td><a href="<?php echo configuration::MAIN_URL;?>?page=form_generator&formID=<?php echo $form['ID']?>"><?php if ($form['info'] != null) { echo $form['info']; } else { echo 'no description';}?></a></td>
-        <td>Edit / Favourite / Delete</td>
+        <td>
+            <?php echo $form['ID']?>
+        </td>
+        <td>
+            <?php if ($form['moderation'] == 1) { echo '<span class="glyphicon glyphicon-heart"></span>';}?>
+        </td>
+        <td>
+            <a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $form['projectID']?>"><?php echo $form['projectID']?></a>
+        </td>
+        <td>
+        <a href="<?php echo configuration::MAIN_URL;?>?page=form_generator&formID=<?php echo $form['ID']?>"><?php if ($form['info'] != null) { echo $form['info']; } else { echo 'no description';}?></a>
+        </td>
+        <td>Edit</td>
+        <td>
+        <form method="post" action="" autocomplete="off">
+            <input type="hidden" name="action" value="fav_form">
+            <input type="hidden" name="formId" value="<?php echo $form['ID']?>">
+            <input type="submit" name="submit" value="Fav">
+        </form>
+        </td>
+        <td>
+        <form method="post" action="" autocomplete="off">
+            <input type="hidden" name="action" value="delete_form">
+            <input type="hidden" name="formId" value="<?php echo $form['ID']?>">
+            <input type="submit" name="submit" value="Delete">
+        </form>
+        </td>
     </tr>
 <?php
     }
