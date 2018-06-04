@@ -329,6 +329,44 @@
             return $stmt->fetch(PDO::FETCH_ASSOC); 
         }
         
+        public function makeFontFavourite($fontID,$myFavourite)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_fonts SET myFavourite = :myFavourite WHERE ID = :ID");
+            $stmt->bindParam(':myFavourite', $myFavourite);
+            $stmt->bindParam(':ID', $fontID);
+            $stmt->execute();
+        }
+        
+        public function cyrillicFont($fontID,$cyrillic)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_fonts SET cyrillic = :cyrillic WHERE ID = :ID");
+            $stmt->bindParam(':cyrillic', $cyrillic);
+            $stmt->bindParam(':ID', $fontID);
+            $stmt->execute();
+        }
+
+        public function latinFont($fontID,$latin)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_fonts SET latin = :latin WHERE ID = :ID");
+            $stmt->bindParam(':latin', $latin);
+            $stmt->bindParam(':ID', $fontID);
+            $stmt->execute();
+        } 
+
+        public function deleteFont($fontID)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_fonts SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $fontID);
+            $stmt->execute();
+        }  
+        
+        public function deleteColor($colorID)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_colors SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $colorID);
+            $stmt->execute();
+        }
+        
         /*
         public function insert($table,$values) 
         {

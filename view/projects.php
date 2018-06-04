@@ -2,37 +2,71 @@
 	<div class="col-lg-12" align="left">
     <a href="" data-toggle="modal" data-target="#AddNewProject" title="Add new project"><span class="glyphicon glyphicon-plus" ></span> Add new project</a>
 <?php 
-    $formBody = '
-    <form method="POST" action="" autocomplete="OFF">
-        <input type="hidden" name="action" value="add_new_project">
-        <table class="table table-striped">
-      <thead >
-        <tr>
-          <th scope="col">Question:</th>
-          <th scope="col">Answer:</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr><td>Title:</td><td><input type="text" name="title" value="" class="txtfield"></td></tr>
-        <tr><td>Customer:</td><td><input type="text" name="customer" value="" class="txtfield"></td></tr>
-        <tr><td>Skype:</td><td><input type="text" name="skype" value="" class="txtfield"></td></tr>
-        <tr><td>Phone1:</td><td><input type="text" name="phone1" value="" class="txtfield"></td></tr>
-        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
-        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
-        <tr><td>Phone2:</td><td><input type="text" name="phone2" value="" class="txtfield"></td></tr>
-        <tr><td>e-mail 1:</td><td><input type="text" name="email1" value="" class="txtfield"></td></tr>
-        <tr><td>e-mail 2:</td><td><input type="text" name="email2" value="" class="txtfield"></td></tr>
-        <tr><td>VK:</td><td><input type="text" name="vk" value="" class="txtfield"></td></tr>
-        <tr><td>FB:</td><td><input type="text" name="fb" value="" class="txtfield"></td></tr>
-        <tr>
-        <td>Price:</td><td><input type="text" name="price" value="" class="txtfield"></td>
-        </tr>
-        </tbody>
-        </table>
-        <p><input type="submit" name="submit" value="Add new project" class="submit_btn"></p>
-        </form>';
+
+    $form = new formGenerator;    
+    $table = new tableGenerator; 
+    
+    # form for adding new project:
+    $formBody .= $form->formStart();
+    $formBody .= $form->hidden(array('name' => 'action','value' => 'add_new_project'));
+    
+    $formBody .= $table->tableStart( 
+        array(
+            'class'=>'table table-striped',
+            'th'=> array('Question:','Answer:')
+        )
+    );
+    
+    // fields set:
+    $fields = array('title','customer','skype','phone1','phone2','phone3','email1','email2','vk','fb','price');
+    
+    foreach ($fields as $field) {
+    $formBody .= $table->tr(
+            array(
+                $field.':',
+                $form->text(array('name' => $field,'class' => 'txtfield'))
+            )
+        ); 
+    }
+    
+    // currency
+    $formBody .= $table->tr(
+            array(
+                'currency:',
+                $form->select(
+                    array(
+                        'name' => 'currency', 
+                        'value' => array(
+                            0 => 'usd',
+                            1 => 'rub',
+                            2 => 'uah'
+                        ) 
+                    )
+                )
+            )
+        ); 
+    // workBegin
+    $formBody .= $table->tr(
+            array(
+                'workBegin:',
+                $form->datetime(array('name' => 'workBegin','value' => date('Y-m-d').'T'.date('H:i:s')))
+            )
+        ); 
+    // workEnd
+    $formBody .= $table->tr(
+            array(
+                'workEnd:',
+                $form->datetime(array('name' => 'workEnd','value' => date('Y-m-d').'T'.date('H:i:s')))
+            )
+        );     
+    
+    $formBody .= $table->tableEnd(); 
+    $formBody .= $form->submit(array('value' => 'Add new project','class' => 'submit_btn'));
+    $formBody .= $form->formEnd();
 
     echo $pure->modalHtml('AddNewProject','Add new project:',$formBody);
+    # <- /form for adding new project
+    
 ?>
     <table class="table table-striped">
       <thead >

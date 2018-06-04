@@ -114,7 +114,7 @@
                 "fontStyle" => "VARCHAR( 20 ) DEFAULT NULL", // normal, italic, oblique
                 "fontVariant" => "VARCHAR( 20 ) DEFAULT NULL", // smallerCase, upperCase
                 "fontWeight" => "VARCHAR( 20 ) DEFAULT NULL", // normal, bold, what else?
-                "cyryllic" => "INT( 1 ) DEFAULT NULL",
+                "cyrillic" => "INT( 1 ) DEFAULT NULL",
                 "latin" => "INT( 1 ) DEFAULT NULL",
                 "fileName" => "VARCHAR( 100 ) NOT NULL", // Arial.ttf
                 "fileType" => "VARCHAR( 5 ) NOT NULL", // ttf

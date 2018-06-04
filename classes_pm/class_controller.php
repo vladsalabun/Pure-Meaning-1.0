@@ -40,7 +40,13 @@
                     'delete_form' => 'deleteForm',
                     'fav_form' => 'favForm',
                     'add_new_color' => 'addNewColor',
-                    'add_new_font' => 'addNewFont'
+                    'delete_color' => 'deleteColor',
+                    'add_new_font' => 'addNewFont',
+                    'make_font_favourite' => 'makeFontFavourite',
+                    'cyrillic_font' => 'cyrillicFont',
+                    'latin_font' => 'latinFont',
+                    'delete_font' => 'deleteFont',
+                    'add_new_project' => 'addNewProject'
                 );
                 
                 // check method:
@@ -865,6 +871,7 @@
         
         public function addNewFont($post) 
         {
+            
             $fileName = $_FILES['file']['name'];
             // check extension: 
             $fileType = substr($fileName,-3);
@@ -893,6 +900,53 @@
         {
             return $this->model->getFont($fontId);
         }
+        
+        public function makeFontFavourite($post)
+        {
+            $this->model->makeFontFavourite($post['fontID'],$post['myFavourite']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function cyrillicFont($post)
+        {
+            $this->model->cyrillicFont($post['fontID'],$post['cyrillic']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
+            header ("Location: $redirect_to");
+            exit();
+        }
+        public function latinFont($post)
+        {
+            $this->model->latinFont($post['fontID'],$post['latin']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
+            header ("Location: $redirect_to");
+            exit();
+        } 
+
+        public function deleteFont($post) 
+        {
+            $this->model->deleteFont($post['fontID']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
+            header ("Location: $redirect_to");
+            exit();
+        }   
+
+        public function deleteColor($post)   
+        {
+            $this->model->deleteColor($post['colorID']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=colors';
+            header ("Location: $redirect_to");
+            exit();           
+        }  
+
+        public function addNewProject($post)  
+        {
+            //echo $post['currency'][0].'---';
+            var_dump($post);
+            exit();
+        }        
+        
       
     } // class pure end
     
