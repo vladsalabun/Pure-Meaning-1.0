@@ -16,7 +16,9 @@
     foreach ($htmlTree AS $singleElement) {
         $branchArray[] = $singleElement['ID'];
     }
-    asort($branchArray);
+    if (is_array($branchArray)){
+        asort($branchArray);
+    }
     
     if (count($htmlTree) > 0 ) {
 ?> 

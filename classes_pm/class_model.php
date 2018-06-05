@@ -367,6 +367,20 @@
             $stmt->execute();
         }
         
+        public function addNewProject($title, $customer, $skype, $phone1, $phone2, $phone3, $email1, $email2, $vk, $fb, $price, $currency, $workBegin, $workEnd)
+        {
+            $sql = "INSERT INTO pm_projects (title, customer, skype, phone1, phone2, phone3, email1, email2, vk, fb, price, currency, workBegin, workEnd) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($title, $customer, $skype, $phone1, $phone2, $phone3, $email1, $email2, $vk, $fb, $price, $currency, $workBegin, $workEnd));
+        }
+        
+        public function addNewSubproject($title, $parentId)
+        {
+            $sql = "INSERT INTO pm_projects (title, parentId) VALUES (?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($title, $parentId));
+        }
+        
         /*
         public function insert($table,$values) 
         {

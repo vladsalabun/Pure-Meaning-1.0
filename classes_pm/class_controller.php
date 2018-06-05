@@ -46,7 +46,8 @@
                     'cyrillic_font' => 'cyrillicFont',
                     'latin_font' => 'latinFont',
                     'delete_font' => 'deleteFont',
-                    'add_new_project' => 'addNewProject'
+                    'add_new_project' => 'addNewProject',
+                    'add_new_subproject' => 'addNewSubproject'
                 );
                 
                 // check method:
@@ -942,8 +943,32 @@
 
         public function addNewProject($post)  
         {
-            //echo $post['currency'][0].'---';
-            var_dump($post);
+            $this->model->addNewProject(
+                $post['title'],
+                $post['customer'],
+                $post['skype'],
+                $post['phone1'],
+                $post['phone2'],
+                $post['phone3'],
+                $post['email1'],
+                $post['email2'],
+                $post['vk'],
+                $post['fb'],
+                $post['price'],
+                $post['currency'][0],
+                strtotime($post['workBegin']),
+                strtotime($post['workEnd'])
+            );
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
+            header ("Location: $redirect_to");
+            exit();
+        } 
+
+        public function addNewSubproject($post)
+        {
+            $this->model->addNewSubproject($post['title'],$post['projectId']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
+            header ("Location: $redirect_to");
             exit();
         }        
         

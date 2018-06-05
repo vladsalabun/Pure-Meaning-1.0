@@ -67,81 +67,101 @@
     echo $pure->modalHtml('AddNewProject','Add new project:',$formBody);
     # <- /form for adding new project
     
-?>
-    <table class="table table-striped">
-      <thead >
-        <tr>
-          <th scope="col">ID:</th>
-          <th scope="col">Title:</th>
-          <th scope="col">Customer:</th>
-          <th scope="col">Skype:</th>
-          <th scope="col">Phones,emails:</th>
-          <th scope="col">VK / FB:</th>
-          <th scope="col">Price:</th>
-          <th scope="col">Start / End:</th>
-          <th scope="col">Day:</th>
-        </tr>
-        </thead>
-        <tbody>
-<?php 
-        $projects = $pure->getAllProjects();
+    echo $table->tableStart( array(
+                'class'=>'table table-striped',
+                'th'=> array('Title:','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
+                )
+            );
 
-        foreach($projects as $project) {
+            $projects = $pure->getAllProjects();
+
+    foreach($projects as $project) {
             
         //$project['done'] 
-            if ($project['currency'] == 0) {
-                $currency = '$';
-            } elseif ($project['currency'] == 1) {
-                $currency = '₽';
-            } elseif ($project['currency'] == 2) {
-                $currency = '₴';
-            } 
+        if ($project['currency'] == 0) {
+            $currency = '$';
+        } elseif ($project['currency'] == 1) {
+            $currency = '₽';
+        } elseif ($project['currency'] == 2) {
+            $currency = '₴';
+        } 
             
-            $subProjects = $pure->getAllSubProjects($project['ID']);
-            $showSub = '<ul>';
-            foreach($subProjects as $subProject) {
-                $showSub .= '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
-            }
-            $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject" title="Add new subproject"><span class="glyphicon glyphicon-plus" ></span></a></li>';
+        $subProjects = $pure->getAllSubProjects($project['ID']);
+        
+        // make subpages:
+        $showSub = '<ul class="tree">';
+        foreach($subProjects as $subProject) {
+            $showSub .= '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a> <a href="" data-toggle="modal" data-target="#Edit'.$subProject['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a></li>';
+            
+            $editSubModalBody = '';
+            $editSubModalBody .= $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'edit_subproject'))
+            . $form->hidden(array('name' => 'projectId','value' => $subProject['ID']))
+            . $form->text(array('name' => 'title','value' => $subProject['title'],'class' => 'txtfield'))
+            . '<br><br>'
+            . $form->submit(array('name' => 'submit','value' => 'Edit subproject','class' => 'submit_btn'))
+            . $form->formEnd();
+            
+            // edit subproject modal:
+            echo $pure->modalHtml(
+                'Edit'.$subProject['ID'],
+                'Edit '.$subProject['title'].':',
+                 $editSubModalBody
+                );            
+        }
+            $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject'.$project['ID'].'" title="Edt subproject"><span class="glyphicon glyphicon-plus" title="Add new subproject"></span></a></li>';
             $showSub .= '</ul>';
 
 
-            if ($project['done'] == 0) {
-                $days = $project['workEnd'] - mktime();
-                $days = round(($days / 60 / 60 / 24),2);
-                $hours = floor(($days - floor($days)) * 24);
-                $done = floor($days).' d. '.$hours.' h.';
-            } else if ($project['done'] == 1) {
-                $done = '<font color="green">Готово</font>';
-            }
-?>         
-                <tr>
-                <th scope="row"><?php echo $project['ID']; ?></th>
-                <td><a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $project['ID']; ?>"><?php echo $project['title']; ?></a><?php echo $showSub;?></td>
-                <td><?php echo $project['customer']; ?></td>
-                <td><?php echo $project['skype']; ?></td>
-                <td>
-                <?php echo strlen($project['phone1']) > 0 ? $project['phone1'].'<br>' : ''; ?>
-                <?php echo strlen($project['phone2']) > 0 ? $project['phone2'].'<br>' : ''; ?>
-                <?php echo strlen($project['phone3']) > 0 ? $project['phone3'].'<br>' : ''; ?>
-                <?php echo strlen($project['email1']) > 0 ? $project['email1'].'<br>' : ''; ?>
-                <?php echo strlen($project['email2']) > 0 ? $project['email2'].'<br>' : ''; ?>
-                </td>
-                <td><a href="<?php echo $project['vk']; ?>" target="_blank">vk</a> / 
-                <a href="<?php echo $project['fb']; ?>" target="_blank">fb</a></td>
-                <td><?php echo $project['price'].$currency; ?></td>
-                <td><?php echo date("Y-m-d", $project['workBegin']); ?><br>
-                <?php echo date("Y-m-d", $project['workEnd']); ?></td>
-                <td><?php echo $done; ?></td>
-                <tr>
-<?php
+        if ($project['done'] == 0) {
+            $days = $project['workEnd'] - mktime();
+            $days = round(($days / 60 / 60 / 24),2);
+            $hours = floor(($days - floor($days)) * 24);
+            $done = floor($days).' d. '.$hours.' h.';
+        } else if ($project['done'] == 1) {
+            $done = '<font color="green">Готово</font>';
         }
-?>
-        </tbody>
-</table>
-
-<?php 
-        echo $pure->modalHtml('AddNewSubProject','Add new subproject:','sub sub');
+        
+        if (strlen($project['phone1']) > 0) $phone1 = $project['phone1'].'<br>';
+        if (strlen($project['phone2']) > 0) $phone2 = $project['phone2'].'<br>';
+        if (strlen($project['phone3']) > 0) $phone3 = $project['phone3'].'<br>';
+        if (strlen($project['email1']) > 0) $email1 = $project['email1'].'<br>';
+        if (strlen($project['email2']) > 0) $email2 = $project['email2'].'<br>';
+        
+        // SHOW table:
+        echo $table->tr(
+             array(
+                    '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>'.$showSub,
+                    $project['customer'],
+                    $project['skype'],
+                    $phone1.$phone2.$phone3.$email1.$email2,
+                    '<a href="'.$project['vk'].'" target="_blank">vk</a> / <a href="'.$project['fb'].'" target="_blank">fb</a>',
+                    $project['price'].$currency,
+                    date("Y-m-d", $project['workBegin'].'<br>'.date("Y-m-d", $project['workEnd'])),
+                    $done
+                ) 
+            );
+ 
+            // add subproject modal:
+            $subprojectModalBody = '';
+            $subprojectModalBody .= $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'add_new_subproject'))
+            . $form->hidden(array('name' => 'projectId','value' => $project['ID']))
+            . $form->text(array('name' => 'title','class' => 'txtfield'))
+            . '<br><br>'
+            . $form->submit(array('name' => 'submit','value' => 'Add subproject','class' => 'submit_btn'))
+            . $form->formEnd();
+            
+            echo $pure->modalHtml(
+                'AddNewSubProject'.$project['ID'],
+                'Add subproject to project #'.$project['ID'].':',
+                $subprojectModalBody
+            );
+            
+        }
+        
+        echo $table->tableEnd();
+        
 ?>
         <p align="left">Створюю новий проект і всю інформацію про нього зберігаю туди, включаючи те, 
         що вводить користувач, посилання на відео конференції з клієнтом і телефонні розмови.</p>
@@ -190,11 +210,6 @@
         <p align="left">
         Сума до оплати: 10000 грн
         </p>
-        <h3>Сторінка на які клієнт буде записувати свої дані:</h3>
-    <p>Ця сторінка створеня для того, щоб полегшити нам з вами роботу. Відповідаючи на запитання не поспішайте. 
-    Якщо ви не знаєте як відповісти, або не хочете цього робити, то поставте відповідну галочку.
-    
-    </p>
     </div>
 </div>
 

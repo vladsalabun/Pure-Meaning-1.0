@@ -20,7 +20,8 @@ h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9
 .glyphicon-menu-down { color: #4d94ff; }
 .glyphicon-edit:hover { color: #0066ff; }
 .glyphicon-menu-down:hover { color: #0066ff; }
-
+.glyphicon-plus:hover { color: #0066ff; }
+.glyphicon-pencil:hover { color: #0066ff; }
 .glyphicon-ok-sign { color: #a4c73c; }
 .glyphicon-remove-sign { color: #ff7373; }
 .glyphicon-arrow-up:hover { color: #444193; }
