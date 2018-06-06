@@ -55,7 +55,7 @@
     {
         public function getAllProjects() 
         {
-            $sql = "SELECT * FROM pm_projects WHERE parentId = 0";
+            $sql = "SELECT * FROM pm_projects WHERE parentId = 0 AND moderation < 3 ORDER BY ID DESC";
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);           
@@ -63,7 +63,7 @@
 
         public function getAllSubProjects($parentId) 
         {
-            $sql = "SELECT * FROM pm_projects WHERE parentId = ?";
+            $sql = "SELECT * FROM pm_projects WHERE parentId = ? AND moderation < 3 ORDER BY ID DESC";
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($parentId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);           
@@ -379,6 +379,42 @@
             $sql = "INSERT INTO pm_projects (title, parentId) VALUES (?,?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute(array($title, $parentId));
+        }
+        
+        public function editSubproject($title, $projectId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_projects SET title = :title WHERE ID = :ID");
+            $stmt->bindParam(':ID', $projectId);
+            $stmt->bindParam(':title', $title);
+            $stmt->execute();      
+        }
+        
+        public function editProject($post)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_projects SET title = :title, customer = :customer, skype = :skype, phone1 = :phone1, phone2 = :phone2, phone3 = :phone3, email1 = :email1, email2 = :email2, vk = :vk, fb = :fb, price = :price, currency = :currency, workBegin = :workBegin, workEnd = :workEnd WHERE ID = :ID");
+            $stmt->bindParam(':title', $post['title']);
+            $stmt->bindParam(':customer', $post['customer']);
+            $stmt->bindParam(':skype', $post['skype']);
+            $stmt->bindParam(':phone1', $post['phone1']);
+            $stmt->bindParam(':phone2', $post['phone2']);
+            $stmt->bindParam(':phone3', $post['phone3']);
+            $stmt->bindParam(':email1', $post['email1']);
+            $stmt->bindParam(':email2', $post['email2']);
+            $stmt->bindParam(':vk', $post['vk']);
+            $stmt->bindParam(':fb', $post['fb']);
+            $stmt->bindParam(':price', $post['price']);
+            $stmt->bindParam(':currency', $post['currency'][0]);
+            $stmt->bindParam(':workBegin', strtotime($post['workBegin']));
+            $stmt->bindParam(':workEnd', strtotime($post['workEnd']));
+            $stmt->bindParam(':ID', $post['projectId']);
+            $stmt->execute();
+        }
+        
+        public function deleteProject($projectId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_projects SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $projectId);
+            $stmt->execute();
         }
         
         /*

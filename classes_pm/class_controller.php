@@ -47,7 +47,10 @@
                     'latin_font' => 'latinFont',
                     'delete_font' => 'deleteFont',
                     'add_new_project' => 'addNewProject',
-                    'add_new_subproject' => 'addNewSubproject'
+                    'edit_project' => 'editProject',
+                    'delete_project' => 'deleteProject',
+                    'add_new_subproject' => 'addNewSubproject',
+                    'edit_subproject' => 'editSubproject'
                 );
                 
                 // check method:
@@ -967,6 +970,30 @@
         public function addNewSubproject($post)
         {
             $this->model->addNewSubproject($post['title'],$post['projectId']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
+            header ("Location: $redirect_to");
+            exit();
+        }  
+
+        public function editSubproject($post)
+        {
+            $this->model->editSubproject($post['title'],$post['projectId']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
+            header ("Location: $redirect_to");
+            exit();
+        }  
+
+        public function editProject($post)
+        {
+            $this->model->editProject($post);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
+            header ("Location: $redirect_to");
+            exit();
+        } 
+
+        public function deleteProject($post)
+        {
+            $this->model->deleteProject($post['projectId']);
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
             header ("Location: $redirect_to");
             exit();

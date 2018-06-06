@@ -73,7 +73,7 @@
                 )
             );
 
-            $projects = $pure->getAllProjects();
+    $projects = $pure->getAllProjects();
 
     foreach($projects as $project) {
             
@@ -93,7 +93,16 @@
         foreach($subProjects as $subProject) {
             $showSub .= '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a> <a href="" data-toggle="modal" data-target="#Edit'.$subProject['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a></li>';
             
+            // edit subproject modal body:
+            $delSub = $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'delete_project'))
+            . $form->hidden(array('name' => 'projectId','value' => $subProject['ID']));
+            $delSub .= $form->submit(array('name' => 'submit','value' => 'Delete project','class' => 'submit_btn'));
+            $delSub .= $form->formEnd();
+
+            
             $editSubModalBody = '';
+
             $editSubModalBody .= $form->formStart()
             . $form->hidden(array('name' => 'action','value' => 'edit_subproject'))
             . $form->hidden(array('name' => 'projectId','value' => $subProject['ID']))
@@ -105,10 +114,11 @@
             // edit subproject modal:
             echo $pure->modalHtml(
                 'Edit'.$subProject['ID'],
-                'Edit '.$subProject['title'].':',
+                'Edit '.$subProject['title'].':'.$delSub,
                  $editSubModalBody
                 );            
         }
+            // add new subproject icon:
             $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject'.$project['ID'].'" title="Edt subproject"><span class="glyphicon glyphicon-plus" title="Add new subproject"></span></a></li>';
             $showSub .= '</ul>';
 
@@ -131,13 +141,15 @@
         // SHOW table:
         echo $table->tr(
              array(
-                    '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>'.$showSub,
+                    '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>
+                    <a href="" data-toggle="modal" data-target="#Edit'.$project['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
+                    '.$showSub,
                     $project['customer'],
                     $project['skype'],
                     $phone1.$phone2.$phone3.$email1.$email2,
                     '<a href="'.$project['vk'].'" target="_blank">vk</a> / <a href="'.$project['fb'].'" target="_blank">fb</a>',
                     $project['price'].$currency,
-                    date("Y-m-d", $project['workBegin'].'<br>'.date("Y-m-d", $project['workEnd'])),
+                    date("Y-m-d", $project['workBegin']).'<br>'.date("Y-m-d", $project['workEnd']),
                     $done
                 ) 
             );
@@ -161,6 +173,86 @@
         }
         
         echo $table->tableEnd();
+        
+        ###
+        // foreach again to show project modal:
+        foreach($projects as $project) {
+            // edit project modal body:        
+            $editModalBody = '';
+            
+            $delProject = $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'delete_project'))
+            . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
+            $delProject .= $form->submit(array('name' => 'submit','value' => 'Delete project','class' => 'submit_btn'));
+            $delProject .= $form->formEnd();
+            
+            
+            $editModalBody .= $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'edit_project'))
+            . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
+
+            $editModalBody .= $table->tableStart( 
+                    array(
+                        'class'=>'table table-striped',
+                        'th'=> array('Question:','Answer:')
+                    )
+                );
+  
+            // fields set:
+            $fields = array('title','customer','skype','phone1','phone2','phone3','email1','email2','vk','fb','price');
+            
+            foreach ($fields as $field) {
+            $editModalBody .= $table->tr(
+                    array(
+                        $field.':',
+                        $form->text(array('name' => $field,'value' => $project[$field],'class' => 'txtfield'))
+                    )
+                ); 
+            }
+            
+            // currency
+            $editModalBody .= $table->tr(
+                    array(
+                        'currency:',
+                        $form->select(
+                            array(
+                                'name' => 'currency', 
+                                'value' => array(
+                                    0 => 'usd',
+                                    1 => 'rub',
+                                    2 => 'uah'
+                                ) 
+                            )
+                        )
+                    )
+                ); 
+            // workBegin
+            $editModalBody .= $table->tr(
+                    array(
+                        'workBegin:',
+                        $form->datetime(array('name' => 'workBegin','value' => date('Y-m-d',$project['workBegin']).'T'.date('H:i:s',$project['workBegin'])))
+                    )
+                ); 
+            // workEnd
+            $editModalBody .= $table->tr(
+                    array(
+                        'workEnd:',
+                        $form->datetime(array('name' => 'workEnd','value' => date('Y-m-d',$project['workEnd']).'T'.date('H:i:s',$project['workEnd'])))
+                    )
+                );     
+           
+            $editModalBody .= $table->tableEnd(); 
+
+            $editModalBody .= $form->submit(array('name' => 'submit','value' => 'Edit project','class' => 'submit_btn'));
+            $editModalBody .= $form->formEnd();
+ 
+            // edit project modal:
+            echo $pure->modalHtml(
+                'Edit'.$project['ID'],
+                'Edit '.$project['title'].':'.$delProject,
+                 $editModalBody
+                );   
+        }
         
 ?>
         <p align="left">Створюю новий проект і всю інформацію про нього зберігаю туди, включаючи те, 
