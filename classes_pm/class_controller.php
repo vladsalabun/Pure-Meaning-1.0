@@ -43,6 +43,7 @@
                     'delete_color' => 'deleteColor',
                     'add_new_font' => 'addNewFont',
                     'make_font_favourite' => 'makeFontFavourite',
+                    'make_font_favourite2' => 'makeFontFavourite2',
                     'cyrillic_font' => 'cyrillicFont',
                     'latin_font' => 'latinFont',
                     'delete_font' => 'deleteFont',
@@ -50,7 +51,9 @@
                     'edit_project' => 'editProject',
                     'delete_project' => 'deleteProject',
                     'add_new_subproject' => 'addNewSubproject',
-                    'edit_subproject' => 'editSubproject'
+                    'edit_subproject' => 'editSubproject',
+                    'add_new_objection_theme' => 'addNewObjectionTheme',
+                    'delete_objection' => 'deleteObjection'
                 );
                 
                 // check method:
@@ -874,9 +877,9 @@
         }
         
         public function addNewFont($post) 
-        {
-            
-            $fileName = $_FILES['file']['name'];
+        {            
+            $fileName = str_replace(" ", "_", $_FILES['file']['name']);
+            $fontFamily = substr($_FILES['file']['name'],0,-4);
             // check extension: 
             $fileType = substr($fileName,-3);
             // if ext is allowed:
@@ -886,12 +889,13 @@
                     $uploadfile = configuration::FONTS_DIR . basename(iconv("UTF-8", "windows-1251",$fileName));
                     if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
                         // TODO: save info to db
-                        $this->model->addNewFont($fileName,$fileType);
+                        $this->model->addNewFont($fontFamily,$fileName,$fileType);
                     } 
                 }
             }
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
             header ("Location: $redirect_to");
+            
             exit();
         }
         
@@ -909,6 +913,14 @@
         {
             $this->model->makeFontFavourite($post['fontID'],$post['myFavourite']);
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        public function makeFontFavourite2($post)
+        {
+            $this->model->makeFontFavourite($post['fontID'],$post['myFavourite']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
             header ("Location: $redirect_to");
             exit();
         }
@@ -997,9 +1009,35 @@
             $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
             header ("Location: $redirect_to");
             exit();
-        }        
+        }  
         
-      
+        public function getObjectionsTheme()
+        {  
+            return $this->model->getObjectionsTheme();
+        } 
+        
+        public function objectionsThemeCount($objectionID)
+        {  
+            return $this->model->objectionsThemeCount($objectionID);
+        }       
+        
+        public function addNewObjectionTheme()
+        {
+            $this->model->addNewObjectionTheme($_POST['theme']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=objections';
+            header ("Location: $redirect_to");
+            exit();            
+        }
+        
+        public function deleteObjection()
+        {
+            $this->model->deleteObjection($_POST['objection']);
+            $redirect_to = CONFIGURATION::MAIN_URL.'?page=objections';
+            header ("Location: $redirect_to");
+            exit();
+        }
+        
+        
     } // class pure end
     
     require 'class_cron.php';

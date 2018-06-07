@@ -306,11 +306,11 @@
             return $stmt->fetchALL(PDO::FETCH_ASSOC); 
         }
         
-        public function addNewFont($fileName,$fileType)
+        public function addNewFont($fontFamily,$fileName,$fileType)
         {
-            $sql = "INSERT INTO pm_fonts (fileName,fileType) VALUES (?,?)";
+            $sql = "INSERT INTO pm_fonts (fontFamily,fileName,fileType) VALUES (?,?,?)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute(array($fileName,$fileType));
+            $stmt->execute(array($fontFamily,$fileName,$fileType));
         }
         
         public function getAllFonts()
@@ -414,6 +414,36 @@
         {
             $stmt = $this->conn->prepare("UPDATE pm_projects SET moderation = 3 WHERE ID = :ID");
             $stmt->bindParam(':ID', $projectId);
+            $stmt->execute();
+        }
+        
+        public function getObjectionsTheme()
+        {
+            $sql = "SELECT * FROM pm_objections WHERE parentId = 0 AND moderation < 3 ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute();
+            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+        
+        public function objectionsThemeCount($objectionID)
+        {
+            $sql = "SELECT * FROM pm_objections WHERE parentId = ? AND moderation < 3 ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($objectionID));
+            return $stmt->rowCount(); 
+        }
+        
+        public function addNewObjectionTheme($theme)
+        {
+            $sql = "INSERT INTO pm_objections (objection) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($theme));
+        }
+        
+        public function deleteObjection($objectionId)
+        {
+            $stmt = $this->conn->prepare("UPDATE pm_objections SET moderation = 3 WHERE ID = :ID");
+            $stmt->bindParam(':ID', $objectionId);
             $stmt->execute();
         }
         

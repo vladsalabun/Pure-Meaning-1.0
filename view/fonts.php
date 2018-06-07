@@ -14,12 +14,20 @@
         
         foreach ($fonts as $font) {
             
+            $favForm = $form->formStart(array('id'=>'make_font_favourite'.$font['ID']));
+            $favForm .= $form->hidden(array('name' => 'action','value' => 'make_font_favourite2'));
+            $favForm .= $form->hidden(array('name' => 'fontID','value' => $font['ID']));
+            
+            
             // Favourite:
             if ($font['myFavourite'] == 0) {
-                $fav = '<span class="glyphicon glyphicon-heart-empty" title="Not favourite"></span>';
+                $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 1));
+                $favForm .= '<span class="glyphicon glyphicon-heart-empty" title="Not favourite" onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit(); "></span>';
             } else if ($font['myFavourite'] == 1) {
-                $fav = '<span class="glyphicon glyphicon-heart" title="Favourite"></span>';
+                $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 0));
+                $favForm .= '<span class="glyphicon glyphicon-heart" title="Favourite" onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit(); "></span>';
             }
+            $favForm .= $form->formEnd();
             
             // Cyrillic:
             if ($font['cyrillic'] == 0) {
@@ -39,7 +47,7 @@
             echo $table->tr(
                 array(
                     $font['ID'],
-                    $fav,
+                    $favForm,
                     '<a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$font['ID'].'">'.$font['fontFamily'].'</a>',
                     $cyr,
                     $latin,
@@ -57,24 +65,16 @@
 
     echo 
      $form->formStart(array('enctype' => 'multipart/form-data'))
-    .$table->tableStart(array('class'=>'table table-striped','th'=> array('#','#')))
+    .$table->tableStart(array('class'=>'table table-striped','th'=> array('')))
     .$form->hidden(array('name' => 'action','value' => 'add_new_font'))
     .$form->hidden(array('name' => 'MAX_FILE_SIZE','value' => '20485760'))
     .$table->tr(
             array(
-                'Font name',
-                $form->text(array('name' => 'font_name','class' => 'test'))
+                $form->uploadFile()
             )
         )
      .$table->tr(
             array(
-                '',
-                $form->uploadFile()
-            )
-        )
-      .$table->tr(
-            array(
-                '',
                 $form->submit(array('name' => 'submit','value' => 'Add font','class' => 'submit_btn'))
             )
       )

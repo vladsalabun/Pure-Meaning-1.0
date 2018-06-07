@@ -47,7 +47,8 @@
             'pdo_query' => array('Генератор запросов PDO',''),
             'form_generator' => array('Генератор форм',''),
             'new_form' => array('Создать новую форму',''),
-            'font' => array('Шрифт',''),
+            'font' => array('Шрифт','fonts'),
+            'objection' => array('Возражения','objection'),
         );        
                 
         // All tables:
@@ -100,6 +101,7 @@
             // Creating objections table:
             "pm_objections" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "parentId" => "INT( 11 ) DEFAULT '0'", // 0 - theme
                 "objection" => "TEXT NULL",
                 "answerRu" => "TEXT NULL",
                 "answerUkr" => "TEXT NULL",
