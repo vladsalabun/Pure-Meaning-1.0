@@ -49,6 +49,14 @@
             }
             return '<input type="text" name="'.$array['name'].'" value="'.$array['value'].'" placeholder="'.$array['placeholder'].'" '.$class.'>';
         }
+
+        public function textarea($array = null)
+        {
+            if (isset($array['class'])) {
+                $class = 'class="'.$array['class'].'"';
+            }
+            return '<textarea name="'.$array['name'].'" '.$class.'>'.$array['value'].'</textarea>';
+        }
         
         public function uploadFile($array = null)
         {

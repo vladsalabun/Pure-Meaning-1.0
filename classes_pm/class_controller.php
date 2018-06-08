@@ -1037,6 +1037,12 @@
             exit();
         }
         
+        public function getObjectionBranch($parentId)
+        {
+            return $this->model->getObjectionBranch($parentId);
+        }
+
+        
         
     } // class pure end
     

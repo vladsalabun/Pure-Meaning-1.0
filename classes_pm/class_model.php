@@ -447,6 +447,14 @@
             $stmt->execute();
         }
         
+        public function getObjectionBranch($parentId)
+        {
+            $sql = "SELECT * FROM pm_objections WHERE parentId = ? AND moderation < 3 ORDER BY ID desc";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array($parentId));
+            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+        
         /*
         public function insert($table,$values) 
         {
