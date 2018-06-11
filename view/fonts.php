@@ -1,18 +1,19 @@
 <?php 
+    $fonts = new fonts;
     $form = new formGenerator;    
     $table = new tableGenerator;    
 ?>
 <div class="row">
 	<div class="col-lg-8 col-sm-9">
     <?php 
-        $fonts = $pure->getAllFonts();
+        $fontsArray = $fonts->getAllFonts();
         echo $table->tableStart( array(
                 'class'=>'table table-striped',
                 'th'=> array('ID:','Fav:','Family:','Cyr:','Lat','Type:')
                 )
             );
         
-        foreach ($fonts as $font) {
+        foreach ($fontsArray as $font) {
             
             $favForm = $form->formStart(array('id'=>'make_font_favourite'.$font['ID']));
             $favForm .= $form->hidden(array('name' => 'action','value' => 'make_font_favourite2'));

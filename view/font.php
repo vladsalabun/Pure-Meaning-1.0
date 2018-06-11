@@ -10,6 +10,7 @@
         $h2 = 26;
     }   
     
+    $fonts = new fonts;
     $form = new formGenerator;    
     $table = new tableGenerator;    
 ?>
@@ -18,7 +19,7 @@
     <p><a href="<?php echo CONFIGURATION::MAIN_URL.'?page=fonts'; ?>">Fonts</a> ← back</p>
 <?php 
 
-    $font = $pure->getFont($_GET['ID']);
+    $font = $fonts->getFont($_GET['ID']);
         
         echo $table->tableStart( array(
                 'class'=>'table table-striped',

@@ -60,7 +60,137 @@
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);           
         }  
+        
+        #
+        ### SELECT:
+        #
+        
+        public function select($query,$vars = null,$fetch = null)
+        {    
+            if (isset($query['SELECT'])) { 
+                $select = $query['SELECT'];
+            } else {
+                $select = '*';
+            }
+            if (isset($query['FROM'])) {
+                $from = $query['FROM'];
+            } else {
+                return '<p>ERROR: you must set FROM what table you want select rows.</p>';
+            }
+            if (isset($query['WHERE'])) {
+                $where = 'WHERE '. $query['WHERE'];
+            }
+            if (isset($query['ORDER'])) {
+                if (isset($query['SORT'])) {
+                    $order = 'ORDER BY '.$query['ORDER'].' '.$query['SORT'];
+                } else {
+                    $order = 'ORDER BY '.$query['ORDER'].' ASC';
+                }
+            } 
+            if (isset($query['LIMIT'])) {
+                $limit = 'LIMIT '.$query['LIMIT'];
+            }
+              
+            if (is_array($vars)) {
+            }
+              
+            $sql = "SELECT $select FROM $from $where $order $limit";
+            $stmt = $this->conn->prepare($sql);    
+            if (is_array($vars)) {
+                $stmt->execute($vars);
+            } else {
+                $stmt->execute();
+            }
 
+            if ($fetch == 1) {
+              return $stmt->fetch(PDO::FETCH_ASSOC);  
+            } else {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+            }
+            
+        }
+        
+        ### /SELECT
+        
+        ### UPDATE:
+        
+        public function update($array) 
+        {
+            
+            // check what table need to update: 
+            if (!isset($array['UPDATE'])) {
+                echo 'ERROR UPDATE: what table you want to update?';
+                exit();
+            }
+            
+            // TABLE to update:
+            $sql .= "UPDATE ".$array['UPDATE']." ";
+                
+            if (count($array['SET']) < 1 or !isset($array['SET'])) {
+                echo 'ERROR UPDATE: what columns in table <b>'.$array['UPDATE'].'</b> you want to update?';
+                exit();
+            }
+            
+            // make columns and values arrays:
+            foreach ($array['SET'] as $key => $value) {
+                $keys[] = $key;
+                $values[] = $value;
+            }
+                
+            $sql .= "SET ";
+                
+            // put columns to query:
+            foreach ($keys as $key) {
+                $set[] = $key . " = :".$key;
+            }
+                
+            // put values to query:
+            $sql .= implode($set,',');
+                
+            if (isset($array['WHERE'])) {
+                    
+                $sql .= " WHERE ";
+                    
+                foreach ($array['WHERE'] as $whereKey => $whereValue) {
+                        $keys[] = $whereKey;
+                        $whereKeys[] = $whereKey;
+                        $values[] = $whereValue;
+                }
+                
+                foreach ($whereKeys as $whereKey) {
+                    $where[] = $whereKey . " = :".$whereKey;
+                }
+
+                $sql .= implode($where,' AND ');
+                
+            }
+                
+            // TODO manual query:
+            if (isset($array['MANUAL_WHERE'])) {
+                    
+            }
+            
+            // prepare:       
+            $stmt = $this->conn->prepare($sql);
+            // bind:
+            foreach ($keys as $num => $val) {
+                $stmt->bindParam(':'.$val, $values[$num]);
+            }
+            // and execute:
+            $stmt->execute();
+            
+            $exp = rand(configuration::EXPERIENCE['UPDATE']['min'],configuration::EXPERIENCE['UPDATE']['max']);
+            $experience = new experience;
+            $experience->addExp($exp);
+            
+        }
+        
+        ### /UPDATE
+
+        
+        
+        
+        
         public function getAllSubProjects($parentId) 
         {
             $sql = "SELECT * FROM pm_projects WHERE parentId = ? AND moderation < 3 ORDER BY ID DESC";
@@ -453,6 +583,26 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($parentId));
             return $stmt->fetchALL(PDO::FETCH_ASSOC); 
+        }
+
+        public function addExp($newExp)
+        {
+            $sql = "SELECT * FROM pm_experience ORDER BY ID DESC LIMIT 1";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array());
+            $allExp = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['allExp'] + $newExp; 
+            
+            $sql = "INSERT INTO pm_experience (newExp,allExp,time) VALUES (?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array($newExp,$allExp,mktime()));
+        }
+        
+        public function allExp()
+        {
+            $sql = "SELECT * FROM pm_experience ORDER BY ID DESC LIMIT 1";
+            $stmt = $this->conn->prepare($sql);    
+            $stmt->execute(array());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['allExp']; 
         }
         
         /*

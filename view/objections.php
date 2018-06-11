@@ -1,10 +1,11 @@
 <div class="row">
 	<div class="col-lg-8">
 <?php
+    $objections = new objections;    
     $form = new formGenerator;    
     $table = new tableGenerator; 
     
-    $themes = $pure->getObjectionsTheme();
+    $themes = $objections->getObjectionsTheme();
     
     echo $table->tableStart( array(
                 'class'=>'table table-striped',
@@ -21,12 +22,12 @@
         $DeleteObjectionTheme .= $form->submit(array('value'=> 'Delete'));
         $DeleteObjectionTheme .= $form->formEnd();
         
-        echo $pure->modalHtml('delete_objection_theme'.$theme['ID'],'Do you want to delete objection ID:'.$theme['ID'].'?',$DeleteObjectionTheme);
+        echo $objections->modalHtml('delete_objection_theme'.$theme['ID'],'Do you want to delete objection ID:'.$theme['ID'].'?',$DeleteObjectionTheme);
     
         echo $table->tr(
                 array(
                     '<a href="'.CONFIGURATION::MAIN_URL.'?page=objection&parentId='.$theme['ID'].'">'.$theme['objection'].'</a>',
-                    $pure->objectionsThemeCount($theme['ID']),
+                    $objections->objectionsThemeCount($theme['ID']),
                     '<a href="" data-toggle="modal" data-target="#delete_objection_theme'.$theme['ID'].'">Delete</a>'
                 )
             );

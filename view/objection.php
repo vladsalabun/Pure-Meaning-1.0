@@ -1,22 +1,24 @@
 <div class="row">
 	<div class="col-lg-12">
+    <p>Where I am? <a href="">Objections</a> -> Objection name:</p>
+    <p><a href="">add new objection</a></p>
 <?php
+    $objection = new objections;  
     $form = new formGenerator;    
     $table = new tableGenerator; 
         
-    $objections = $pure->getObjectionBranch($_GET['parentId']);
+    $objectionsArray = $objection->getObjectionBranch($_GET['parentId']);
     
     echo $table->tableStart( array(
                 'class'=>'table table-striped',
-                'th'=> array('Objection:','Edit','Answer:'),
+                'th'=> array('Objection:','Answer:'),
                 )
             );
-    foreach($objections as $objection) {
+    foreach($objectionsArray as $objection) {
                
         echo $table->tr(
                 array(
-                    $objection['objection'],
-                    '<a href="" data-toggle="modal" data-target="#edit_objection'.$objection['ID'].'">edit</a>',
+                    '<p>'.$objection['objection'].'</p><p><a href="" data-toggle="modal" data-target="#edit_objection'.$objection['ID'].'"><span class="glyphicon glyphicon-pencil"></span></a> <a href="" data-toggle="modal" data-target="#delete_objection'.$objection['ID'].'"><span class="glyphicon glyphicon-remove"></span></a></p>',
                     '<p><b>UKR:</b><br>'.$objection['answerUkr'].'</p>
                      <p><b>RUS:</b> <br>'.$objection['answerRu'].'</p>'  
                 )
@@ -24,7 +26,7 @@
     }
     echo $table->tableEnd(); 
 
-    foreach($objections as $objection) {
+    foreach($objectionsArray as $objection) {
         
         $editObjection = $form->formStart();
         $editObjection .= '<p>'.$theme['objection'].'</p>';
@@ -34,7 +36,8 @@
                 )
             );
         $editObjection .= $form->hidden(array('name' => 'action','value' => 'edit_objection'));
-        $editObjection .= $form->hidden(array('name' => 'objection','value' => $objection['ID']));
+        $editObjection .= $form->hidden(array('name' => 'ID','value' => $objection['ID']));
+        $editObjection .= $form->hidden(array('name' => 'parent','value' => $objection['parentId']));
         $editObjection .= $table->tr(
                 array(
                     $form->textarea(array('name' => 'answerUkr','value' => $objection['answerUkr'], 'class' => 'big_textarea')),

@@ -3,6 +3,7 @@
     <a href="" data-toggle="modal" data-target="#AddNewProject" title="Add new project"><span class="glyphicon glyphicon-plus" ></span> Add new project</a>
 <?php 
 
+    $projects = new projects;    
     $form = new formGenerator;    
     $table = new tableGenerator; 
     
@@ -69,13 +70,13 @@
     
     echo $table->tableStart( array(
                 'class'=>'table table-striped',
-                'th'=> array('Title:','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
+                'th'=> array('Title:','pdf','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
                 )
             );
 
-    $projects = $pure->getAllProjects();
+    $projectsArray = $projects->getAllProjects();
 
-    foreach($projects as $project) {
+    foreach($projectsArray as $project) {
             
         //$project['done'] 
         if ($project['currency'] == 0) {
@@ -86,7 +87,7 @@
             $currency = '₴';
         } 
             
-        $subProjects = $pure->getAllSubProjects($project['ID']);
+        $subProjects = $projects->getAllSubProjects($project['ID']);
         
         // make subpages:
         $showSub = '<ul class="tree">';
@@ -144,6 +145,8 @@
                     '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>
                     <a href="" data-toggle="modal" data-target="#Edit'.$project['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
                     '.$showSub,
+                    // TODO: generate PDF
+                    'pdf',
                     $project['customer'],
                     $project['skype'],
                     $phone1.$phone2.$phone3.$email1.$email2,
@@ -176,7 +179,7 @@
         
         ###
         // foreach again to show project modal:
-        foreach($projects as $project) {
+        foreach($projectsArray as $project) {
             // edit project modal body:        
             $editModalBody = '';
             
@@ -284,24 +287,6 @@
             print_r($question2);
             echo '</pre>';
         ?>
-        <p>Потім можна згенерувати документ PDF як технічне завдання на розробку сайту.</p>
-        <br>
-        <h3>Висилаю на пошту і пишу:</h3>
-        <p align="left">
-        Висилаю вам цей pdf документ, щоб ви могли дізнатись як саме буде розроблятись ваш сайт.<br>
-        Якщо ви не хочете витрачати свій час на всі ці технічні питання, то можете просто оплачувати роботу.
-        <br>Ви можете мені довіряти. Я зроблю для вас хороший сайт. 
-        <br>Ось посилання для оплати послуг:
-        <ul align="left"> 
-        <li>Оплатити через: <a href="">ПриватБанк</a></li>
-        <li>Оплатити через: <a href="">Карту Wisa/Mastercard</a></li>
-        <li>Оплатити через: <a href="">Яндекс.Деньги</a><br></li>
-        <li>Оплатити через: <a href="">WebMoney</a></li>
-        </ul>
-        </p>
-        <p align="left">
-        Сума до оплати: 10000 грн
-        </p>
     </div>
 </div>
 

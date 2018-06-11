@@ -5,6 +5,32 @@
 ?>
 
 </div>
+<div class="container">
+<?php 
+    $myExp = $experience->allExp();
+    foreach (configuration::LEVEL as $level => $levelExp) {
+        if ($myExp > $levelExp) {
+            $myLevel = $level;
+        }
+    }
+    
+    if ($myLevel < 20) {
+        $designerClass = 'Junior';
+    } else if ($myLevel < 40) {
+        $designerClass = 'Middle';
+    } else if ($myLevel < 76) {
+        $designerClass = 'Senior';
+    } else {
+        $designerClass = 'God';
+    }
+    
+    $delta = $myExp - configuration::LEVEL[$myLevel];
+    $needExp = configuration::LEVEL[($myLevel + 1)];
+    echo '<div id="level">'.$designerClass.' Designer: <b>'.$myLevel.'</b> lvl, '.round(($delta / $needExp * 100),2).'%<div id="level_complete" style="margin-top: -24px; background: #306eba; width: '.round(($delta / $needExp * 100),2).'%; height: 23px;"></div>';
+    echo '<p align="left">';
+    
+?>    
+</div>
 <br>
 <?php 
 	
@@ -22,35 +48,6 @@
 		$("body").css("display","none").fadeIn("slow");
 	});
 </script>
-<?php 
-    $backgroundColors = array(
-        // background => font color
-        '#559E54' => '#F7E7D4',
-        '#FF6633' => '#FFFFFF',
-        '#C21460' => '#F7E7D4',
-        '#e6e6e6' => '#1258DC',
-        '#1258DC' => '#e6e6e6',
-        '#669999' => '#FFFFFF',
-        '#1258DC' => '#00CCFF',
-        '#1258DC' => '#00CCFF'
-    );
-    
-    $d1 = array_rand($backgroundColors);
-    $color1 = $backgroundColors[$d1];
-    $background1 = array_search($color1, $backgroundColors);
-            
-    echo '<style>
-    .navbar {background: #222222;} 
-    .navbar-inverse .navbar-nav > li > a  {color: #c6c6c6; }
-    .navbar-inverse .navbar-brand  {color: #ededed; }
-    .navbar { border: none;}
-    
-    #footer {background: '.$background1.';} 
-    #footer_inner {color: '.$color1.'; } 
-</style>
-';
-
-?>
 </body>
 </html>
-    <?php } ?>
+<?php } ?>

@@ -1,7 +1,5 @@
 <div class="row">
 	<div class="col-lg-12">
-    <a href="<?php echo configuration::MAIN_URL?>?page=pdo_query">Генератор запросов PDO</a><br>
-    <a href="<?php echo configuration::MAIN_URL?>?page=form_generator">Генератор форм</a><br>
     <h4>Notepad++ shortkeys:</h4>
     
     F11 - на весь экран<br>
@@ -13,15 +11,18 @@
     Ctrl + Shift + U - прописные<br>
     Alt + U - Все с заглавной<br>
     Ctrl + Shift + Up/Down - переместить строку вверх/вниз<br>
-    <h3>Tables:</h3>
+    <h3>Query generator:</h3>
+    <ol>
 <?php 
-        
+     
     foreach (configuration::MYSQL_TABLES as $tableName => $columnArray) {
-        echo '<h4>'.$tableName.'</h4>';
-        echo implode(array_keys($columnArray),',');
+        echo '<li>'.$tableName.': <a href="">select</a> / <a href="">update</a> / <a href="">insert</a></li>'; 
+        //echo '<h4>'.$tableName.'</h4>';
+        //echo implode(array_keys($columnArray),',');
     }
         
 ?>
+    </ol>
     <h4>Суть шрифтів:</h4>
     <ol align="left">
     <li>Щоб на ньому текст був читабельним</li>

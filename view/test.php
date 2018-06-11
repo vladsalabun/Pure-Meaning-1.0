@@ -48,7 +48,7 @@
             )
         );
     
-        echo json_encode($form);
+        //echo json_encode($form);
         
     /*
         Копіювання блоку і його вмісту:
@@ -60,8 +60,18 @@
   
     */
     
-    $fileName = str_replace(" ", "_", 'lkj lskjd klj.jhf');
-    echo $fileName;
+    $m = new model;
+    
+    $query = array(
+                'SELECT' => '*',
+                'FROM' => 'pm_projects',
+                'WHERE' => 'parentId = ? AND moderation < ?',
+                'ORDER' => 'ID',
+                'SORT' => 'DESC',
+    );
+    
+    print_r($m->select($query,array(0,3)),1);
+    
     
     ?>
     </div>

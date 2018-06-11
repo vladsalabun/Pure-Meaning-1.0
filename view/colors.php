@@ -1,12 +1,13 @@
 <div class="row">
 	<div class="col-lg-8" style="overflow: hidden;">
     <?php 
-        // TODO: editing colors in modal window
+    // TODO: editing colors in modal window
+    $colors = new colors; 
     $form = new formGenerator;    
     $table = new tableGenerator;  
     
-        $colors = $pure->getAllColors();
-        foreach($colors as $color) {
+        $colorsArray = $colors->getAllColors();
+        foreach($colorsArray as $color) {
     ?>
         <div id="color-block" style="overflow: hidden; height: 80px; width: 60px; float: left; margin: 5px; font-size: 12px; ">
             <div id="color-block-show" style="overflow: hidden; height: 60px; width: 60px; border: 1px #eee solid; background: <?php echo $color['color'];?>;">

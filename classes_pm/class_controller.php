@@ -4,10 +4,12 @@
     {
         
         public $model;
+        public $go;
         
         function __construct() 
         {
             $this->model = new model;
+            $this->go = new redirect;
         }
         
         public function checkPage() 
@@ -35,38 +37,49 @@
                     'add_new_class_style' => 'addNewClassStyle',
                     'change_parent' => 'changeParent',
                     'current_tree_copy' => 'currentTreeCopy',
-                    'generate_pdo' => 'generatePDO',
-                    'add_new_form' => 'addNewForm',
-                    'delete_form' => 'deleteForm',
-                    'fav_form' => 'favForm',
-                    'add_new_color' => 'addNewColor',
-                    'delete_color' => 'deleteColor',
-                    'add_new_font' => 'addNewFont',
-                    'make_font_favourite' => 'makeFontFavourite',
-                    'make_font_favourite2' => 'makeFontFavourite2',
-                    'cyrillic_font' => 'cyrillicFont',
-                    'latin_font' => 'latinFont',
-                    'delete_font' => 'deleteFont',
-                    'add_new_project' => 'addNewProject',
-                    'edit_project' => 'editProject',
-                    'delete_project' => 'deleteProject',
-                    'add_new_subproject' => 'addNewSubproject',
-                    'edit_subproject' => 'editSubproject',
-                    'add_new_objection_theme' => 'addNewObjectionTheme',
-                    'delete_objection' => 'deleteObjection'
+                    'add_new_color' => array('colors' => 'addNewColor'),
+                    'delete_color' => array('colors' => 'deleteColor'),
+                    'add_new_font' => array('fonts' => 'addNewFont'),
+                    'make_font_favourite' => array('fonts' => 'makeFontFavourite'),
+                    'make_font_favourite2' => array('fonts' => 'makeFontFavourite2'),
+                    'cyrillic_font' => array('fonts' => 'cyrillicFont'),
+                    'latin_font' => array('fonts' => 'latinFont'),
+                    'delete_font' => array('fonts' => 'deleteFont'),
+                    'add_new_project' => array('projects' => 'addNewProject'),
+                    'edit_project' => array('projects' => 'editProject'),
+                    'delete_project' => array('projects' => 'deleteProject'),
+                    'add_new_subproject' => array('projects' => 'addNewSubproject'),
+                    'edit_subproject' => array('projects' => 'editSubproject'),
+                    'add_new_objection_theme' => array('objections' => 'addNewObjectionTheme'),
+                    'delete_objection' => array('objections' => 'deleteObjection'),
+                    'edit_objection' => array('objections' => 'editObjection')
                 );
                 
-                // check method:
-                if (method_exists($this, $allowed_methods[$_POST['action']])) {
-                    // if exists, use it:
-                    $this->$allowed_methods[$_POST['action']]($_POST);
+                if (is_array($allowed_methods[$_POST['action']])) {
+                    // handle it to his class:
+                    foreach ($allowed_methods[$_POST['action']] as $className => $methodName) {
+                        $tmpObject = new $className;
+                        // check method:
+                        if (method_exists($tmpObject, $methodName)) {
+                            // and use it:
+                            $tmpObject->$methodName();
+                        } else {
+                            // if method don't exist, redirect to main url:
+                            $this->go->go();
+                        }
+                    }
                 } else {
-                    // if method don't exist, redirect to main url:
-                    $redirect_to = CONFIGURATION::MAIN_URL;
-                    header ("Location: $redirect_to");
-                    exit();
+                    // check method:
+                    if (method_exists($this, $allowed_methods[$_POST['action']])) {
+                        // and use it:
+                        $this->$allowed_methods[$_POST['action']]($_POST);
+                    } else {
+                        // if method don't exist, redirect to main url:
+                        $this->go->go();
+                    }
                 }
-            }
+                
+            } // <- / $_POST
             
             if (isset($_GET['page'])) {
                 // check if such page is specified in settings:
@@ -141,17 +154,7 @@
         public function fish($max) 
         {
             return substr(configuration::FISH,0,$max);
-        }
-        
-        public function getAllProjects() 
-        {
-            return $this->model->getAllProjects();
-        }
- 
-        public function getAllSubProjects($projectId) 
-        {
-            return $this->model->getAllSubProjects($projectId);
-        }
+        }      
  
         public function createDocumentTree($array, $str = NULL) 
         {
@@ -405,34 +408,56 @@
         public function addContentBlock($post) 
         {
             $count = $this->model->addContentBlock($post['rows'],$post['id'],$post['type'][0]);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit();  
+            
+            $this->go->go(
+                array(
+                    'page' => 'project',
+                    'id' => $post['id']
+                )
+            );
+  
         }
       
         public function addNewElement($post) 
         {
             // add:
             $this->model->addNewElement($post['rows'],$post['id'],$post['branch_id'],$post['class_name'],$post['type'][0]);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&new_rows='.$post['rows'].'&id_name='.$post['id_name'].'&class_name='.$post['class_name'];
-            header ("Location: $redirect_to");
-            exit(); 
+            
+            $this->go->go(
+                array(
+                    'page'=>'project',
+                    'id' => $post['id'],
+                    'new_rows' => $post['rows'],
+                    'id_name' => $post['id_name'],
+                    'class_name' => $post['class_name']
+                )
+            );
         }
         
         public function deleteElement($post)
         {
             $this->model->deleteElement($post['branch_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'].'&deleted='.$post['branch_id'];
-            header ("Location: $redirect_to");
-            exit(); 
+
+            $this->go->go(
+                array(
+                    'page'=>'project',
+                    'id' => $post['id'],
+                    'deleted' => $post['branch_id']
+                )
+            );
         }
         
         public function favElement($post)
         {
             $this->model->favElement($post['branch_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit(); 
+            
+            $this->go->go(
+                array(
+                    'page'=>'project',
+                    'id' => $post['id'],
+                    'deleted' => $post['branch_id']
+                )
+            );
         }
 
         #
@@ -520,8 +545,7 @@
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
                     // save to db:
                     $this->model->changeProjectStyle($projectId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
-                    
+                    $this->go->go(array('page' => $page,'projectId' => $projectId));
                 } else if ($actionWith == 'identifier') {
                     
                     # ADD NEW IDENTIFIER STYLE:
@@ -530,7 +554,7 @@
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
                     // save to db:
                     $this->model->deleteElementStyle($elementId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                    $this->go->go(array('page' => $page,'id' => $elementId));
                     
                 } else if ($actionWith == 'class') {
                     
@@ -541,8 +565,7 @@
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
                     // save to db:
                     $this->model->changeProjectStyle($projectId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
-                    
+                    $this->go->go(array('page'=> $page,'projectId' => $projectId,'class' => $whatToAdd));
                 }
             } else if ($actionType == 'delete') {
                 if ($actionWith == 'class_style') {
@@ -554,7 +577,7 @@
                     unset($styleArray[$whatToAdd][$cssValue]);
                     // save to db:
                     $this->model->changeProjectStyle($projectId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
+                    $this->go->go(array('page'=> $page,'projectId' => $projectId,'class' => $whatToAdd));
                 
                 } else if ($actionWith == 'body') {
                     
@@ -565,7 +588,7 @@
                     unset($styleArray[$whatToAdd][$cssValue]);
                     // save to db:
                     $this->model->changeProjectStyle($projectId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
+                    $this->go->go(array('page'=> $page,'projectId' => $projectId));
                     
                 } else if ($actionWith == 'identifier') {
                     
@@ -576,7 +599,7 @@
                     unset($styleArray[$whatToAdd][$cssName]);
                     // save to db:
                     $this->model->deleteElementStyle($elementId,json_encode($styleArray));
-                    $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                    $this->go->go(array('page'=> $page,'id' => $elementId));
                     
                 }
             } else if ($actionType == 'edit') {
@@ -597,9 +620,9 @@
                     // save:
                     $this->model->changeProjectStyle($projectId,json_encode($style));
                     if ($whatToAdd == 'body') {
-                        $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId;
+                        $this->go->go(array('page'=> $page,'projectId' => $projectId));
                     } else {
-                        $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&projectId='.$projectId.'&class='.$whatToAdd;
+                        $this->go->go(array('page'=> $page,'projectId' => $projectId, 'class' => $whatToAdd));
                     }
                     
                 } else if ($actionWith == 'element') {
@@ -629,31 +652,24 @@
                         }
                         
                         $redirect_to = CONFIGURATION::MAIN_URL.'?page='.$page.'&id='.$elementId;
+                        $this->go->go(array('page'=> $page,'id' => $elementId));
                         
                 }
             }
-            
-            // and go back:
-            header ("Location: $redirect_to");
-            exit();
-        }            
+        }           
         
         ###
         
         public function addLeaves($post) 
         {
             $this->model->addLeaves($post['block_id'],$post['type'][0],$post['rows'],$post['class_name'],$post['project_id']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
-            header ("Location: $redirect_to");
-            exit();
+            $this->go->go(array('page'=> 'project','id' => $post['project_id']));
         }
         
         public function changeParent($post)
         {
-            $this->model->changeParent($post['branch_id'],$post['newparent'][0]) ;           
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['id'];
-            header ("Location: $redirect_to");
-            exit();
+            $this->model->changeParent($post['branch_id'],$post['newparent'][0]) ;   
+            $this->go->go(array('page'=> 'project','id' => $post['id']));            
         }
         
         public function currentTreeCopy($post)
@@ -727,9 +743,7 @@
                 $this->model->updateBlockPriority($blockId, $newPriority);
             }
  
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
-            header ("Location: $redirect_to");
-            exit();
+            $this->go->go(array('page'=> 'project','id' => $post['project_id']));  
         }
         
         public function decreasePriority($post) 
@@ -792,257 +806,8 @@
                 $this->model->updateBlockPriority($blockId, $newPriority);
             }
             
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=project&id='.$post['project_id'];
-            header ("Location: $redirect_to");
-            exit();
+            $this->go->go(array('page'=> 'project','id' => $post['project_id']));  
         }
-      
-        public function generatePDO($post) 
-        {
-            include 'view/generator.php';
-            exit();
-        }
-
-        public function getForms() 
-        {
-            return $this->model->getForms();
-        } 
-        
-        public function getFormById($formId) 
-        {
-            return $this->model->getFormById($formId);
-        }
-        
-        public function addNewForm($post) 
-        {
-            //var_dump($post);
-            
-            $form = array(
-            'method' => $post['method'],
-            'action' => $post['form_action'],
-            'autocomplete' => $post['autocomplete']);
-            
-            $elements = array();
-
-            for ($i = 0; $i < $post['element_count']; $i++ ) {
-                
-                $elements[] = array(
-                    $post['type'.$i] => array(
-                        'name' => $post['name'.$i],
-                        'value' => $post['value'.$i],
-                        'placeholder' => $post['placeholder'.$i],
-                        'class' => $post['class'.$i]
-                    )
-                );
-            }
-            
-            $form['elements'] = $elements;
-            
-            $this->model->addNewForm($post['projectId'],json_encode($form));
-
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function deleteForm($post)
-        {
-            $this->model->deleteForm($post['formId']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function favForm($post)
-        {
-            $this->model->favForm($post['formId']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=forms';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function addNewColor($post)
-        {
-            if (strlen($post['color']) > 0) {
-                $this->model->addNewColor($post['color']);
-            }
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=colors';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function getAllColors()
-        {
-            return $this->model->getAllColors();
-        }
-        
-        public function addNewFont($post) 
-        {            
-            $fileName = str_replace(" ", "_", $_FILES['file']['name']);
-            $fontFamily = substr($_FILES['file']['name'],0,-4);
-            // check extension: 
-            $fileType = substr($fileName,-3);
-            // if ext is allowed:
-            if (in_array($fileType,configuration::FONTS_TYPES)){
-                if ($_FILES['file']['tmp_name'] != '') {
-                    // convert cyrillic:
-                    $uploadfile = configuration::FONTS_DIR . basename(iconv("UTF-8", "windows-1251",$fileName));
-                    if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-                        // TODO: save info to db
-                        $this->model->addNewFont($fontFamily,$fileName,$fileType);
-                    } 
-                }
-            }
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
-            header ("Location: $redirect_to");
-            
-            exit();
-        }
-        
-        public function getAllFonts() 
-        {
-            return $this->model->getAllFonts();
-        }
-        
-        public function getFont($fontId)
-        {
-            return $this->model->getFont($fontId);
-        }
-        
-        public function makeFontFavourite($post)
-        {
-            $this->model->makeFontFavourite($post['fontID'],$post['myFavourite']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function makeFontFavourite2($post)
-        {
-            $this->model->makeFontFavourite($post['fontID'],$post['myFavourite']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function cyrillicFont($post)
-        {
-            $this->model->cyrillicFont($post['fontID'],$post['cyrillic']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
-            header ("Location: $redirect_to");
-            exit();
-        }
-        public function latinFont($post)
-        {
-            $this->model->latinFont($post['fontID'],$post['latin']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=font&ID='.$post['fontID'];
-            header ("Location: $redirect_to");
-            exit();
-        } 
-
-        public function deleteFont($post) 
-        {
-            $this->model->deleteFont($post['fontID']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=fonts';
-            header ("Location: $redirect_to");
-            exit();
-        }   
-
-        public function deleteColor($post)   
-        {
-            $this->model->deleteColor($post['colorID']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=colors';
-            header ("Location: $redirect_to");
-            exit();           
-        }  
-
-        public function addNewProject($post)  
-        {
-            $this->model->addNewProject(
-                $post['title'],
-                $post['customer'],
-                $post['skype'],
-                $post['phone1'],
-                $post['phone2'],
-                $post['phone3'],
-                $post['email1'],
-                $post['email2'],
-                $post['vk'],
-                $post['fb'],
-                $post['price'],
-                $post['currency'][0],
-                strtotime($post['workBegin']),
-                strtotime($post['workEnd'])
-            );
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
-            header ("Location: $redirect_to");
-            exit();
-        } 
-
-        public function addNewSubproject($post)
-        {
-            $this->model->addNewSubproject($post['title'],$post['projectId']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
-            header ("Location: $redirect_to");
-            exit();
-        }  
-
-        public function editSubproject($post)
-        {
-            $this->model->editSubproject($post['title'],$post['projectId']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
-            header ("Location: $redirect_to");
-            exit();
-        }  
-
-        public function editProject($post)
-        {
-            $this->model->editProject($post);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
-            header ("Location: $redirect_to");
-            exit();
-        } 
-
-        public function deleteProject($post)
-        {
-            $this->model->deleteProject($post['projectId']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=projects';
-            header ("Location: $redirect_to");
-            exit();
-        }  
-        
-        public function getObjectionsTheme()
-        {  
-            return $this->model->getObjectionsTheme();
-        } 
-        
-        public function objectionsThemeCount($objectionID)
-        {  
-            return $this->model->objectionsThemeCount($objectionID);
-        }       
-        
-        public function addNewObjectionTheme()
-        {
-            $this->model->addNewObjectionTheme($_POST['theme']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=objections';
-            header ("Location: $redirect_to");
-            exit();            
-        }
-        
-        public function deleteObjection()
-        {
-            $this->model->deleteObjection($_POST['objection']);
-            $redirect_to = CONFIGURATION::MAIN_URL.'?page=objections';
-            header ("Location: $redirect_to");
-            exit();
-        }
-        
-        public function getObjectionBranch($parentId)
-        {
-            return $this->model->getObjectionBranch($parentId);
-        }
-
-        
         
     } // class pure end
     
@@ -1050,4 +815,9 @@
     require 'classes_pm/class_beautifyDom.php';
     require 'classes_pm/class_form.php';
     require 'classes_pm/class_table.php';
-    
+    require 'classes_pm/class_go.php';
+    require 'classes_pm/class_objections.php';
+    require 'classes_pm/class_experience.php';
+    require 'classes_pm/class_projects.php';
+    require 'classes_pm/class_fonts.php';
+    require 'classes_pm/class_colors.php';

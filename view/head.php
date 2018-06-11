@@ -7,7 +7,7 @@ $start_time = microtime(true);
 ?><!DOCTYPE html>
 <html lang="ru">
 <head><?php // TODO: generate TITLE! ?>
-<title>Pure meaning 1.0</title>
+<title>Pure meaning 2.0</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -24,7 +24,7 @@ $start_time = microtime(true);
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?php echo CONFIGURATION::MAIN_URL;?>">Pure Meaning 1.0</a>
+			<a class="navbar-brand" href="<?php echo CONFIGURATION::MAIN_URL;?>">Pure Meaning 2.0</a>
 		</div>
 		<div class="collapse navbar-collapse" id="responsive-menu">
 			<ul class="nav navbar-nav"> 
@@ -45,3 +45,8 @@ $start_time = microtime(true);
 
 	</div>
     <?php } ?>
+<?php 
+    $exp = rand(configuration::EXPERIENCE['LOAD']['min'],configuration::EXPERIENCE['LOAD']['max']);
+    $experience = new experience;
+    $experience->addExp($exp);
+?>
