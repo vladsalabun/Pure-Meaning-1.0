@@ -92,7 +92,7 @@
                 $limit = 'LIMIT '.$query['LIMIT'];
             }
               
-            // TODO: 
+            // TODO: ?
             if (is_array($vars)) {
             }
               
@@ -168,7 +168,7 @@
                 
             // TODO manual query:
             if (isset($array['MANUAL_WHERE'])) {
-                    
+                $sql .= " WHERE ...";  
             }
             
             // prepare:       

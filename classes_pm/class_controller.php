@@ -827,3 +827,4 @@
     require 'classes_pm/class_projects.php';
     require 'classes_pm/class_fonts.php';
     require 'classes_pm/class_colors.php';
+    require 'classes_pm/class_highlight.php';

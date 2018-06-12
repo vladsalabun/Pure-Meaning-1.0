@@ -2,53 +2,17 @@
 	<div class="col-lg-12">
     <?php 
     
-        $style = array(
-            'body' => array(
-                'background' => '#306eba',
-                'color' => '#000',
-                'font-size' => '16px',
-                'font-family' => 'Arial',
-                'padding' => '10px'
-            ),
-            'row' => array(
-                'padding' => '10px'
-            ),
-            'subrow' => array(
-                'padding' => '10px'
+        $website = array(
+            // поверх: (этаж)
+            'header' => array(),
+            'body' => array(),
+            'footer' => array(
+                'contacts' = array(
+                    'email','phone','address','skype','vk','facebook','instagram'
+                )
             )
         );
-    
-        $form = array(
-            'method' => 'POST',
-            'action' => '',
-            'autocomplete' => 'off',
-            'elements' => array(
-                0 => array(
-                    'text' => array(
-                        'name' => 'name1',
-                        'value' => 'value1',
-                        'placeholder' => 'place1',
-                        'class' => 'textarea'
-                    )
-                ),
-                1 => array(
-                    'text' => array(
-                        'name' => 'name1',
-                        'value' => 'value1',
-                        'placeholder' => 'place1',
-                        'class' => 'textarea'
-                    )
-                ),
-                2 => array(
-                    'hidden' => array(
-                        'name' => 'hihi',
-                        'value' => 'vava'
-                    )
-                ),
-            )
-        );
-    
-        //echo json_encode($form);
+
         
     /*
         Копіювання блоку і його вмісту:
@@ -60,18 +24,7 @@
   
     */
     
-    $m = new model;
-    
-    $query = array(
-                'SELECT' => '*',
-                'FROM' => 'pm_projects',
-                'WHERE' => 'parentId = ? AND moderation < ?',
-                'ORDER' => 'ID',
-                'SORT' => 'DESC',
-    );
-    
-    print_r($m->select($query,array(0,3)),1);
-    
+
     
     ?>
     </div>

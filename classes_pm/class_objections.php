@@ -15,7 +15,7 @@
                 'WHERE' => 'ID = ' . $ID,
                 'fetch' => 1
             );
-            return $this->model->select($array);
+            return $this->model->select($array, null);
         }
         
         public function objectionsThemeCount($objectionID)
