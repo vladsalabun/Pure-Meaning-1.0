@@ -17,7 +17,7 @@
 
         $DeleteObjectionTheme = $form->formStart();
         $DeleteObjectionTheme .= '<p>'.$theme['objection'].'</p>';
-        $DeleteObjectionTheme .= $form->hidden(array('name' => 'action','value' => 'delete_objection'));
+        $DeleteObjectionTheme .= $form->hidden(array('name' => 'action','value' => 'delete_objection_theme'));
         $DeleteObjectionTheme .= $form->hidden(array('name' => 'objection','value' => $theme['ID']));
         $DeleteObjectionTheme .= $form->submit(array('value'=> 'Delete'));
         $DeleteObjectionTheme .= $form->formEnd();

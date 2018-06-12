@@ -6,6 +6,17 @@
         {  
             return $this->model->getObjectionsTheme();
         } 
+
+        public function getObjection($ID)
+        {  
+            $array = array(
+                'SELECT' => '*',
+                'FROM' => 'pm_objections',
+                'WHERE' => 'ID = ' . $ID,
+                'fetch' => 1
+            );
+            return $this->model->select($array);
+        }
         
         public function objectionsThemeCount($objectionID)
         {  
@@ -18,7 +29,7 @@
             $this->go->go('objections');            
         }
         
-        public function deleteObjection()
+        public function deleteObjectionTheme()
         {
             $this->model->deleteObjection($_POST['objection']);
             $this->go->go('objections');
@@ -34,6 +45,7 @@
             $array = array(
                     'UPDATE' => 'pm_objections',
                     'SET' => array(
+                        'objection' => $_POST['objection'],
                         'answerUkr' => $_POST['answerUkr'],
                         'answerRu' => $_POST['answerRu']
                     ),
@@ -43,6 +55,38 @@
                 );
             
             $this->model->update($array);   
-            $this->go->go(array('page' => 'objection', 'parentId' => $_POST['parent']));
+            $this->go->go(array('page' => 'objection', 'parentId' => $_POST['parentId']));
         }
+        
+        public function addObjection()
+        {
+            $array = array(
+                'INSERT INTO' => 'pm_objections',
+                'COLUMNS' => array(
+                        'parentId' => $_POST['parentId'],
+                        'objection' => $_POST['objection'],
+                        'answerUkr' => $_POST['answerUkr'],
+                        'answerRu' => $_POST['answerRu']
+                 )
+            );
+            $this->model->insert($array);
+            $this->go->go(array('page' => 'objection', 'parentId' => $_POST['parentId']));
+        }
+        
+        public function deleteObjection()
+        {
+             $array = array(
+                    'UPDATE' => 'pm_objections',
+                    'SET' => array(
+                        'moderation' => 3,
+                    ),
+                    'WHERE' => array(
+                        'ID' => $_POST['ID']
+                    )
+                );
+            
+            $this->model->update($array);   
+            $this->go->go(array('page' => 'objection', 'parentId' => $_POST['parentId']));
+        }
+        
     }

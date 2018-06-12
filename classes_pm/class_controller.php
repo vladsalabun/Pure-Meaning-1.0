@@ -37,22 +37,28 @@
                     'add_new_class_style' => 'addNewClassStyle',
                     'change_parent' => 'changeParent',
                     'current_tree_copy' => 'currentTreeCopy',
+                    
                     'add_new_color' => array('colors' => 'addNewColor'),
                     'delete_color' => array('colors' => 'deleteColor'),
+                    
                     'add_new_font' => array('fonts' => 'addNewFont'),
                     'make_font_favourite' => array('fonts' => 'makeFontFavourite'),
                     'make_font_favourite2' => array('fonts' => 'makeFontFavourite2'),
                     'cyrillic_font' => array('fonts' => 'cyrillicFont'),
                     'latin_font' => array('fonts' => 'latinFont'),
                     'delete_font' => array('fonts' => 'deleteFont'),
+                    
                     'add_new_project' => array('projects' => 'addNewProject'),
                     'edit_project' => array('projects' => 'editProject'),
                     'delete_project' => array('projects' => 'deleteProject'),
                     'add_new_subproject' => array('projects' => 'addNewSubproject'),
                     'edit_subproject' => array('projects' => 'editSubproject'),
+                    
                     'add_new_objection_theme' => array('objections' => 'addNewObjectionTheme'),
                     'delete_objection' => array('objections' => 'deleteObjection'),
-                    'edit_objection' => array('objections' => 'editObjection')
+                    'delete_objection_theme' => array('objections' => 'deleteObjectionTheme'),
+                    'edit_objection' => array('objections' => 'editObjection'),
+                    'add_objection' => array('objections' => 'addObjection')
                 );
                 
                 if (is_array($allowed_methods[$_POST['action']])) {

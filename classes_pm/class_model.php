@@ -65,7 +65,7 @@
         ### SELECT:
         #
         
-        public function select($query,$vars = null,$fetch = null)
+        public function select($query,$vars = null)
         {    
             if (isset($query['SELECT'])) { 
                 $select = $query['SELECT'];
@@ -77,6 +77,7 @@
             } else {
                 return '<p>ERROR: you must set FROM what table you want select rows.</p>';
             }
+            // TODO: what if we get user data? 
             if (isset($query['WHERE'])) {
                 $where = 'WHERE '. $query['WHERE'];
             }
@@ -91,6 +92,7 @@
                 $limit = 'LIMIT '.$query['LIMIT'];
             }
               
+            // TODO: 
             if (is_array($vars)) {
             }
               
@@ -101,9 +103,8 @@
             } else {
                 $stmt->execute();
             }
-
-            if ($fetch == 1) {
-              return $stmt->fetch(PDO::FETCH_ASSOC);  
+            if ($query['fetch'] == 1) {   
+                return $stmt->fetch(PDO::FETCH_ASSOC);  
             } else {
                 return $stmt->fetchAll(PDO::FETCH_ASSOC); 
             }
@@ -186,6 +187,28 @@
         }
         
         ### /UPDATE
+        
+        ### INSERT
+        public function insert($array) 
+        {           
+            foreach($array['COLUMNS'] as $columns => $value) {
+                $cols[] = $columns;
+                $vals[] = $value;
+                $questionmarks[] = '?';
+            }
+            
+            // TODO: check for errors. Does the table has such columns? Does it exixts?
+            
+            $sql = "INSERT INTO ".$array['INSERT INTO']." (".implode($cols,',').") VALUES (".implode($questionmarks,',').")";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($vals);
+            
+            $exp = rand(configuration::EXPERIENCE['INSERT']['min'],configuration::EXPERIENCE['INSERT']['max']);
+            $experience = new experience;
+            $experience->addExp($exp);
+            
+        }
+        ### /INSERT
 
         
         
