@@ -525,6 +525,8 @@
             $sql = "INSERT INTO pm_projects (title, customer, skype, phone1, phone2, phone3, email1, email2, vk, fb, price, currency, workBegin, workEnd) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute(array($title, $customer, $skype, $phone1, $phone2, $phone3, $email1, $email2, $vk, $fb, $price, $currency, $workBegin, $workEnd));
+            
+            return $this->conn->lastInsertId();
         }
         
         public function addNewSubproject($title, $parentId)

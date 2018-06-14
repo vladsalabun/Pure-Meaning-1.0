@@ -11,7 +11,8 @@
     <p align="left"> ← <a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $element['projectId']; ?>">Back to project <?php echo $element['projectId']; ?></a></p>
     <h4>Edit element: #<?php echo $element['ID']; ?></h4>
     
-    <p align="left">+ <a href="" data-toggle="modal" data-target="#add_new_style">add new style</a></p>
+    <p align="left">+ <a href="" data-toggle="modal" data-target="#add_new_style">add new style</a>
+    </p>
 <?php 
             $styleBody = '
             <p align="left">Choose option:</p>
@@ -26,7 +27,7 @@
                 $cssKeys = array();
             }
             
-            foreach(configuration::STYLE as $styleOption) {
+            foreach(configuration::STYLE as $styleOption => $styleParams) {
                 if (!in_array($styleOption,$cssKeys)) {
                     $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
                 }
@@ -43,6 +44,7 @@
            if (count(configuration::OTHER) > count($style['other'])) {
 ?>
     <p align="left">+ <a href="" data-toggle="modal" data-target="#other_option">add other option</a></p>
+    <br>TODO: компактніше дизайн
 <?php 
             $otherBody = '
             <p align="left">Choose option:</p>

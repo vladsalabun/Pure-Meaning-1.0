@@ -21,14 +21,24 @@
         
         public function addNewProject()  
         {
-            $this->model->addNewProject(
+            // insert new project to database and get last ID:
+            $lastInsertedID = $this->model->addNewProject(
                 $_POST['title'], $_POST['customer'], $_POST['skype'],
                 $_POST['phone1'], $_POST['phone2'], $_POST['phone3'],
                 $_POST['email1'], $_POST['email2'], $_POST['vk'],
                 $_POST['fb'], $_POST['price'], $_POST['currency'][0],
                 strtotime($_POST['workBegin']), strtotime($_POST['workEnd'])
             );
-            
+
+            // if WordPress:
+            if ($_POST['project_type'][0] == 0) {
+                foreach (configuration::WORDPRESS_PAGES as $page) {
+                    $this->model->addNewSubproject($page,$lastInsertedID);
+                }
+            } else if($_POST['project_type'][0] == 99) {
+                // if custom:
+            }
+
             $this->go->go('projects'); 
         } 
 

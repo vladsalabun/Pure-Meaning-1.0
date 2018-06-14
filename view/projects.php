@@ -59,10 +59,24 @@
                 'workEnd:',
                 $form->datetime(array('name' => 'workEnd','value' => date('Y-m-d').'T'.date('H:i:s')))
             )
-        );     
-    
+        );            
+    // project type:
+    $formBody .= $table->tr(
+            array(
+                'Project type:',
+                $form->select(
+                    array(
+                        'name' => 'project_type', 
+                        'value' => array(
+                            0 => 'WordPress',
+                            99 => 'Custom'
+                        ) 
+                    )
+                )
+            )
+        ); 
     $formBody .= $table->tableEnd(); 
-    $formBody .= $form->submit(array('value' => 'Add new project','class' => 'submit_btn'));
+    $formBody .= $form->submit(array('value' => 'Add new project','class' => 'submit_btn'));   
     $formBody .= $form->formEnd();
 
     echo $pure->modalHtml('AddNewProject','Add new project:',$formBody);

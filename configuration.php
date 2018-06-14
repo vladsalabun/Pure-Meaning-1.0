@@ -14,6 +14,10 @@
         
         const FONTS_DIR = 'uploads/fonts/';
         const FONTS_TYPES = array('ttf','otf','woff','woff2');
+        
+        const WORDPRESS_PAGES = array(
+                '404','footer','page','single','index','header'
+              );
         /*  
             For each key you need to create *.php file in folder /view
             These pages will be displayed in the main menu:
@@ -215,16 +219,29 @@
         );
         
         const STYLE = array(
-            'background',
-            'color',
-            'font-size',
-            'font-family',
-            'padding',
-            'margin',     
-            'float',     
-            'text-align',     
-            'width',     
-            'height',     
+            'background' => array(
+                'type' => 'string',
+                'values' => array('#')
+            ),
+            'color' => array(),
+            'font-size' => array(
+                'type' => 'int',
+                'values' => array('px','em','%')
+            ),
+            'font-weight' => array(
+                'type' => 'string',
+                'values' => array('normal','bold','italic')
+            ),
+            'font-family' => array(),
+            'padding' => array(),
+            'margin' => array(),     
+            'float' => array(),     
+            'text-align' => array(
+                'type' => 'string',
+                'values' => array('left', 'right', 'justify', 'center')
+            ),     
+            'width' => array(),     
+            'height' => array(),     
         );
         
         const STYLEVALUES = array(
@@ -237,74 +254,6 @@
             'background'  => '#'
         );
         
-        const FORM = array(
-            'action' => null,
-            'autocomplete' => 'off',
-            'method' => array(
-                'get',
-                'post'
-            ),
-            'type' => array(
-                'hidden' => array(
-                    'name' => '',
-                    'value' => ''
-                ),
-                'text' => array(
-                    'name' => '',
-                    'value' => '',
-                    'placeholder' => '',
-                    'class' => ''
-                ),
-                'textarea' => array(
-                    'name' => '',
-                    'value' => '',
-                    'placeholder' => '',
-                    'class' => ''
-                ),
-                'number' => array(
-                    'name' => '',
-                    'value' => '',
-                    'placeholder' => '',
-                    'class' => ''
-                ),
-                'select' => array(
-                    'name' => '',
-                    'value' => '',
-                    'class' => ''
-                ),
-                'radio' => array(
-                    'name' => '',
-                    'value' => ''
-                ),
-                'checkbox' => array(
-                    'name' => '',
-                    'value' => ''
-                ),
-                'date' => array(
-                    'name' => ''
-                ),
-                'file' => array(
-                    'name' => ''
-                ),
-                'submit' => array(
-                    'name' => '',
-                    'value' => '',
-                    'class' => ''
-                )
-            )
-        );
-        
-        
-         const FISH = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat fermentum augue a accumsan. Ut est sapien, malesuada eget convallis eu, mattis nec eros. Suspendisse suscipit vehicula augue, nec commodo mi interdum ac. Etiam id sem venenatis, hendrerit purus eu, auctor metus. Quisque lacinia nisi eu pellentesque pharetra. Phasellus malesuada id sapien ut sagittis. Nam eget dui nec dui tristique commodo at vitae nibh. In imperdiet odio ut lorem aliquam varius. Aenean facilisis tempus dui, et posuere sapien vulputate faucibus. Integer pharetra leo non leo aliquet, vitae ullamcorper dui rutrum. Duis vestibulum facilisis rhoncus. Nam ligula nunc, sagittis sed purus in, tincidunt finibus magna. Vivamus laoreet massa eu rhoncus tempus. Quisque tincidunt hendrerit metus sed vehicula. Sed iaculis mauris nec nunc suscipit hendrerit. Cras at scelerisque tellus, ut dignissim lorem.
-
-Suspendisse vestibulum nec tellus ultricies tristique. Sed bibendum ex arcu, ut efficitur sapien aliquet a. In nunc sapien, varius id diam sit amet, sagittis luctus nulla. Ut convallis nibh augue, id pellentesque diam convallis a. Integer ornare volutpat finibus. Pellentesque lacinia egestas faucibus. Nulla pulvinar sapien justo, vitae aliquam orci efficitur sit amet. In ut rutrum libero, vitae accumsan magna. Integer ultrices, enim sed fermentum sagittis, dui nisi semper mi, eu fringilla felis libero in elit. Nullam sit amet rhoncus leo. Vivamus egestas, elit quis luctus finibus, risus nibh pulvinar tortor, quis congue orci enim id justo. Nulla facilisi.
-
-Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris laoreet ipsum ac tortor venenatis feugiat. Phasellus vehicula risus eget justo dignissim rhoncus. Sed lacinia fringilla neque, sodales gravida arcu hendrerit sed. Praesent tempus enim magna, ullamcorper sodales turpis mattis vel. Nunc in finibus ipsum. Vestibulum id laoreet nibh, nec vulputate lectus. Curabitur velit sem, tristique a turpis ac, dignissim suscipit orci. Suspendisse eget tempus erat. Morbi aliquam nisi urna, id ornare velit accumsan nec. Aliquam nec magna nec dolor tincidunt bibendum et sed lorem. Pellentesque in cursus justo. Sed in justo sodales, viverra justo eu, tempus ante. Phasellus bibendum volutpat odio, sed imperdiet libero bibendum at.
-
-Aenean ultricies ante et neque aliquet, eget molestie libero tincidunt. Etiam nec venenatis turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras non tellus at velit euismod efficitur auctor eu leo. Suspendisse blandit turpis a ligula semper dictum. Vivamus finibus fringilla nibh quis euismod. Curabitur nec porta lacus. Ut sodales libero in ex ullamcorper consectetur eget vel nulla. Mauris hendrerit massa sagittis rutrum luctus. Donec ac vestibulum libero. Mauris nunc augue, porttitor ut porttitor sit amet, vestibulum at libero. Vivamus tempor bibendum ante sed venenatis. Donec non libero a ante tristique fringilla. Nam tincidunt urna vel ante eleifend consequat.
-
-Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus aliquet. Quisque euismod feugiat nunc eget egestas. Sed sagittis dapibus accumsan. Proin malesuada elementum metus placerat tempus. Cras mi ante, tempus vel leo id, lobortis sollicitudin eros. Donec fermentum tortor dui, sed tempor metus tempor vel.';
-       
         const LEVEL = array(
             1 => 0,
             2 => 68,
@@ -396,5 +345,15 @@ Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus ali
             'UPDATE' => array('min' => 80, 'max' => 180),
             'INSERT' => array('min' => 100, 'max' => 240),
         );
+        
+         const FISH = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat fermentum augue a accumsan. Ut est sapien, malesuada eget convallis eu, mattis nec eros. Suspendisse suscipit vehicula augue, nec commodo mi interdum ac. Etiam id sem venenatis, hendrerit purus eu, auctor metus. Quisque lacinia nisi eu pellentesque pharetra. Phasellus malesuada id sapien ut sagittis. Nam eget dui nec dui tristique commodo at vitae nibh. In imperdiet odio ut lorem aliquam varius. Aenean facilisis tempus dui, et posuere sapien vulputate faucibus. Integer pharetra leo non leo aliquet, vitae ullamcorper dui rutrum. Duis vestibulum facilisis rhoncus. Nam ligula nunc, sagittis sed purus in, tincidunt finibus magna. Vivamus laoreet massa eu rhoncus tempus. Quisque tincidunt hendrerit metus sed vehicula. Sed iaculis mauris nec nunc suscipit hendrerit. Cras at scelerisque tellus, ut dignissim lorem.
+
+    Suspendisse vestibulum nec tellus ultricies tristique. Sed bibendum ex arcu, ut efficitur sapien aliquet a. In nunc sapien, varius id diam sit amet, sagittis luctus nulla. Ut convallis nibh augue, id pellentesque diam convallis a. Integer ornare volutpat finibus. Pellentesque lacinia egestas faucibus. Nulla pulvinar sapien justo, vitae aliquam orci efficitur sit amet. In ut rutrum libero, vitae accumsan magna. Integer ultrices, enim sed fermentum sagittis, dui nisi semper mi, eu fringilla felis libero in elit. Nullam sit amet rhoncus leo. Vivamus egestas, elit quis luctus finibus, risus nibh pulvinar tortor, quis congue orci enim id justo. Nulla facilisi.
+
+    Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris laoreet ipsum ac tortor venenatis feugiat. Phasellus vehicula risus eget justo dignissim rhoncus. Sed lacinia fringilla neque, sodales gravida arcu hendrerit sed. Praesent tempus enim magna, ullamcorper sodales turpis mattis vel. Nunc in finibus ipsum. Vestibulum id laoreet nibh, nec vulputate lectus. Curabitur velit sem, tristique a turpis ac, dignissim suscipit orci. Suspendisse eget tempus erat. Morbi aliquam nisi urna, id ornare velit accumsan nec. Aliquam nec magna nec dolor tincidunt bibendum et sed lorem. Pellentesque in cursus justo. Sed in justo sodales, viverra justo eu, tempus ante. Phasellus bibendum volutpat odio, sed imperdiet libero bibendum at.
+
+    Aenean ultricies ante et neque aliquet, eget molestie libero tincidunt. Etiam nec venenatis turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras non tellus at velit euismod efficitur auctor eu leo. Suspendisse blandit turpis a ligula semper dictum. Vivamus finibus fringilla nibh quis euismod. Curabitur nec porta lacus. Ut sodales libero in ex ullamcorper consectetur eget vel nulla. Mauris hendrerit massa sagittis rutrum luctus. Donec ac vestibulum libero. Mauris nunc augue, porttitor ut porttitor sit amet, vestibulum at libero. Vivamus tempor bibendum ante sed venenatis. Donec non libero a ante tristique fringilla. Nam tincidunt urna vel ante eleifend consequat.
+
+    Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus aliquet. Quisque euismod feugiat nunc eget egestas. Sed sagittis dapibus accumsan. Proin malesuada elementum metus placerat tempus. Cras mi ante, tempus vel leo id, lobortis sollicitudin eros. Donec fermentum tortor dui, sed tempor metus tempor vel.';
        
     }

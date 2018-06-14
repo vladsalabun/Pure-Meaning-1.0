@@ -1,6 +1,17 @@
 <?php 
     if($_GET['page'] === 'preview') {
         
+    } else if ($_GET['page'] === 'edit_element') {
+?>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script>
+	$(document).ready(function()
+	{
+		$("body").css("display","none").fadeIn("slow");
+	});
+</script>
+<?php    
     } else {
 ?>
 
