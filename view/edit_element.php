@@ -5,6 +5,12 @@
     $projectId = $element['projectId'];
     // make style array:
     $style = json_decode($element['style'],true);
+    
+    // TODO:
+    # 1. Таблицю стилей компактно
+    # 2. Випадаючий список підказок
+    
+    
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -44,7 +50,6 @@
            if (count(configuration::OTHER) > count($style['other'])) {
 ?>
     <p align="left">+ <a href="" data-toggle="modal" data-target="#other_option">add other option</a></p>
-    <br>TODO: компактніше дизайн
 <?php 
             $otherBody = '
             <p align="left">Choose option:</p>

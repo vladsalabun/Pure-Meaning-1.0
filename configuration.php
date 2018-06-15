@@ -214,34 +214,90 @@
         );
         
         const OTHER = array(
+            'text',
             'fish',
-            'text',    
+                
         );
         
         const STYLE = array(
             'background' => array(
                 'type' => 'string',
+                'values' => array('')
+            ),
+            'background-image' => array(
+                'type' => 'string',
+                'values' => array('url("?") no-repeat|repeat center|left|right')
+            ),
+            'background-color' => array(
+                'type' => 'string',
                 'values' => array('#')
             ),
-            'color' => array(),
+            'border' => array(
+                'type' => 'string',
+                'values' => array('?px solid|dotted|dashed #?') //
+            ),            
+            'color' => array(
+                'type' => 'string',
+                'values' => array('#')
+            ),
+            'display' => array(
+                'type' => 'string',
+                'values' => array('block','inline','inline-block','list-item','run-in','table','table-caption','table-cell','table-column','table-column-group','table-footer-group', 'table-header-group','table-row','table-row-group','none','initial','inherit')
+            ),           
+            'float' => array(
+                'type' => 'string',
+                'values' => array('left','right','none','initial','inherit')
+            ),            
             'font-size' => array(
                 'type' => 'int',
-                'values' => array('px','em','%')
+                'values' => array('px') // em,%
             ),
             'font-weight' => array(
                 'type' => 'string',
-                'values' => array('normal','bold','italic')
+                'values' => array('normal','bold','bolder','lighter')
+            ),
+            'font-style' => array(
+                'type' => 'string',
+                'values' => array('normal','italic','oblique','initial','inherit')
             ),
             'font-family' => array(),
-            'padding' => array(),
-            'margin' => array(),     
+            'padding' => array(
+                'type' => 'int',
+                'values' => array('px')
+            ),
+            'margin' => array(
+                'type' => 'int',
+                'values' => array('px')
+            ),     
             'float' => array(),     
             'text-align' => array(
                 'type' => 'string',
                 'values' => array('left', 'right', 'justify', 'center')
             ),     
-            'width' => array(),     
-            'height' => array(),     
+            'width' => array(
+                'type' => 'int',
+                'values' => array('px')
+            ),     
+            'height' => array(
+                'type' => 'int',
+                'values' => array('px')
+            ), 
+            'line-height' => array(
+                'type' => 'int',
+                'values' => array('%')
+            ), 
+            'text-align' => array(
+                'type' => 'string',
+                'values' => array('left','right','center','justify','initial','inherit')
+            ), 
+            'text-decoration' => array(
+                'type' => 'string',
+                'values' => array('none','underline','overline','line-through','blink')
+            ),            
+            'word-break' => array(
+                'type' => 'string',
+                'values' => array('normal','break-all','keep-all','initial','inherit')
+            ),
         );
         
         const STYLEVALUES = array(

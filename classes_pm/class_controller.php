@@ -557,7 +557,13 @@
                     # ADD NEW IDENTIFIER STYLE:
                     $style = $this->model->getElementInfo($elementId)['style'];
                     $styleArray = json_decode($style, true);
+                    
+                    // verify css: 
+                    if (in_array($key,array_keys(configuration::STYLE))) {
+                        $cssValue = $this->verifyCss($cssName,$cssValue);
+                    }
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    
                     // save to db:
                     $this->model->deleteElementStyle($elementId,json_encode($styleArray));
                     $this->go->go(array('page' => $page,'id' => $elementId));
@@ -637,10 +643,12 @@
                         $style = array();
                         $other = array();
                         $css = array();
+                        $styleParams = array_keys(configuration::STYLE);
                         
                         foreach ($cssName as $key => $value) { 
-                            if (in_array($key,configuration::STYLE)) {
-                                // TODO: add 'px' and '#' to values
+                            if (in_array($key,$styleParams)) {
+                                // verify css:
+                                $value = $this->verifyCss($key,$value);
                                 $css[$key] = $value;
                             }
                             if (in_array($key,configuration::OTHER)) {
@@ -750,6 +758,46 @@
             }
  
             $this->go->go(array('page'=> 'project','id' => $post['project_id']));  
+        }
+        
+        public function verifyCss($cssKey,$cssValue)
+        {
+            // TODO: if ($cssValue == null) {}
+            
+            $cssValue = trim($cssValue);
+            // if css param has only 1 possible value:
+            if (count(configuration::STYLE[$cssKey]['values']) == 1) {
+                // if value type in integer:
+                if (configuration::STYLE[$cssKey]['type'] == 'int') {
+                    // get all numbers: 
+                    preg_match_all("/[0-9,]+/", $cssValue,$mathes);
+                    foreach ($mathes[0] as $k => $int) {
+                        $goodValue[] = $int.configuration::STYLE[$cssKey]['values'][0];
+                    }
+                    return implode($goodValue,' ');
+                } else if (configuration::STYLE[$cssKey]['type'] == 'string') {
+                    // if value is #:
+                    if (configuration::STYLE[$cssKey]['values'][0] == '#') {
+                        $parts = explode('#',$cssValue);
+                        foreach ($parts as $k => $val) {
+                            if (strlen($val) == 3 or strlen($val) == 6) {
+                                return strtoupper('#'.$val);
+                            }
+                        }
+                    // if somthing wrong, return black:
+                        return '#000000';
+                    } else {
+                        // TODO: difficult string ?px solid|dotted|dashed #?
+                        return $cssValue;
+                    }
+                }
+            } else {
+                if (in_array($cssValue,configuration::STYLE[$cssKey]['values'])) {
+                    return $cssValue;
+                } else {
+                    return configuration::STYLE[$cssKey]['values'][0];
+                }
+            }
         }
         
         public function decreasePriority($post) 

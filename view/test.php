@@ -21,8 +21,27 @@
             )
         );
         
+        #
+        echo $pure->verifyCss('font-size','1px solid #iuyuyt');
+        
+        $keys = array_keys(configuration::STYLE);
+        if (in_array('font-size',$keys)) {
+            echo 'yes';
+        }
+        else { echo 'no'; }
+        
+        $type = configuration::STYLE['font-size']['values'][0];
+        $value = configuration::STYLE['font-size']['type'];
+        
+        $input = '';
+
+        
+        
+        
+        $a = configuration::STYLE;
+        ksort($a);
         echo '<pre>';
-        print_r(configuration::STYLE);
+        print_r($a);
         
         
         // які властивості елементів?
@@ -40,9 +59,7 @@
         4) Вставляю в базу даних з новими ІД (класи з старого дерева)
   
     */
-    
 
-    
     ?>
     </div>
 </div>

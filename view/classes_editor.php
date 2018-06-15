@@ -6,7 +6,8 @@
     $classes = $pure->getAllClasses($_GET['projectId']);
     $json = $pure->getProjectStyle($_GET['projectId'])['globalStyles'];
     $bodyStylesArray = json_decode($json,true);
-
+    $styleParams = array_keys(configuration::STYLE);
+    
     foreach ($classes as $ck => $classesArr) {
         if (strlen($classesArr['class']) > 0) {
 ?> 
@@ -35,7 +36,7 @@
                 $cssKeys = array();
             }
             
-            foreach(configuration::STYLE as $styleOption) {
+            foreach($styleParams as $styleOption) {
                 if (!in_array($styleOption,$cssKeys)) {
                     $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
                 }
@@ -118,7 +119,7 @@
                 $cssKeys = array();
             }
             
-            foreach(configuration::STYLE as $styleOption) {
+            foreach($styleParams as $styleOption) {
                 if (!in_array($styleOption,$cssKeys)) {
                     $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
                 }
