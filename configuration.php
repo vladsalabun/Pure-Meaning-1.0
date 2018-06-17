@@ -3,6 +3,7 @@
     // Setup:
     class configuration
     {    
+        const VER = 2.1;
         const HOST = 'localhost';
         const DB_NAME = 'pure_meaning';
         const DB_USER = 'mysql';
@@ -55,6 +56,7 @@
             'new_form' => array('Создать новую форму',''),
             'font' => array('Шрифт','fonts'),
             'objection' => array('Возражения','objection'),
+            'memegen' => array('memegen','memegen'),
         );        
                 
         // All tables:
@@ -260,7 +262,10 @@
                 'type' => 'string',
                 'values' => array('normal','italic','oblique','initial','inherit')
             ),
-            'font-family' => array(),
+            'font-family' => array(
+                'type' => 'string',
+                'values' => array('')
+            ),
             'padding' => array(
                 'type' => 'int',
                 'values' => array('px')
@@ -269,18 +274,17 @@
                 'type' => 'int',
                 'values' => array('px')
             ),     
-            'float' => array(),     
             'text-align' => array(
                 'type' => 'string',
                 'values' => array('left', 'right', 'justify', 'center')
             ),     
             'width' => array(
                 'type' => 'int',
-                'values' => array('px')
+                'values' => array('px','%')
             ),     
             'height' => array(
                 'type' => 'int',
-                'values' => array('px')
+                'values' => array('px','%')
             ), 
             'line-height' => array(
                 'type' => 'int',
@@ -401,6 +405,55 @@
             'UPDATE' => array('min' => 80, 'max' => 180),
             'INSERT' => array('min' => 100, 'max' => 240),
         );
+
+        const ALLOWED_METHODS = array (
+            'add_content_block' => 'addContentBlock',
+            'increase_priority' => 'increasePriority',
+            'decrease_priority' => 'decreasePriority',
+            'add_new_element' => 'addNewElement',
+            'add_leaves' => 'addLeaves',
+            'delete_element' => 'deleteElement',
+            'edit_element' => 'editElement',
+            'add_other_option' => 'addOtherOption',
+            'add_css_option' => 'addCssOption',
+            'delete_other_option' => 'deleteOtherOption',
+            'delete_css_option' => 'deleteCssOption',
+            'fav_element' => 'favElement',
+            'edit_body_style' => 'editBodyStyle',
+            'delete_body_option' => 'deleteBodyOption',
+            'edit_class_style' => 'editClassStyle',
+            'delete_class_option' => 'deleteClassOption',
+            'add_new_body_style' => 'addNewBodyStyle',
+            'add_new_class_style' => 'addNewClassStyle',
+            'change_parent' => 'changeParent',
+            'current_tree_copy' => 'currentTreeCopy',
+            
+            'add_new_color' => array('colors' => 'addNewColor'),
+            'delete_color' => array('colors' => 'deleteColor'),
+            
+            'add_new_font' => array('fonts' => 'addNewFont'),
+            'make_font_favourite' => array('fonts' => 'makeFontFavourite'),
+            'make_font_favourite2' => array('fonts' => 'makeFontFavourite2'),
+            'cyrillic_font' => array('fonts' => 'cyrillicFont'),
+            'latin_font' => array('fonts' => 'latinFont'),
+            'delete_font' => array('fonts' => 'deleteFont'),
+            
+            'add_new_project' => array('projects' => 'addNewProject'),
+            'edit_project' => array('projects' => 'editProject'),
+            'delete_project' => array('projects' => 'deleteProject'),
+            'add_new_subproject' => array('projects' => 'addNewSubproject'),
+            'edit_subproject' => array('projects' => 'editSubproject'),
+            
+            'add_new_objection_theme' => array('objections' => 'addNewObjectionTheme'),
+            'delete_objection' => array('objections' => 'deleteObjection'),
+            'delete_objection_theme' => array('objections' => 'deleteObjectionTheme'),
+            'edit_objection' => array('objections' => 'editObjection'),
+            'add_objection' => array('objections' => 'addObjection'),
+            
+            'get_json_style_config' => array('json' => 'getStyleConfig'),
+            
+            'meme_screenshot' => array('screenshot' => 'memeShot')
+         );
         
          const FISH = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat fermentum augue a accumsan. Ut est sapien, malesuada eget convallis eu, mattis nec eros. Suspendisse suscipit vehicula augue, nec commodo mi interdum ac. Etiam id sem venenatis, hendrerit purus eu, auctor metus. Quisque lacinia nisi eu pellentesque pharetra. Phasellus malesuada id sapien ut sagittis. Nam eget dui nec dui tristique commodo at vitae nibh. In imperdiet odio ut lorem aliquam varius. Aenean facilisis tempus dui, et posuere sapien vulputate faucibus. Integer pharetra leo non leo aliquet, vitae ullamcorper dui rutrum. Duis vestibulum facilisis rhoncus. Nam ligula nunc, sagittis sed purus in, tincidunt finibus magna. Vivamus laoreet massa eu rhoncus tempus. Quisque tincidunt hendrerit metus sed vehicula. Sed iaculis mauris nec nunc suscipit hendrerit. Cras at scelerisque tellus, ut dignissim lorem.
 

@@ -1,10 +1,7 @@
 <div class="row">
 	<div class="col-lg-8">
 <?php
-    $objections = new objections;    
-    $form = new formGenerator;    
-    $table = new tableGenerator; 
-    
+    $objections = new objections;
     $themes = $objections->getObjectionsTheme();
     
     echo $table->tableStart( array(

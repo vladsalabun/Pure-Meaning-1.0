@@ -1,5 +1,6 @@
 <div class="row">
 	<div class="col-lg-8"> 
+        <p><a href="<?php echo configuration::MAIN_URL;?>?page=memegen">memegen</a></p>
         <p>Grab all ideas which you can! Remember them, and code them!</p>
         <p><b>Менеджер проектів:</b></p>
         <ol align="left">
@@ -11,6 +12,7 @@
         <p>Суть проекту в тому, щоб створити базу для накопичення хороших візуальних даних.</p>
     </div>
 	<div class="col-lg-4">
+    <h3>Турботливо, бо для себе :)</h3>
     <p>TODO:</p>
     <ol>
         <li>json,html,php beautofier</li>

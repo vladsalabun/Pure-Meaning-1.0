@@ -54,7 +54,7 @@
     <input type="hidden" name="action" value="edit_class_style">
     <input type="hidden" name="projectId" value="<?php echo $_GET['projectId']; ?>"> 
     <input type="hidden" name="className" value="<?php echo $_GET['class']; ?>"> 
-    <table class="table table-striped">
+    <table class="table table-sm table-mini">
     <thead><tr><th scope="col">Option</th><th scope="col">Value:</th></tr></thead>
     <tbody>    
 <?php       
@@ -137,7 +137,7 @@
     <form method="POST" id="edit_element" action="" autocomplete="OFF">
     <input type="hidden" name="action" value="edit_body_style">
     <input type="hidden" name="projectId" value="<?php echo $_GET['projectId']; ?>"> 
-    <table class="table table-striped">
+    <table class="table table-sm table-mini">
     <thead><tr><th scope="col">Option</th><th scope="col">Value:</th></tr></thead>
     <tbody>
 <?php 

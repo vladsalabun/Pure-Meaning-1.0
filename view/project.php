@@ -23,7 +23,7 @@
     if (count($htmlTree) > 0 ) {
 ?> 
     <h4>Template:</h4>
-        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Class style editor</a></p>
+        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
         <p>Insert element from: <a href="" data-toggle="modal" data-target="#copyFromCurrentTree">current tree</a> | <a href="">other tree</a> | <a href="">favourite</a> | <a href="">templates</a></p>
         <p>Copy: <a href="">brunch style</a></p>
 <?php 

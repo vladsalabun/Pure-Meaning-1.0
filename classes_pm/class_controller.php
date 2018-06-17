@@ -16,51 +16,7 @@
         {
             if ($_POST) 
             {
-                $allowed_methods = array (
-                    'add_content_block' => 'addContentBlock',
-                    'increase_priority' => 'increasePriority',
-                    'decrease_priority' => 'decreasePriority',
-                    'add_new_element' => 'addNewElement',
-                    'add_leaves' => 'addLeaves',
-                    'delete_element' => 'deleteElement',
-                    'edit_element' => 'editElement',
-                    'add_other_option' => 'addOtherOption',
-                    'add_css_option' => 'addCssOption',
-                    'delete_other_option' => 'deleteOtherOption',
-                    'delete_css_option' => 'deleteCssOption',
-                    'fav_element' => 'favElement',
-                    'edit_body_style' => 'editBodyStyle',
-                    'delete_body_option' => 'deleteBodyOption',
-                    'edit_class_style' => 'editClassStyle',
-                    'delete_class_option' => 'deleteClassOption',
-                    'add_new_body_style' => 'addNewBodyStyle',
-                    'add_new_class_style' => 'addNewClassStyle',
-                    'change_parent' => 'changeParent',
-                    'current_tree_copy' => 'currentTreeCopy',
-                    
-                    'add_new_color' => array('colors' => 'addNewColor'),
-                    'delete_color' => array('colors' => 'deleteColor'),
-                    
-                    'add_new_font' => array('fonts' => 'addNewFont'),
-                    'make_font_favourite' => array('fonts' => 'makeFontFavourite'),
-                    'make_font_favourite2' => array('fonts' => 'makeFontFavourite2'),
-                    'cyrillic_font' => array('fonts' => 'cyrillicFont'),
-                    'latin_font' => array('fonts' => 'latinFont'),
-                    'delete_font' => array('fonts' => 'deleteFont'),
-                    
-                    'add_new_project' => array('projects' => 'addNewProject'),
-                    'edit_project' => array('projects' => 'editProject'),
-                    'delete_project' => array('projects' => 'deleteProject'),
-                    'add_new_subproject' => array('projects' => 'addNewSubproject'),
-                    'edit_subproject' => array('projects' => 'editSubproject'),
-                    
-                    'add_new_objection_theme' => array('objections' => 'addNewObjectionTheme'),
-                    'delete_objection' => array('objections' => 'deleteObjection'),
-                    'delete_objection_theme' => array('objections' => 'deleteObjectionTheme'),
-                    'edit_objection' => array('objections' => 'editObjection'),
-                    'add_objection' => array('objections' => 'addObjection')
-                );
-                
+                $allowed_methods = configuration::ALLOWED_METHODS;
                 if (is_array($allowed_methods[$_POST['action']])) {
                     // handle it to his class:
                     foreach ($allowed_methods[$_POST['action']] as $className => $methodName) {
@@ -238,28 +194,30 @@
         public function globalStyles($projectId) 
         {
             $globalStylesJson = $this->model->globalStyles($projectId)['globalStyles'];
-            $globalStylesArray = json_decode($globalStylesJson, true);
-            
-            $str = '<style>';
-            
-            foreach($globalStylesArray as $class => $styleArray) {
-                if ($class == 'body') {
-                    $str .= $class.' {';
-                    foreach ($styleArray as $styleName => $styleValue) {
-                        $str .= $styleName . ': ' . $styleValue . '; ';
+            if ($globalStylesJson != null) {
+                $globalStylesArray = json_decode($globalStylesJson, true);
+
+                $str = '<style>';
+                
+                foreach($globalStylesArray as $class => $styleArray) {
+                    if ($class == 'body') {
+                        $str .= $class.' {';
+                        foreach ($styleArray as $styleName => $styleValue) {
+                            $str .= $styleName . ': ' . $styleValue . '; ';
+                        }
+                        $str .= '} ';
+                    } else {
+                        $str .= '.' . $class.' {';
+                        foreach ($styleArray as $styleName => $styleValue) {
+                            $str .= $styleName . ': ' . $styleValue. '; ';
+                        }
+                        $str .= '} ';
                     }
-                    $str .= '} ';
-                } else {
-                    $str .= '.' . $class.' {';
-                    foreach ($styleArray as $styleName => $styleValue) {
-                        $str .= $styleName . ': ' . $styleValue. '; ';
-                    }
-                    $str .= '} ';
                 }
+                
+                $str .= '</style>';
+                return $str;
             }
-            
-            $str .= '</style>';
-            return $str;
         }
        
         public function getElementInfo($elementId) 
@@ -547,6 +505,12 @@
                     # ADD NEW BODY STYLE:
                     $style = $this->getProjectStyle($projectId)['globalStyles'];
                     $styleArray = json_decode($style, true);
+                    
+                    // verify css: 
+                    if (in_array($cssName,array_keys(configuration::STYLE))) {
+                        $cssValue = $this->verifyCss($cssName,$cssValue);
+                    }
+                    
                     // add to style array:
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
                     // save to db:
@@ -559,7 +523,7 @@
                     $styleArray = json_decode($style, true);
                     
                     // verify css: 
-                    if (in_array($key,array_keys(configuration::STYLE))) {
+                    if (in_array($cssName,array_keys(configuration::STYLE))) {
                         $cssValue = $this->verifyCss($cssName,$cssValue);
                     }
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
@@ -573,6 +537,11 @@
                     # ADD NEW CLASS STYLE:
                     $style = $this->getProjectStyle($projectId)['globalStyles'];
                     $styleArray = json_decode($style, true);
+                    
+                    // verify css: 
+                    if (in_array($cssName,array_keys(configuration::STYLE))) {
+                        $cssValue = $this->verifyCss($cssName,$cssValue);
+                    }
                     // add to style array:
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
                     // save to db:
@@ -620,10 +589,13 @@
                     # EDIT BODY AND CLASS CSS STYLE:
                     $style = json_decode($this->getProjectStyle($projectId)['globalStyles'],true);
                     $css = array();
+                    $styleParams = array_keys(configuration::STYLE);
+                    
                     // make new style array:
                     foreach ($cssName as $key => $value) {
-                        if (in_array($key,configuration::STYLE)) {
-                            // TODO: add 'px' and '#' to values
+                        if (in_array($key,$styleParams)) {
+                            // verify css:
+                            $value = $this->verifyCss($key,$value);
                             $css[$key] = $value;
                         }
                     }
@@ -792,10 +764,29 @@
                     }
                 }
             } else {
-                if (in_array($cssValue,configuration::STYLE[$cssKey]['values'])) {
-                    return $cssValue;
+                if (configuration::STYLE[$cssKey]['type'] == 'int') {
+                    $goodValue = configuration::STYLE[$cssKey]['values'][0];
+                    // check all possible style values:
+                    foreach (configuration::STYLE[$cssKey]['values'] as $possibleValue) {
+                        $pos = strpos($cssValue, $possibleValue);
+                        if ($pos === false) {} else {
+                            // get user style:
+                            $goodValue = $possibleValue;
+                        } 
+                    }
+                    // get ints:
+                    preg_match_all("/[0-9,]+/", $cssValue,$mathes);
+                    // put them to array:
+                    foreach ($mathes[0] as $k => $int) {
+                        $goodInt[] = $int.$goodValue;
+                    }
+                    return implode($goodInt,' ');
                 } else {
-                    return configuration::STYLE[$cssKey]['values'][0];
+                    if (in_array($cssValue,configuration::STYLE[$cssKey]['values'])) {
+                        return $cssValue;
+                    } else {
+                        return configuration::STYLE[$cssKey]['values'][0];
+                    }
                 }
             }
         }
@@ -863,6 +854,27 @@
             $this->go->go(array('page'=> 'project','id' => $post['project_id']));  
         }
         
+        public function postRequest($action) 
+        {
+            if (in_array($action,array_keys(configuration::ALLOWED_METHODS))) {
+                $options = array(
+                    'http' => array(
+                        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                        'method'  => 'POST',
+                        'content' => http_build_query(array('action' => $action))
+                    )
+                );
+                $context  = stream_context_create($options);
+                $result = file_get_contents(configuration::MAIN_URL, false, $context);
+                if ($result === FALSE) { 
+                    return 'Post request error!'; 
+                }
+                return $result;
+            } else {
+                return 'Bad post request.';
+            }
+        }
+        
     } // class pure end
     
     require 'class_cron.php';
@@ -876,3 +888,6 @@
     require 'classes_pm/class_fonts.php';
     require 'classes_pm/class_colors.php';
     require 'classes_pm/class_highlight.php';
+    require 'classes_pm/class_modal_window.php';
+    require 'classes_pm/class_json.php';
+    require 'classes_pm/class_screenShot.php';

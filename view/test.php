@@ -22,27 +22,16 @@
         );
         
         #
-        echo $pure->verifyCss('font-size','1px solid #iuyuyt');
+        //echo $pure->verifyCss('width','110% 11px');
+     
+        echo $pure->postRequest('get_json_style_config');
         
-        $keys = array_keys(configuration::STYLE);
-        if (in_array('font-size',$keys)) {
-            echo 'yes';
-        }
-        else { echo 'no'; }
-        
-        $type = configuration::STYLE['font-size']['values'][0];
-        $value = configuration::STYLE['font-size']['type'];
-        
-        $input = '';
-
-        
-        
-        
+/*
         $a = configuration::STYLE;
         ksort($a);
         echo '<pre>';
         print_r($a);
-        
+*/
         
         // які властивості елементів?
         // яке призначення елементів?
