@@ -875,6 +875,21 @@
             }
         }
         
+        public function getMeme($id = null) {
+            if(isset($id)){
+                $array = array(
+                    "SELECT" => "*",
+                    "FROM" => "pm_memes",
+                    "WHERE" => "ID = $id",
+                    "fetch" => 1,
+            );
+            return $this->model->select($array, null);
+            } else {
+                return 'Error! No meme id.';
+            }
+        }
+        
+        
     } // class pure end
     
     require 'class_cron.php';

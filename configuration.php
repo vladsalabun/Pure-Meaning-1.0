@@ -206,6 +206,15 @@
                 "allExp" => "INT( 11 ) DEFAULT '0'",
                 "time" => "INT( 11 ) DEFAULT '0'"
             ),
+
+            // Creating memes:
+            "pm_memes" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "name" => "VARCHAR( 200 ) NULL",
+                "style" => "TEXT NULL", // json
+                "time" => "INT( 11 ) DEFAULT '0'",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),
             
         );
 
