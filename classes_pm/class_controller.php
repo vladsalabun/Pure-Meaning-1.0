@@ -889,6 +889,57 @@
             }
         }
         
+        public function memeUpdate() 
+        {   
+            
+            $styleArray['html'] = $_POST['html'];
+            
+            foreach ($_POST as $postName => $postValue) {
+                $parts = explode('_',$postName);
+                if (count($parts) == 3) {
+                    if ($parts[0] == 'id') {
+                        // if  ID exist:
+                        if (isset($styleArray['css']['id'][$parts[1]]))
+                        {
+                            // add more style:
+                            $styleArray['css']['id'][$parts[1]] += array($parts[2] => $postValue);
+                        } else {
+                            // add ID and style:
+                            $styleArray['css']['id'][$parts[1]] = array($parts[2] => $postValue);
+                        } 
+                    } else if ($parts[0] == 'class') {
+                        // if class exist:
+                        if (isset($styleArray['css']['class'][$parts[1]]))
+                        {
+                            // add more style:
+                            $styleArray['css']['class'][$parts[1]] += array($parts[2] => $postValue);
+                        } else {
+                            // add class and style:
+                            $styleArray['css']['class'][$parts[1]] = array($parts[2] => $postValue);
+                        } 
+                    }
+                }
+            }
+            
+            //$json = str_replace(array("\\n", "\\r"), '', json_encode($styleArray));
+
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "name" => $_POST['name'],
+                "style" => json_encode($styleArray),
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );
+                    
+            $this->model->update($array); 
+            // page to redirect:    
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));  
+
+        }
+        
         
     } // class pure end
     

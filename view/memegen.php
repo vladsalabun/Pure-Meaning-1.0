@@ -1,5 +1,102 @@
 <script type='text/javascript' src='js/screenshotter.js'></script>
 <div class="row">
+    <div class="col-lg-3">
+    <p><a href="" id="megaButton" class="reader" onclick="makeIT();">Download image</a></p>
+    <?php
+    
+    $HtmlFormatter = new HtmlFormatter;
+    
+    $meme = $pure->getMeme($_GET['ID']);
+    $style = json_decode($meme['style'],true);
+
+    echo 
+     $form->formStart()
+    .$form->hidden(array('name' => 'action', 'value' => 'meme_update'))
+    .$form->hidden(array('name' => 'ID', 'value' => $_GET['ID']))
+    .$table->tableStart( array(
+                'class'=>'table table-sm table-mini',
+                'th'=> array('Name:','Params:'))
+        )
+    .$table->tr(
+        array(
+            'Name:',
+            $form->text(array('name' => 'name', 'value' => $meme['name'], 'class' => 'txtfield'))
+            )
+        )
+    .$table->tr(
+        array(
+            array(
+                // colspan = 2:
+                2,$form->textarea(array('name' => 'html', 'value' => $style['html'], 'class' => 'memetextarea')))
+            )
+        );
+
+    foreach($style['css'] as $type => $typeArray) {
+        $styleString = ''; 
+        // get all identifiers:
+        if ($type == 'id') {
+            
+            // walk through one identifier:
+            foreach ($typeArray as $idName => $idCss) {
+                
+                echo $table->tr(
+                    array(
+                            '',
+                            '<br><br><b>#'.$idName.'</b> (<a href="">x</a>)'
+                        )
+                    );
+                
+                // show al ID style:
+                foreach ($idCss as $idCssName => $idCssValue) {
+                    echo $table->tr(
+                    array(
+                        $idCssName,
+                        $form->text(array('name' => 'id_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield'))
+                        )
+                    );
+                }
+            }
+            
+        } else if ($type == 'class') {
+            // get all classes:
+            // walk through one identifier:
+            foreach ($typeArray as $idName => $idCss) {
+                
+                echo $table->tr(
+                    array(
+                            '',
+                            '<br><br><b>.'.$idName.'</b>'
+                        )
+                    );
+                
+                // show al ID style:
+                foreach ($idCss as $idCssName => $idCssValue) {
+                    echo $table->tr(
+                    array(
+                        $idCssName,
+                        $form->text(array('name' => 'class_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield'))
+                        )
+                    );
+                }
+            }
+        }
+    }
+
+
+
+    echo $table->tr(
+        array(
+            '',
+            $form->submit(array('name' => 'submit', 'value' => 'Update meme', 'class' => 'btn'))
+            )
+        ) 
+
+    .$table->tableEnd()
+    .$form->formEnd();
+        
+    
+    ?>
+    </div>
 	<div class="col-lg-9">
     <?php
         if(isset($_GET['width'])) {
@@ -23,97 +120,50 @@
             $font_family = 'Arial';
         }
         
-        $meme = $pure->getMeme(1);
-        var_dump($meme);
-        
-        $style = array(
-            'html' => '<div id="capture">
-            <br><br>
-            <br><br>
-            <br>
-            <h2 id="one">Каждый раб хочет собственного раба</h2>
-            <h2 id="two">Суп-пюре из ядерного гриба</h2>
-            <h2 id="three">От короны тяжёлая голова</h3>
-            <h2 id="four">По ночам детям зачитывают права </h3>            
-            </div>',
-            'css' => array(
-                'id'=> array(
-                    'capture' => array(
-                        'background' => '#f5f5dc',
-                        'width' => $width.'px',
-                        'height' => $height.'px',
-                        'padding' => '0px',
-                        'font-size' => $font_size.'px', 
-                        'font-family' => $font_family, 
-                        'text-align' => 'center'
-                    ),
-                    'one' => array(
-                        'color' => '#000',
-                        'font-size' => '32px',
-                        'font-style' => 'oblique'
-                    ),
-                    'two' => array(
-                        'color' => '#000',
-                        'font-size' => '32px',
-                        'font-style' => 'oblique'
-                    ),
-                    'three' => array(
-                        'color' => '#000',
-                        'font-size' => '32px',
-                        'font-style' => 'oblique'
-                    ),
-                    'four' => array(
-                        'color' => '#000',
-                        'font-size' => '32px',
-                        'font-style' => 'oblique'
-                    )
-                ),
-                'class' => array(
-                    'className' => array(
-                        'color' => '#000'
-                    ),
-                    'className2' => array(
-                        'background' => '#000'
-                    )
-                )
-            )
-        );
-        
-        
+
         // TODO:
         /*
         1. Копірайт на мем
+        2. Наступний-попередній мем
+        3. Форму зміни стилей з підказками
+        4. Парсер html
+        5. На flex!
         */
+
+        // show meme:
+        echo $style['html'];
+        
+        //$pure->updateMeme(1,'test',$style);
         
         echo '<style>';
         
         foreach($style['css'] as $type => $typeArray) {
             
-            $str = '';
+            $styleString = '';
             // get all identifiers:
             if ($type == 'id') {
                 // walk throught one identifier:
                 foreach ($typeArray as $idName => $idCss) {
-                    $str .= '#' . $idName.' {';
+                    $styleString .= '#' . $idName.' {';
                         // show al ID style:
                         foreach ($idCss as $idCssName => $idCssValue) {
-                            $str .= $idCssName . ': ' . $idCssValue. '; ';
+                            $styleString .= $idCssName . ': ' . $idCssValue. '; ';
                         }
-                    $str .= '} ';
+                    $styleString .= '} ';
                 }
             } else if ($type == 'class') {
                 // get all classes:
                 // walk throught one identifier:
                 foreach ($typeArray as $className => $classCss) {
-                    $str .= '.' . $className.' {';   
+                    $styleString .= '.' . $className.' {';   
                     foreach ($classCss as $styleName => $styleValue) {
-                        $str .= $styleName . ': ' . $styleValue. '; ';
+                        $styleString .= $styleName . ': ' . $styleValue. '; ';
                     }
-                    $str .= '} ';
+                    $styleString .= '} ';
                 }
             }
             // show:
-            echo $str;
+            echo $styleString;
         }
         
         echo '</style>';   
@@ -123,10 +173,7 @@
         
     ?>
     <?php echo $pure->modalHtml('canvas','Download canvas:','<div id="f"></div>'); ?>
-    <?php echo $style['html'];?>
-    </div>
-    <div class="col-lg-3">
-    <p><a href="" id="megaButton" class="reader" onclick="makeIT();">Download image</a></p>
+    <?php $style['html'];?>
     </div>
     
 </div>

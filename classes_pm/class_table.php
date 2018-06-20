@@ -33,7 +33,11 @@
         {
             $string .= '<tr>';
             foreach ($array as $value) {
-                $string .= '<td>'.$value.'</td>';
+                if (is_array($value)) {
+                        $string .= '<td colspan="'.$value[0].'">'.$value[1].'</td>';
+                } else {
+                    $string .= '<td>'.$value.'</td>';
+                }
             }
             $string .= '</tr>';
             return $string;
