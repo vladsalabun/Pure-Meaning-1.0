@@ -746,6 +746,7 @@
                     foreach ($mathes[0] as $k => $int) {
                         $goodValue[] = $int.configuration::STYLE[$cssKey]['values'][0];
                     }
+
                     return implode($goodValue,' ');
                 } else if (configuration::STYLE[$cssKey]['type'] == 'string') {
                     // if value is #:
@@ -891,12 +892,18 @@
         
         public function memeUpdate() 
         {   
-            
+            $styleParams = array_keys(configuration::STYLE);
             $styleArray['html'] = $_POST['html'];
             
             foreach ($_POST as $postName => $postValue) {
                 $parts = explode('_',$postName);
                 if (count($parts) == 3) {
+                    
+                    if (in_array($parts[2],$styleParams)) {
+                        // verify css:
+                        $postValue = $this->verifyCss($parts[2],$postValue);
+                    }
+                    
                     if ($parts[0] == 'id') {
                         // if  ID exist:
                         if (isset($styleArray['css']['id'][$parts[1]]))
@@ -920,8 +927,6 @@
                     }
                 }
             }
-            
-            //$json = str_replace(array("\\n", "\\r"), '', json_encode($styleArray));
 
             $array = array(
             "UPDATE" => 'pm_memes',
@@ -940,6 +945,32 @@
 
         }
         
+        public function memeDeleteBlock() 
+        {
+            $meme = $this->getMeme($_POST['ID']);
+            $styleArray = json_decode($meme['style'],true);
+            
+            if ($_POST['type'] == 'id') {
+                unset($styleArray['css']['id'][$_POST['name']]);
+            } else if ($_POST['type'] == 'class') {
+                unset($styleArray['css']['class'][$_POST['name']]);
+            }
+             
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "style" => json_encode($styleArray),
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );
+                    
+            $this->model->update($array); 
+            // page to redirect:    
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));  
+            
+        }
         
     } // class pure end
     
