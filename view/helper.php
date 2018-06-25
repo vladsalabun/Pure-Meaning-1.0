@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-lg-12">
-    <h4>Notepad++ shortkeys:</h4>
+    <h3>Notepad++ shortkeys:</h3>
     
     F11 - на весь экран<br>
     Ctrl + Q - закомментировать/раскомментировать<br>
@@ -11,6 +11,36 @@
     Ctrl + Shift + U - прописные<br>
     Alt + U - Все с заглавной<br>
     Ctrl + Shift + Up/Down - переместить строку вверх/вниз<br>
+    <h3>Templatter:</h3>
+    <pre>
+<?php
+    echo Highlight::render(
+    "
+    \$table->tableStart('th' => array('',''),'class' => '');
+    \$table->tr('','');
+    \$table->tr(array(2,'')); // розтягнути на дві колонки
+    \$table->tableEnd();
+
+    \$modal->a('window','anchor'); // посилання на модальне вікно
+    
+    \$form->formStart();
+    \$form->hidden('name'=> '','value'=> '');
+    \$form->text('name'=> '','value'=> '','class'=>'txtfield','placeholder' =>'');
+    \$form->textarea('name'=> '','value'=> '','class'=>'txtfield');
+    \$form->uploadFile('name'=> '');
+    \$form->select('name'=> '','value'=> array('key'=>'value'));
+    \$form->datetime('name'=> '','value'=> '')
+    \$form->submit('name'=> '','value'=> '','class'=>'txtfield');
+    \$form->formEnd();
+    
+    HTML: 
+        p('text');
+        modalLink('windowId', 'anchor');
+        modalHtml('windowId','text in modal header','modal body');
+    "
+    );
+?>
+    </pre>
     <h3>Query generator:</h3>
     <ol>
 <?php 

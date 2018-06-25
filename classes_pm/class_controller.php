@@ -734,9 +734,13 @@
         
         public function verifyCss($cssKey,$cssValue)
         {
-            // TODO: if ($cssValue == null) {}
-            
             $cssValue = trim($cssValue);
+            
+            // TODO: 
+            if ($cssValue == null) {
+                return '';
+            }
+            
             // if css param has only 1 possible value:
             if (count(configuration::STYLE[$cssKey]['values']) == 1) {
                 // if value type in integer:
@@ -746,8 +750,8 @@
                     foreach ($mathes[0] as $k => $int) {
                         $goodValue[] = $int.configuration::STYLE[$cssKey]['values'][0];
                     }
-
                     return implode($goodValue,' ');
+                    
                 } else if (configuration::STYLE[$cssKey]['type'] == 'string') {
                     // if value is #:
                     if (configuration::STYLE[$cssKey]['values'][0] == '#') {
@@ -909,9 +913,15 @@
                         if (isset($styleArray['css']['id'][$parts[1]]))
                         {
                             // add more style:
+                            if (in_array($parts[2],array_keys(configuration::STYLE))) {
+                                $postValue = $this->verifyCss($parts[2],$postValue);
+                            }
                             $styleArray['css']['id'][$parts[1]] += array($parts[2] => $postValue);
                         } else {
                             // add ID and style:
+                            if (in_array($parts[2],array_keys(configuration::STYLE))) {
+                                $postValue = $this->verifyCss($parts[2],$postValue);
+                            }
                             $styleArray['css']['id'][$parts[1]] = array($parts[2] => $postValue);
                         } 
                     } else if ($parts[0] == 'class') {
@@ -919,9 +929,15 @@
                         if (isset($styleArray['css']['class'][$parts[1]]))
                         {
                             // add more style:
+                            if (in_array($parts[2],array_keys(configuration::STYLE))) {
+                                $postValue = $this->verifyCss($parts[2],$postValue);
+                            }
                             $styleArray['css']['class'][$parts[1]] += array($parts[2] => $postValue);
                         } else {
                             // add class and style:
+                            if (in_array($parts[2],array_keys(configuration::STYLE))) {
+                                $postValue = $this->verifyCss($parts[2],$postValue);
+                            }
                             $styleArray['css']['class'][$parts[1]] = array($parts[2] => $postValue);
                         } 
                     }
@@ -968,7 +984,91 @@
                     
             $this->model->update($array); 
             // page to redirect:    
-            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));  
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
+            
+        }
+        
+        public function addCssToMeme() 
+        {
+            if (strlen($_POST['value']) > 1) {
+                // get meme style:
+                $meme = $this->getMeme($_POST['ID']);
+                $style = json_decode($meme['style'],true);
+
+                // get type of new block:
+                $type = substr($_POST['value'], 0, 1);
+                // and name:
+                $name = substr($_POST['value'], 1); 
+                
+                if ($type == '#') {
+                    // add new id:
+                    if (!isset($style['css']['id'][$name])) {
+                       $style['css']['id'][$name] = array();
+                    }
+                } else if ($type == '.') {
+                    // add new class:
+                    if (!isset($style['css']['class'][$name])) {
+                        $style['css']['class'][$name] = array();
+                    }
+                }
+                
+                // update in db:
+                $array = array(
+                "UPDATE" => 'pm_memes',
+                "SET" => array(
+                    "style" => json_encode($style),
+                ),
+                    "WHERE" => array(
+                        "ID" => $_POST['ID']
+                    )
+                );
+                        
+                $this->model->update($array); 
+            }
+            
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
+        }
+        
+        public function memeAddStyle() 
+        {
+            if (strlen($_POST['value']) > 1) { 
+                // get meme style:
+                $meme = $this->getMeme($_POST['ID']);
+                $style = json_decode($meme['style'],true);
+                
+                if ($_POST['type'] == 'id') {
+                    // add new id:
+                    if (isset($style['css']['id'][$_POST['name']])) {
+                        if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
+                            $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
+                        }
+                       $style['css']['id'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
+                    }
+                } else if ($_POST['type'] == 'class') {
+                    // add new class:
+                    if (isset($style['css']['class'][$_POST['name']])) {
+                        if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
+                            $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
+                        }
+                        $style['css']['class'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
+                    }
+                }
+                
+                // update in db:
+                $array = array(
+                "UPDATE" => 'pm_memes',
+                "SET" => array(
+                    "style" => json_encode($style),
+                ),
+                    "WHERE" => array(
+                        "ID" => $_POST['ID']
+                    )
+                );
+                        
+                $this->model->update($array); 
+            }
+            
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
             
         }
         
@@ -988,3 +1088,48 @@
     require 'classes_pm/class_modal_window.php';
     require 'classes_pm/class_json.php';
     require 'classes_pm/class_screenShot.php';
+    require 'classes_pm/class_html.php';
+    
+    // USEFULL FUNCTIONS: 
+    
+    function p($string) {
+        return '<p>'.$string.'</p>';
+    }
+    
+    function modalWindow($modalId,$modalTitle,$modalBody) 
+    { 
+        return   '
+        <!-- Modal -->
+            <div class="modal fade" id="'.$modalId.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="exampleModalLongTitle">'.$modalTitle.'</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">'.$modalBody.'</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+            </div>
+        <!-- /Modal -->';
+    }
+    
+    function modalLink($array = null, $anchor = null)
+    {
+        if (is_array($array)) {
+            return '<a href="" data-toggle="modal" data-target="#'.$array['window'].'">'.$array['anchor'].'</a>';
+        } else {
+            if(isset($array) and isset($anchor)) {
+                return '<a href="" data-toggle="modal" data-target="#'.$array.'">'.$anchor.'</a>';
+            } else {
+                return 'Error! Bad modal link param!';
+            }
+        }
+    }
+    
+    

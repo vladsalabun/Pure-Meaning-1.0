@@ -45,7 +45,7 @@
     .$table->tr(
         array(
             '',
-            '<a href="" data-toggle="modal" data-target="#addcss">add css</a>',
+            $mw->a('addcss','add css'),
             ''
         )
     );
@@ -63,9 +63,8 @@
                     array(
                             '',
                             '<br><br><b>#'.$idName.'</b>:   
-                            <a href="" data-toggle="modal" data-target="#addto_id_'.$idName.'">add</a> / 
-                            <a href="" data-toggle="modal" data-target="#delete_id_'.$idName.'">del</a>',
-                            ''
+                            '.$mw->a('addto_id_'.$idName,'add').' / 
+                            '.$mw->a('delete_id_'.$idName,'del')
                         )
                     );
                 // show al ID style:
@@ -127,46 +126,45 @@
 	<div class="col-lg-9">
     <?php       
 
-    // show meme:
-        echo $style['html'];
+    // show meme style:
+    echo '<style>';
+    
+    foreach($style['css'] as $type => $typeArray) {
         
-        //$pure->updateMeme(1,'test',$style);
-        
-        echo '<style>';
-        
-        foreach($style['css'] as $type => $typeArray) {
-            
-            $styleString = '';
-            // get all identifiers:
-            if ($type == 'id') {
-                // walk throught one identifier:
-                foreach ($typeArray as $idName => $idCss) {
-                    $styleString .= '#' . $idName.' {';
-                        // show al ID style:
-                        foreach ($idCss as $idCssName => $idCssValue) {
-                            $styleString .= $idCssName . ': ' . $idCssValue. '; ';
-                        }
-                    $styleString .= '} ';
-                }
-            } else if ($type == 'class') {
-                // get all classes:
-                // walk throught one identifier:
-                foreach ($typeArray as $className => $classCss) {
-                    $styleString .= '.' . $className.' {';   
-                    foreach ($classCss as $styleName => $styleValue) {
-                        $styleString .= $styleName . ': ' . $styleValue. '; ';
+        $styleString = '';
+        // get all identifiers:
+        if ($type == 'id') {
+            // walk throught one identifier:
+            foreach ($typeArray as $idName => $idCss) {
+                $styleString .= '#' . $idName.' {';
+                    // show al ID style:
+                    foreach ($idCss as $idCssName => $idCssValue) {
+                        $styleString .= $idCssName . ': ' . $idCssValue. '; ';
                     }
-                    $styleString .= '} ';
-                }
+                $styleString .= '} ';
             }
-            // show:
-            echo $styleString;
+        } else if ($type == 'class') {
+            // get all classes:
+            // walk throught one identifier:
+            foreach ($typeArray as $className => $classCss) {
+                $styleString .= '.' . $className.' {';   
+                foreach ($classCss as $styleName => $styleValue) {
+                    $styleString .= $styleName . ': ' . $styleValue. '; ';
+                }
+                $styleString .= '} ';
+            }
         }
-        
-        echo '</style>';    
-    ?>
-    <?php echo $pure->modalHtml('canvas','Download canvas:','<div id="f"></div>'); ?>
-    <?php $style['html'];?>
+        // show:
+        echo $styleString;
+    }
+    
+    echo '</style>';    
+
+    echo $pure->modalHtml('canvas','Download canvas:','<div id="f"></div>'); 
+    
+    // SHOW MEME:
+    echo $style['html'];
+?>
     </div>
 </div>
 <script>
@@ -191,16 +189,40 @@
 
 </script>
 <?php 
+
     foreach ($modalsArray as $type => $valuesArray) {
         foreach ($valuesArray as $value) {
             
+            $currentCssKeys = array();
+            // adding form:
             $AddToModalBody = $form->formStart()
             .$form->hidden(array('name' => 'action', 'value' => 'meme_add_style'))
+            .$form->hidden(array('name' => 'ID','value' => $_GET['ID']))
             .$form->hidden(array('name' => 'type', 'value' => $type))
-            .$form->hidden(array('name' => 'name', 'value' => $value))
-            .$form->submit(array('name' => 'submit', 'value' => 'Add style', 'class' => 'btn'))
+            .$form->hidden(array('name' => 'name', 'value' => $value));
+
+            $currentCssKeys = array_keys($style['css'][$type][$value]);
+            
+            $AddToModalBody .= p('<p><select name="option[]">');
+            
+            foreach(configuration::STYLE as $styleOption => $styleParams) {
+                if (!in_array($styleOption,$currentCssKeys)) {
+                    $AddToModalBody  .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
+                }
+            }
+            
+            $AddToModalBody .= '</select></p>'
+            .p('Enter value:')
+            .p($form->text(array('name'=>'value','value' => '','class'=>'txtfield')));
+            
+            
+            // adding form:
+            $AddToModalBody .=
+             $form->submit(array('name' => 'submit', 'value' => 'Add style', 'class' => 'btn'))
             .$form->formEnd();
             
+            
+            // delete form:
             $deleteModalBody = $form->formStart()
                 .$form->hidden(array('name' => 'action', 'value' => 'meme_delete_block'))
                 .$form->hidden(array('name' => 'ID', 'value' => $_GET['ID']))
@@ -209,12 +231,24 @@
                 .$form->submit(array('name' => 'submit', 'value' => 'Delete', 'class' => 'btn'))
                 .$form->formEnd();
             
-            echo $pure->modalHtml('delete_'.$type.'_'.$value,'Do you want to delete '.$type.' <b>'.$value.'</b>?',$deleteModalBody);
-            echo $pure->modalHtml('addto_'.$type.'_'.$value,'Add style to '.$type.' <b>'.$value.'</b>?',$AddToModalBody);
+            // deleting all css modal:
+            echo modalWindow('delete_'.$type.'_'.$value,'Do you want to delete '.$type.' <b>'.$value.'</b>?',$deleteModalBody);
+            
+            // adding css modal: 
+            echo modalWindow('addto_'.$type.'_'.$value,'Add style to '.$type.' <b>'.$value.'</b>?',$AddToModalBody);
         }
     }
-    
-    $AddCssBody = '';
-    echo $pure->modalHtml('addcss','Add css:',$AddCssBody);
+   
+    // ADD CSS:
+    $AddCssBody = 
+         $form->formStart()
+        .$form->hidden(array('name' => 'action','value' => 'add_css_to_meme'))
+        .$form->hidden(array('name' => 'ID','value' => $_GET['ID']))
+        .p('Type <b>#idName</b> or <b>.className:</b>')
+        .p($form->text(array('name'=>'value','value' => '','class'=>'txtfield')))
+        .p($form->submit(array('name' => 'submit', 'value' => 'Add', 'class' => 'btn')))
+        .$form->formEnd();
+        
+    echo modalWindow('addcss','Add css:',$AddCssBody);
     
 ?>

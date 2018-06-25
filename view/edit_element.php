@@ -133,7 +133,7 @@
 
     
 <!--- /LIVE PREVIEW --->  
- 
+
     </div>
 </div>
 <?php 
@@ -156,11 +156,11 @@
         }
     }
 
-    $styleBody .='</select></p>
-    <p align="left">Enter value:</p>
-    <p>'.$form->text(array('name'=>'value','value' => '','class'=>'txtfield')).'</p>
-    <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
-    </form>'; 
+    $styleBody .='</select></p>'
+    .p('Enter value:')
+    .p($form->text(array('name'=>'value','value' => '','class'=>'txtfield')))
+    .p($form->submit(array('name' => 'submit', 'value' => 'Add', 'class' => 'btn')))
+    .$form->formEnd();
 
     echo $pure->modalHtml('add_new_style','Add style:',$styleBody);
 

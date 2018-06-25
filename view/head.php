@@ -53,4 +53,5 @@ $start_time = microtime(true);
     $form = new formGenerator;    
     $table = new tableGenerator;
     $mw = new modal;
+    //$html = new htmlTemplate;
 ?>
