@@ -734,63 +734,67 @@
         
         public function verifyCss($cssKey,$cssValue)
         {
-            $cssValue = trim($cssValue);
-            
-            // TODO: 
-            if ($cssValue == null) {
-                return '';
-            }
-            
-            // if css param has only 1 possible value:
-            if (count(configuration::STYLE[$cssKey]['values']) == 1) {
-                // if value type in integer:
-                if (configuration::STYLE[$cssKey]['type'] == 'int') {
-                    // get all numbers: 
-                    preg_match_all("/[0-9,]+/", $cssValue,$mathes);
-                    foreach ($mathes[0] as $k => $int) {
-                        $goodValue[] = $int.configuration::STYLE[$cssKey]['values'][0];
-                    }
-                    return implode($goodValue,' ');
-                    
-                } else if (configuration::STYLE[$cssKey]['type'] == 'string') {
-                    // if value is #:
-                    if (configuration::STYLE[$cssKey]['values'][0] == '#') {
-                        $parts = explode('#',$cssValue);
-                        foreach ($parts as $k => $val) {
-                            if (strlen($val) == 3 or strlen($val) == 6) {
-                                return strtoupper('#'.$val);
+            if (strlen($cssValue) > 1) {
+                $cssValue = trim($cssValue);
+                // if css param has only 1 possible value:
+                if (count(configuration::STYLE[$cssKey]['values']) == 1) {
+                    // if value type in integer:
+                    if (configuration::STYLE[$cssKey]['type'] == 'int') {
+                        // get all numbers: 
+                        preg_match_all("/[0-9,]+/", $cssValue,$mathes);
+                        if (count($mathes[0]) > 0) {
+                            foreach ($mathes[0] as $k => $int) {
+                                $goodValue[] = $int.configuration::STYLE[$cssKey]['values'][0];
                             }
+                            return implode($goodValue,' ');
+                        } else {
+                            return '';
                         }
-                    // if somthing wrong, return black:
-                        return '#000000';
-                    } else {
-                        // TODO: difficult string ?px solid|dotted|dashed #?
-                        return $cssValue;
+                        
+                    } else if (configuration::STYLE[$cssKey]['type'] == 'string') {
+                        // if value is #:
+                        if (configuration::STYLE[$cssKey]['values'][0] == '#') {
+                            $parts = explode('#',$cssValue);
+                            foreach ($parts as $k => $val) {
+                                if (strlen($val) == 3 or strlen($val) == 6) {
+                                    return strtoupper('#'.$val);
+                                }
+                            }
+                        // if somthing wrong, return black:
+                            return '#000000';
+                        } else {
+                            // TODO: difficult string ?px solid|dotted|dashed #?
+                            return $cssValue;
+                        }
                     }
-                }
-            } else {
-                if (configuration::STYLE[$cssKey]['type'] == 'int') {
-                    $goodValue = configuration::STYLE[$cssKey]['values'][0];
-                    // check all possible style values:
-                    foreach (configuration::STYLE[$cssKey]['values'] as $possibleValue) {
-                        $pos = strpos($cssValue, $possibleValue);
-                        if ($pos === false) {} else {
-                            // get user style:
-                            $goodValue = $possibleValue;
-                        } 
-                    }
-                    // get ints:
-                    preg_match_all("/[0-9,]+/", $cssValue,$mathes);
-                    // put them to array:
-                    foreach ($mathes[0] as $k => $int) {
-                        $goodInt[] = $int.$goodValue;
-                    }
-                    return implode($goodInt,' ');
                 } else {
-                    if (in_array($cssValue,configuration::STYLE[$cssKey]['values'])) {
-                        return $cssValue;
+                    if (configuration::STYLE[$cssKey]['type'] == 'int') {
+                        $goodValue = configuration::STYLE[$cssKey]['values'][0];
+                        // check all possible style values:
+                        foreach (configuration::STYLE[$cssKey]['values'] as $possibleValue) {
+                            $pos = strpos($cssValue, $possibleValue);
+                            if ($pos === false) {} else {
+                                // get user style:
+                                $goodValue = $possibleValue;
+                            } 
+                        }
+                        // get ints:
+                        preg_match_all("/[0-9,]+/", $cssValue,$mathes);
+                        // put them to array:
+                        if (count($mathes[0]) > 0) {
+                            foreach ($mathes[0] as $k => $int) {
+                                $goodInt[] = $int.$goodValue;
+                            }
+                            return implode($goodInt,' ');
+                        } else {
+                            return '';
+                        }
                     } else {
-                        return configuration::STYLE[$cssKey]['values'][0];
+                        if (in_array($cssValue,configuration::STYLE[$cssKey]['values'])) {
+                            return $cssValue;
+                        } else {
+                            return configuration::STYLE[$cssKey]['values'][0];
+                        }
                     }
                 }
             }
@@ -944,18 +948,7 @@
                 }
             }
 
-            $array = array(
-            "UPDATE" => 'pm_memes',
-            "SET" => array(
-                "name" => $_POST['name'],
-                "style" => json_encode($styleArray),
-            ),
-                "WHERE" => array(
-                    "ID" => $_POST['ID']
-                )
-            );
-                    
-            $this->model->update($array); 
+            $this->updateMemeJson(json_encode($styleArray),$_POST['ID']);
             // page to redirect:    
             $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));  
 
@@ -971,18 +964,8 @@
             } else if ($_POST['type'] == 'class') {
                 unset($styleArray['css']['class'][$_POST['name']]);
             }
-             
-            $array = array(
-            "UPDATE" => 'pm_memes',
-            "SET" => array(
-                "style" => json_encode($styleArray),
-            ),
-                "WHERE" => array(
-                    "ID" => $_POST['ID']
-                )
-            );
-                    
-            $this->model->update($array); 
+            
+            $this->updateMemeJson(json_encode($styleArray),$_POST['ID']);
             // page to redirect:    
             $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
             
@@ -1012,18 +995,7 @@
                     }
                 }
                 
-                // update in db:
-                $array = array(
-                "UPDATE" => 'pm_memes',
-                "SET" => array(
-                    "style" => json_encode($style),
-                ),
-                    "WHERE" => array(
-                        "ID" => $_POST['ID']
-                    )
-                );
-                        
-                $this->model->update($array); 
+                $this->updateMemeJson(json_encode($style),$_POST['ID']);
             }
             
             $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
@@ -1031,46 +1003,80 @@
         
         public function memeAddStyle() 
         {
-            if (strlen($_POST['value']) > 1) { 
-                // get meme style:
-                $meme = $this->getMeme($_POST['ID']);
-                $style = json_decode($meme['style'],true);
-                
-                if ($_POST['type'] == 'id') {
-                    // add new id:
-                    if (isset($style['css']['id'][$_POST['name']])) {
-                        if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
-                            $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
-                        }
-                       $style['css']['id'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
+            // get meme style:
+            $meme = $this->getMeme($_POST['ID']);
+            $style = json_decode($meme['style'],true);
+            
+            if ($_POST['type'] == 'id') {
+                // add new id:
+                if (isset($style['css']['id'][$_POST['name']])) {
+                    if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
+                        $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
                     }
-                } else if ($_POST['type'] == 'class') {
-                    // add new class:
-                    if (isset($style['css']['class'][$_POST['name']])) {
-                        if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
-                            $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
-                        }
-                        $style['css']['class'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
-                    }
+                   $style['css']['id'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
                 }
-                
-                // update in db:
-                $array = array(
-                "UPDATE" => 'pm_memes',
-                "SET" => array(
-                    "style" => json_encode($style),
-                ),
-                    "WHERE" => array(
-                        "ID" => $_POST['ID']
-                    )
-                );
-                        
-                $this->model->update($array); 
+            } else if ($_POST['type'] == 'class') {
+                // add new class:
+                if (isset($style['css']['class'][$_POST['name']])) {
+                    if (in_array($_POST['option'][0],array_keys(configuration::STYLE))) {
+                        $cssValue = $this->verifyCss($_POST['option'][0],$_POST['value']);
+                    }
+                    $style['css']['class'][$_POST['name']] += array($_POST['option'][0] => $cssValue);
+                }
             }
+            
+            $this->updateMemeJson(json_encode($style),$_POST['ID']); 
             
             $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
             
         }
+        
+        public function memeDeleteBlockStyle() 
+        { 
+            // get meme style:
+            $meme = $this->getMeme($_POST['ID']);
+            $style = json_decode($meme['style'],true);
+            // delete block style:
+            unset($style['css'][$_POST['type']][$_POST['name']][$_POST['style']]);
+            // update:
+            $this->updateMemeJson(json_encode($style),$_POST['ID']);
+
+        }
+        
+        public function updateMemeJson($json,$memeID) 
+        {
+            // update in db:
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "style" => $json,
+            ),
+                "WHERE" => array(
+                    "ID" => $memeID
+                )
+            );
+                    
+            $this->model->update($array); 
+            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));
+        }
+
+        
+        public function getAllFonts() 
+        {
+            $safeFonts = array();
+            
+            // get my own fonts:
+            $json = new json;
+            $allFonts = $json->getAllFonts();
+            // make font array:
+            foreach ($allFonts as $fontArray) {
+                $safeFonts += array($fontArray['ID'] => $fontArray['fontFamily']);
+            }
+            $safeFonts += configuration::safeFonts;
+            
+            return $safeFonts;
+        }
+        
         
     } // class pure end
     
@@ -1131,5 +1137,4 @@
             }
         }
     }
-    
     

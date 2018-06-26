@@ -1,6 +1,9 @@
 <script type='text/javascript' src='js/screenshotter.js'></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type='text/javascript' src='js/jquery-editable-select.js'></script>
+<link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/jquery-editable-select.css" type="text/css" media="screen" />
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-4">
     <p><a href="" id="megaButton" class="reader" onclick="makeIT();">Download image</a></p>
     <?php
     
@@ -14,7 +17,6 @@
         6. Як відкрити папку після завантаження мема? 
         7. Сторінка перегляду мемів
     */
-
     
     $meme = $pure->getMeme($_GET['ID']);
     $style = json_decode($meme['style'],true);
@@ -49,7 +51,7 @@
             ''
         )
     );
-        
+      
     foreach($style['css'] as $type => $typeArray) {
         $styleString = ''; 
         // get all identifiers:
@@ -67,15 +69,27 @@
                             '.$mw->a('delete_id_'.$idName,'del')
                         )
                     );
-                // show al ID style:
+                // show all ID style:
                 foreach ($idCss as $idCssName => $idCssValue) {
-                    echo $table->tr(
-                    array(
-                        $idCssName,
-                        $form->text(array('name' => 'id_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield')),
-                        'x'
-                        )
-                    );
+                    
+                    if ($idCssName == 'font-family') {
+                        echo $table->tr(
+                        array(
+                            $idCssName,
+                            $form->fontSelectingForm($idCssValue,'id_'.$idName.'_'.$idCssName),
+                            $mw->a('delete_id_'.$idName.'_css_'.$idCssName,'x')
+                            )
+                        );
+                        
+                    } else {
+                        echo $table->tr(
+                        array(
+                            $idCssName,
+                            $form->text(array('name' => 'id_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield')),
+                            $mw->a('delete_id_'.$idName.'_css_'.$idCssName,'x')
+                            )
+                        );
+                    }
                 }
             }            
         } else if ($type == 'class') {
@@ -90,19 +104,29 @@
                             '',
                             '<br><br><b>.'.$idName.'</b>: 
                             <a href="" data-toggle="modal" data-target="#addto_class_'.$idName.'">add</a> / 
-                            <a href="" data-toggle="modal" data-target="#delete_class_'.$idName.'">x</a>',
+                            <a href="" data-toggle="modal" data-target="#delete_class_'.$idName.'">del</a>',
                             ''
                         )
                     );
                 // show al ID style:
                 foreach ($idCss as $idCssName => $idCssValue) {
-                    echo $table->tr(
-                    array(
-                        $idCssName,
-                        $form->text(array('name' => 'class_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield'))
-                        ),
-                        'x'
-                    );
+                    if ($idCssName == 'font-family') {
+                        echo $table->tr(
+                        array(
+                            $idCssName,
+                            $form->fontSelectingForm($idCssValue,'class_'.$idName.'_'.$idCssName),
+                            $mw->a('delete_class_'.$idName.'_css_'.$idCssName,'x')
+                            )
+                        );
+                    } else {
+                        echo $table->tr(
+                        array(
+                            $idCssName,
+                            $form->text(array('name' => 'class_'.$idName.'_'.$idCssName, 'value' => $idCssValue, 'class' => 'txtfield')),
+                            $mw->a('delete_class_'.$idName.'_css_'.$idCssName,'x')
+                            )
+                        );
+                    }
                 }
             }
         }
@@ -123,7 +147,7 @@
         
     ?>
     </div>
-	<div class="col-lg-9">
+	<div class="col-lg-8">
     <?php       
 
     // show meme style:
@@ -205,9 +229,26 @@
             
             $AddToModalBody .= p('<p><select name="option[]">');
             
+            // check block styles:
             foreach(configuration::STYLE as $styleOption => $styleParams) {
+                // new style which can be selecter
                 if (!in_array($styleOption,$currentCssKeys)) {
                     $AddToModalBody  .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
+                } else {
+                    
+                    // if style is already selected, show modal to delete it:
+                    $deleteBlockStyleBody = 
+                     $form->formStart()
+                    .$form->hidden(array('name' => 'action', 'value' => 'meme_delete_block_style'))
+                    .$form->hidden(array('name' => 'ID','value' => $_GET['ID']))
+                    .$form->hidden(array('name' => 'type','value' => $type))
+                    .$form->hidden(array('name' => 'name','value' => $value))
+                    .$form->hidden(array('name' => 'style','value' => $styleOption))
+                    .$form->submit(array('name' => 'submit', 'value' => 'Delete '.$styleOption, 'class' => 'btn'))
+                    .$form->formEnd();
+                    
+                    echo modalWindow('delete_'.$type.'_'.$value.'_css_'.$styleOption,'Delete style: <b>'.$styleOption.'</b> from '.$type.': <b>'.$value.'</b>',$deleteBlockStyleBody);
+                    
                 }
             }
             

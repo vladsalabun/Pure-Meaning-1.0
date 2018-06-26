@@ -33,7 +33,10 @@
     \$form->submit('name'=> '','value'=> '','class'=>'txtfield');
     \$form->formEnd();
     
-    HTML: 
+    # Вибір шрифтa:
+        \$form->fontSelectingForm(\$idCssValue,'id_'.\$idName.'_'.\$idCssName)
+    
+    # HTML: 
         p('text');
         modalLink('windowId', 'anchor');
         modalHtml('windowId','text in modal header','modal body');

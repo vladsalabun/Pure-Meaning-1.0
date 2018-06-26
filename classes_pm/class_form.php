@@ -94,7 +94,32 @@
             }
         }
         
-
+        public function fontSelectingForm($currentFont = null,$elementName = null) 
+        { 
+            $allFonts = $this->getAllFonts();
+            
+            if (in_array($currentFont,$allFonts)) {
+                $currentFontID = array_search($currentFont,$allFonts);
+            } else {
+                $currentFontID = null;
+            }
+            
+            $string = '<select id="editable-select-'.$elementName.'" name="'.$elementName.'">';
+            foreach ($allFonts as $fontID => $fontFamily) {
+                if ($fontID == $currentFontID) {
+                    $selected = 'selected';
+                } else {
+                    $selected = null;
+                }
+                $string .= '<option '.$selected.'>'.$fontFamily.'</option>';
+            }
+            $string .= '</select>
+            <script>
+                $(\'#editable-select-'.$elementName.'\').editableSelect({ filter: false }); 
+            </script>';
+            
+            return $string;
+        }
  
  
 

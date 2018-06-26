@@ -1,0 +1,31 @@
+/**
+ * jQuery Editable Select
+ * Indri Muska <indrimuska@gmail.com>
+ *
+ * Source on GitHub @ https://github.com/indrimuska/jquery-editable-select
+ */
+
+input.es-input { 
+    border: 1px solid #d1d1d1;  
+    width: 100%;
+}
+input.es-input.open {
+	-webkit-border-bottom-left-radius: 0; 
+    -moz-border-radius-bottomleft: 0; 
+    border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0; 
+    -moz-border-radius-bottomright: 0; 
+    border-bottom-right-radius: 0; 
+    }
+.es-list { 
+    position: absolute; padding: 0; margin: 0; 
+    display: none; z-index: 1000; background: #fff; 
+    max-height: 220px; 
+    width: 300px;
+    overflow-y: auto;
+    border: 1px solid #d1d1d1; 
+}
+.es-list li { display: block; padding: 2px 4px; margin: 0; font-size: 10px;}
+.es-list li:hover { cursor: pointer; }
+.es-list li.selected { background: #f3f3f3; }
+.es-list li[disabled] { opacity: .5; }

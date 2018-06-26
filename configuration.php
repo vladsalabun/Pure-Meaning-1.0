@@ -3,7 +3,7 @@
     // Setup:
     class configuration
     {    
-        const VER = 2.1;
+        const VER = 2.2;
         const HOST = 'localhost';
         const DB_NAME = 'pure_meaning';
         const DB_USER = 'mysql';
@@ -301,16 +301,50 @@
             ), 
             'text-align' => array(
                 'type' => 'string',
-                'values' => array('left','right','center','justify','initial','inherit')
+                'values' => array(
+                    'left',
+                    'right',
+                    'center',
+                    'justify',
+                    'initial',
+                    'inherit'
+                )
             ), 
             'text-decoration' => array(
                 'type' => 'string',
-                'values' => array('none','underline','overline','line-through','blink')
+                'values' => array(
+                    'none',
+                    'underline',
+                    'overline',
+                    'line-through',
+                    'blink'
+                )
             ),            
             'word-break' => array(
                 'type' => 'string',
-                'values' => array('normal','break-all','keep-all','initial','inherit')
+                'values' => array(
+                    'normal',
+                    'break-all',
+                    'keep-all',
+                    'initial',
+                    'inherit'
+                )
             ),
+            'font-stretch' => array(
+                'type' => 'string',
+                'values' => array(
+                    'inherit', 
+                    'ultra-condensed', 
+                    'extra-condensed', 
+                    'condensed', 
+                    'semi-condensed', 
+                    'normal', 
+                    'semi-expanded', 
+                    'expanded', 
+                    'extra-expanded', 
+                    'ultra-expanded'
+                )
+            ),  
         );
         
         const STYLEVALUES = array(
@@ -465,17 +499,31 @@
             'meme_update' => 'memeUpdate',
             'meme_delete_block' => 'memeDeleteBlock',
             'add_css_to_meme' => 'addCssToMeme',
-            'meme_add_style' => 'memeAddStyle'
+            'meme_add_style' => 'memeAddStyle',
+            'meme_delete_block_style' => 'memeDeleteBlockStyle'
          );
         
          const FISH = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis volutpat fermentum augue a accumsan. Ut est sapien, malesuada eget convallis eu, mattis nec eros. Suspendisse suscipit vehicula augue, nec commodo mi interdum ac. Etiam id sem venenatis, hendrerit purus eu, auctor metus. Quisque lacinia nisi eu pellentesque pharetra. Phasellus malesuada id sapien ut sagittis. Nam eget dui nec dui tristique commodo at vitae nibh. In imperdiet odio ut lorem aliquam varius. Aenean facilisis tempus dui, et posuere sapien vulputate faucibus. Integer pharetra leo non leo aliquet, vitae ullamcorper dui rutrum. Duis vestibulum facilisis rhoncus. Nam ligula nunc, sagittis sed purus in, tincidunt finibus magna. Vivamus laoreet massa eu rhoncus tempus. Quisque tincidunt hendrerit metus sed vehicula. Sed iaculis mauris nec nunc suscipit hendrerit. Cras at scelerisque tellus, ut dignissim lorem.
 
-    Suspendisse vestibulum nec tellus ultricies tristique. Sed bibendum ex arcu, ut efficitur sapien aliquet a. In nunc sapien, varius id diam sit amet, sagittis luctus nulla. Ut convallis nibh augue, id pellentesque diam convallis a. Integer ornare volutpat finibus. Pellentesque lacinia egestas faucibus. Nulla pulvinar sapien justo, vitae aliquam orci efficitur sit amet. In ut rutrum libero, vitae accumsan magna. Integer ultrices, enim sed fermentum sagittis, dui nisi semper mi, eu fringilla felis libero in elit. Nullam sit amet rhoncus leo. Vivamus egestas, elit quis luctus finibus, risus nibh pulvinar tortor, quis congue orci enim id justo. Nulla facilisi.
+            Suspendisse vestibulum nec tellus ultricies tristique. Sed bibendum ex arcu, ut efficitur sapien aliquet a. In nunc sapien, varius id diam sit amet, sagittis luctus nulla. Ut convallis nibh augue, id pellentesque diam convallis a. Integer ornare volutpat finibus. Pellentesque lacinia egestas faucibus. Nulla pulvinar sapien justo, vitae aliquam orci efficitur sit amet. In ut rutrum libero, vitae accumsan magna. Integer ultrices, enim sed fermentum sagittis, dui nisi semper mi, eu fringilla felis libero in elit. Nullam sit amet rhoncus leo. Vivamus egestas, elit quis luctus finibus, risus nibh pulvinar tortor, quis congue orci enim id justo. Nulla facilisi.
 
-    Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris laoreet ipsum ac tortor venenatis feugiat. Phasellus vehicula risus eget justo dignissim rhoncus. Sed lacinia fringilla neque, sodales gravida arcu hendrerit sed. Praesent tempus enim magna, ullamcorper sodales turpis mattis vel. Nunc in finibus ipsum. Vestibulum id laoreet nibh, nec vulputate lectus. Curabitur velit sem, tristique a turpis ac, dignissim suscipit orci. Suspendisse eget tempus erat. Morbi aliquam nisi urna, id ornare velit accumsan nec. Aliquam nec magna nec dolor tincidunt bibendum et sed lorem. Pellentesque in cursus justo. Sed in justo sodales, viverra justo eu, tempus ante. Phasellus bibendum volutpat odio, sed imperdiet libero bibendum at.
+            Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris laoreet ipsum ac tortor venenatis feugiat. Phasellus vehicula risus eget justo dignissim rhoncus. Sed lacinia fringilla neque, sodales gravida arcu hendrerit sed. Praesent tempus enim magna, ullamcorper sodales turpis mattis vel. Nunc in finibus ipsum. Vestibulum id laoreet nibh, nec vulputate lectus. Curabitur velit sem, tristique a turpis ac, dignissim suscipit orci. Suspendisse eget tempus erat. Morbi aliquam nisi urna, id ornare velit accumsan nec. Aliquam nec magna nec dolor tincidunt bibendum et sed lorem. Pellentesque in cursus justo. Sed in justo sodales, viverra justo eu, tempus ante. Phasellus bibendum volutpat odio, sed imperdiet libero bibendum at.
 
-    Aenean ultricies ante et neque aliquet, eget molestie libero tincidunt. Etiam nec venenatis turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras non tellus at velit euismod efficitur auctor eu leo. Suspendisse blandit turpis a ligula semper dictum. Vivamus finibus fringilla nibh quis euismod. Curabitur nec porta lacus. Ut sodales libero in ex ullamcorper consectetur eget vel nulla. Mauris hendrerit massa sagittis rutrum luctus. Donec ac vestibulum libero. Mauris nunc augue, porttitor ut porttitor sit amet, vestibulum at libero. Vivamus tempor bibendum ante sed venenatis. Donec non libero a ante tristique fringilla. Nam tincidunt urna vel ante eleifend consequat.
+            Aenean ultricies ante et neque aliquet, eget molestie libero tincidunt. Etiam nec venenatis turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras non tellus at velit euismod efficitur auctor eu leo. Suspendisse blandit turpis a ligula semper dictum. Vivamus finibus fringilla nibh quis euismod. Curabitur nec porta lacus. Ut sodales libero in ex ullamcorper consectetur eget vel nulla. Mauris hendrerit massa sagittis rutrum luctus. Donec ac vestibulum libero. Mauris nunc augue, porttitor ut porttitor sit amet, vestibulum at libero. Vivamus tempor bibendum ante sed venenatis. Donec non libero a ante tristique fringilla. Nam tincidunt urna vel ante eleifend consequat.
 
-    Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus aliquet. Quisque euismod feugiat nunc eget egestas. Sed sagittis dapibus accumsan. Proin malesuada elementum metus placerat tempus. Cras mi ante, tempus vel leo id, lobortis sollicitudin eros. Donec fermentum tortor dui, sed tempor metus tempor vel.';
+            Sed non tempor nunc, non viverra sem. Donec imperdiet nisi vitae erat cursus aliquet. Quisque euismod feugiat nunc eget egestas. Sed sagittis dapibus accumsan. Proin malesuada elementum metus placerat tempus. Cras mi ante, tempus vel leo id, lobortis sollicitudin eros. Donec fermentum tortor dui, sed tempor metus tempor vel.';
+            
+        const safeFonts = array(
+            90001 => 'Arial', 
+            90002 => 'Helvetica', 
+            90003 => 'Arial Black',
+            90004 => 'Courier New', 
+            90005 => 'Impact', 
+            90006 => 'Lucida Sans Unicode',
+            90007 => 'Palatino Linotype', 
+            90008 => 'Times New Roman', 
+            90009 => 'Verdana', 
+            90010 => 'Trebuchet MS'
+        );
        
     }
