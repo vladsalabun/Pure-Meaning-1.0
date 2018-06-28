@@ -16,8 +16,8 @@
 <?php
     echo Highlight::render(
     "
-    \$table->tableStart('th' => array('',''),'class' => '');
-    \$table->tr('','');
+    \$table->tableStart(array('th' => array('',''),'class' => 'table table-sm table-mini'));
+    \$table->tr(array('',''));
     \$table->tr(array(2,'')); // розтягнути на дві колонки
     \$table->tableEnd();
 

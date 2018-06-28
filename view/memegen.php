@@ -4,22 +4,55 @@
 <link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/jquery-editable-select.css" type="text/css" media="screen" />
 <div class="row">
     <div class="col-lg-4">
-    <p><a href="" id="megaButton" class="reader" onclick="makeIT();">Download image</a></p>
-    <?php
+<?php 
+    
+    echo p('← <a href="'.CONFIGURATION::MAIN_URL.'?page=memes">Memes</a>');
+    echo p('<a href="" id="megaButton" class="reader" onclick="makeIT();">Download image</a>');
     
     // TODO:
     /*
+    
         1. Копірайт на мем
         2. Наступний-попередній мем
         3. Форму зміни стилей з підказками
         4. На flex!
         5. Рандомний колір і фон, щоб записувати вдалі і невдалі пари у базу знань
-        6. Як відкрити папку після завантаження мема? 
-        7. Сторінка перегляду мемів
-    */
+        7. Сторінка перегляду мемів з можливістю видалення файлів (просто як фтп)
+   
+       @font-face {
+            font-family: Pompadur; 
+            src: url(fonts/pompadur.ttf);
+       }
+       
+    */   
     
+    $fonts = new fonts;
     $meme = $pure->getMeme($_GET['ID']);
     $style = json_decode($meme['style'],true);
+    
+    // walk through styles and get all fonts:
+    $fontFaceArray = array();
+    
+    foreach ($style['css']['id'] as $blockName => $blockCssArray) {
+        if(isset($blockCssArray['font-family'])) {
+            $fontFaceArray[] = $blockCssArray['font-family'];
+        }
+    }
+    foreach ($style['css']['class'] as $blockName => $blockCssArray) {
+        if(isset($blockCssArray['font-family'])) {
+            $fontFaceArray[] = $blockCssArray['font-family'];
+        }
+    }
+    
+    echo '<style>';
+    // get fonts info by font name, and plug them:
+    foreach ($fontFaceArray as $fontFaceName){
+        $fontFace = $fonts->getFontByName($fontFaceName);        
+        echo ' @font-face { font-family: '.$fontFace['fontFamily'].'; src: url('.configuration::MAIN_URL.'/uploads/fonts/'.$fontFace['fileName'].'); }';
+    }
+    echo '</style>';
+    
+    
 
     echo 
      $form->formStart()

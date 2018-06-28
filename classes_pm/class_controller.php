@@ -1077,6 +1077,17 @@
             return $safeFonts;
         }
         
+        public function getMemeList() 
+        {
+            $array = array(
+                "SELECT" => "*",
+                "FROM" => "pm_memes",
+                "WHERE" => "moderation < 2",
+                "ORDER" => "ID",
+                "SORT" => "DESC"
+            );
+            return $this->model->select($array, null); 
+        }
         
     } // class pure end
     

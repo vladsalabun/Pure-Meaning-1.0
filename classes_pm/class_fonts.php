@@ -60,5 +60,20 @@
         {
             $this->model->deleteFont($_POST['fontID']);
             $this->go->go('fonts');
-        }       
+        }
+
+        public function getFontByName($name) 
+        {
+            $array = array(
+                "SELECT" => "*",
+                "FROM" => "pm_fonts",
+                "WHERE" => "fontFamily = '$name'",
+                "fetch" => 1
+            );
+
+            return $this->model->select($array, null);
+        }
+
+
+        
     }

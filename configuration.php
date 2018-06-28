@@ -30,6 +30,7 @@
             'fonts' => 'Fonts',
             //'backgrounds' => 'Backgrounds',
             'colors' => 'Colors',
+            'memes' => 'Memes',
             'objections' => 'Objections',
             //'forms' => 'Forms',
             //'tables' => 'Tables',
