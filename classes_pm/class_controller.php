@@ -948,9 +948,20 @@
                 }
             }
 
-            $this->updateMemeJson(json_encode($styleArray),$_POST['ID']);
-            // page to redirect:    
-            $this->go->go(array('page'=> 'memegen','ID' => $_POST['ID']));  
+            // update meme name:
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "name" => $_POST['name'],
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );     
+            $this->model->update($array);
+            
+            // update meme json and redirect:
+            $this->updateMemeJson(json_encode($styleArray),$_POST['ID']); 
 
         }
         
@@ -1087,6 +1098,77 @@
                 "SORT" => "DESC"
             );
             return $this->model->select($array, null); 
+        }
+        
+        public function addNewMeme() 
+        {
+            $style = array(
+                'html' => '<div id="capture"><br><br>test</div>',
+                'css' => array(
+                    'id' => array(
+                        'capture' => array(
+                            'width' => '500px',
+                            'height' => '500px',
+                            'font-size' => '40px',
+                            'text-align' => 'center',
+                            'background-color' => '#C0D6E4'
+                        )
+                    ),
+                    'class' => array()
+                )
+            );
+            
+            $array = array(
+                "INSERT INTO" => 'pm_memes',
+                "COLUMNS" => array(
+                    "name" => $_POST['name'],
+                    "style" => json_encode($style),
+                    "time" => time()
+                )
+            );
+            
+            $this->model->insert($array);
+            $this->go->go('memes');
+        }
+        
+        public function deleteMeme() 
+        {
+            // update in db:
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "moderation" => 2,
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );
+                    
+            $this->model->update($array); 
+            $this->go->go(array('page'=> 'memes','ID' => $_POST['ID']));
+        }
+        
+        public function memeFavourite() 
+        {
+            // update in db:
+            $array = array(
+            "UPDATE" => 'pm_memes',
+            "SET" => array(
+                "moderation" => $_POST['moderation'],
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );
+                    
+            $this->model->update($array); 
+            $this->go->go('memes');        
+        }
+        
+        public function deleteMemePng() 
+        {
+            unlink(configuration::SCREENSHOTS_DIR.$_POST['FilePng']);
+            $this->go->go('memes');
         }
         
     } // class pure end

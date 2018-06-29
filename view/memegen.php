@@ -12,17 +12,10 @@
     // TODO:
     /*
     
-        1. Копірайт на мем
-        2. Наступний-попередній мем
-        3. Форму зміни стилей з підказками
-        4. На flex!
-        5. Рандомний колір і фон, щоб записувати вдалі і невдалі пари у базу знань
-        7. Сторінка перегляду мемів з можливістю видалення файлів (просто як фтп)
-   
-       @font-face {
-            font-family: Pompadur; 
-            src: url(fonts/pompadur.ttf);
-       }
+        1. Форму зміни стилей з підказками
+        2. На flex!
+        3. Рандомний колір і фон, щоб записувати вдалі і невдалі пари у базу знань
+        4. Збереження по CTRL+S
        
     */   
     
@@ -33,14 +26,18 @@
     // walk through styles and get all fonts:
     $fontFaceArray = array();
     
-    foreach ($style['css']['id'] as $blockName => $blockCssArray) {
-        if(isset($blockCssArray['font-family'])) {
-            $fontFaceArray[] = $blockCssArray['font-family'];
+    if (count($style['css']['id']) > 0) {
+        foreach ($style['css']['id'] as $blockName => $blockCssArray) {
+            if(isset($blockCssArray['font-family'])) {
+                $fontFaceArray[] = $blockCssArray['font-family'];
+            }
         }
     }
-    foreach ($style['css']['class'] as $blockName => $blockCssArray) {
-        if(isset($blockCssArray['font-family'])) {
-            $fontFaceArray[] = $blockCssArray['font-family'];
+    if (count($style['css']['class']) > 0) {
+        foreach ($style['css']['class'] as $blockName => $blockCssArray) {
+            if(isset($blockCssArray['font-family'])) {
+                $fontFaceArray[] = $blockCssArray['font-family'];
+            }
         }
     }
     

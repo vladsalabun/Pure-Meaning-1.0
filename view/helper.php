@@ -1,16 +1,5 @@
 <div class="row">
-	<div class="col-lg-12">
-    <h3>Notepad++ shortkeys:</h3>
-    
-    F11 - на весь экран<br>
-    Ctrl + Q - закомментировать/раскомментировать<br>
-    Ctrl + Shift + Q - закомментировать выделенное<br>
-    Tab - добавить табуляции выделенного фрагмента<br>
-    Shift + Tab - удалить табуляции выделенного фрагмента<br>
-    Ctrl + U - строчные<br>
-    Ctrl + Shift + U - прописные<br>
-    Alt + U - Все с заглавной<br>
-    Ctrl + Shift + Up/Down - переместить строку вверх/вниз<br>
+	<div class="col-lg-8">
     <h3>Templatter:</h3>
     <pre>
 <?php
@@ -24,13 +13,13 @@
     \$modal->a('window','anchor'); // посилання на модальне вікно
     
     \$form->formStart();
-    \$form->hidden('name'=> '','value'=> '');
-    \$form->text('name'=> '','value'=> '','class'=>'txtfield','placeholder' =>'');
-    \$form->textarea('name'=> '','value'=> '','class'=>'txtfield');
-    \$form->uploadFile('name'=> '');
-    \$form->select('name'=> '','value'=> array('key'=>'value'));
-    \$form->datetime('name'=> '','value'=> '')
-    \$form->submit('name'=> '','value'=> '','class'=>'txtfield');
+    \$form->hidden(array('name'=> '','value'=> ''));
+    \$form->text(array('name'=> '','value'=> '','class'=>'txtfield','placeholder' =>''));
+    \$form->textarea(array('name'=> '','value'=> '','class'=>'txtfield'));
+    \$form->uploadFile(array('name'=> ''));
+    \$form->select(array('name'=> '','value'=> array('key'=>'value')));
+    \$form->datetime(array('name'=> '','value'=> ''))
+    \$form->submit(array('name'=> '','value'=> '','class'=>'btn'));
     \$form->formEnd();
     
     # Вибір шрифтa:
@@ -39,12 +28,14 @@
     # HTML: 
         p('text');
         modalLink('windowId', 'anchor');
-        modalHtml('windowId','text in modal header','modal body');
+        modalWindow('windowId','text in modal header','modal body');
     "
     );
 ?>
     </pre>
-    <h3>Query generator:</h3>
+    </div>
+    <div class="col-lg-4">
+        <h3>Query generator:</h3>
     <ol>
 <?php 
 
@@ -69,7 +60,18 @@
         
 ?>
     </ol>
-    <h4>Суть шрифтів:</h4>
+        <h3>Notepad++ shortkeys:</h3>
+    
+    F11 - на весь экран<br>
+    Ctrl + Q - закомментировать/раскомментировать<br>
+    Ctrl + Shift + Q - закомментировать выделенное<br>
+    Tab - добавить табуляции выделенного фрагмента<br>
+    Shift + Tab - удалить табуляции выделенного фрагмента<br>
+    Ctrl + U - строчные<br>
+    Ctrl + Shift + U - прописные<br>
+    Alt + U - Все с заглавной<br>
+    Ctrl + Shift + Up/Down - переместить строку вверх/вниз<br>
+        <h4>Суть шрифтів:</h4>
     <ol align="left">
     <li>Щоб на ньому текст був читабельним</li>
     <li>Щоб виділити важливу інформацію</li>
