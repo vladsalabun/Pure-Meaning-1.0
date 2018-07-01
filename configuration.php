@@ -171,21 +171,37 @@
 Широкий (Wide) — более широкий вариант прямого начертания[1].
 */           
             
-
-            // Creating backgrounds table:
-            "pm_backgrounds" => array ( 
-                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
-                "backgroundColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
-                "textColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
-                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
-            ),            
-
             // Creating all colors table:
             "pm_colors" => array ( 
                 "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
                 "color" => "VARCHAR( 10 ) NOT NULL",
+                "name" => "VARCHAR( 10 ) NOT NULL",
+                "rainbow" => "INT( 1 ) DEFAULT '0'", // 1-7
+                "tone" => "INT( 1 ) DEFAULT '0'", // 0 - light, 1 - dark
+                "saturation" => "INT( 1 ) DEFAULT '0'", // 1 - saturated, 2 - muted
                 "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ), 
+
+            // Creating association category:
+            "pm_association" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "association" => "VARCHAR( 100 ) NOT NULL",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),
+
+            // Creating association pairs:
+            "pm_colorAssociation" => array ( 
+                "colorID" => "INT( 11 ) DEFAULT '0'",
+                "associationID" => "INT( 11 ) DEFAULT '0'"
+            ),
+            
+            // Creating color sets:
+            "pm_colorSets" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "backgroundColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
+                "textColor" => "VARCHAR( 10 ) NOT NULL", // ex. #000000
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),
             
             // Creating elements table:
             "pm_elements" => array ( 

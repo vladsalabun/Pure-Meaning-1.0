@@ -21,7 +21,7 @@
     
         $DeleteColor = $form->formStart(array('id'=>'delete_color'.$color['ID']));
         $DeleteColor .= $form->hidden(array('name' => 'action','value' => 'delete_color'));
-        $DeleteColor .= $form->hidden(array('name' => 'colorID','value' => $color['ID']));
+        $DeleteColor .= $form->hidden(array('name' => 'ID','value' => $color['ID']));
         $DeleteColor .= '<div id="color-block-show" style="overflow: hidden; height: 60px; width: 60px; border: 1px #eee solid; background: '.$color['color'].';"></div><br>';
         $DeleteColor .= $form->submit(array('value'=> 'Delete'));
         $DeleteColor .= $form->formEnd();
@@ -45,9 +45,9 @@
                 $form->text(array('name' => 'color','placeholder' => '#000'))
             )
         )
-    .$table->tr(array('Тон',$form->text(array('name' => 'ton'))))        
-    .$table->tr(array('Асоциации:',$form->text(array('name' => 'assoc',))))
-    .$table->tr(array('Категория:',$form->text(array('name' => 'category',))))
+    .$table->tr(array('Tone',$form->text(array('name' => 'tone'))))        
+    .$table->tr(array('Rainbow:',$form->text(array('name' => 'rainbow'))))
+    .$table->tr(array('Saturation:',$form->text(array('name' => 'saturation'))))
     .$table->tr(array(
             '',
             $form->submit(

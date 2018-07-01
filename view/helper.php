@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="col-lg-8">
     <h3>Templatter:</h3>
@@ -33,6 +34,9 @@
     );
 ?>
     </pre>
+    <h3>Bootstrap:</h3>
+    <b>.container-fluid</b> - контейнер на ширину екрану
+    
     </div>
     <div class="col-lg-4">
         <h3>Query generator:</h3>
@@ -163,7 +167,7 @@ Highlight::render(
         )
     );
     $this->model->insert($array);
-    $this->go->go(\'objection\');
+    $this->go->go(\''.$tableName.'\');
 }
     // '.$tableName.' fields:
     // '.implode(array_keys($columnArray),', ').'       

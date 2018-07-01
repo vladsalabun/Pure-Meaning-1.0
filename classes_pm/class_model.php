@@ -444,20 +444,6 @@
             $stmt->bindParam(':ID', $formId);
             $stmt->execute();
         }    
-
-        public function addNewColor($color) 
-        {
-            $sql = "INSERT INTO pm_colors (color) VALUES (?)";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute(array($color));  
-        }
-        public function getAllColors() 
-        {
-            $sql = "SELECT * FROM pm_colors WHERE moderation < 3 ORDER BY ID desc";
-            $stmt = $this->conn->prepare($sql);    
-            $stmt->execute(array());
-            return $stmt->fetchALL(PDO::FETCH_ASSOC); 
-        }
         
         public function addNewFont($fontFamily,$fileName,$fileType)
         {
@@ -513,15 +499,8 @@
             $stmt->execute();
         }  
         
-        public function deleteColor($colorID)
-        {
-            $stmt = $this->conn->prepare("UPDATE pm_colors SET moderation = 3 WHERE ID = :ID");
-            $stmt->bindParam(':ID', $colorID);
-            $stmt->execute();
-        }
-        
         public function addNewProject($title, $customer, $skype, $phone1, $phone2, $phone3, $email1, $email2, $vk, $fb, $price, $currency, $workBegin, $workEnd)
-        {
+        {                                                                                               
             $sql = "INSERT INTO pm_projects (title, customer, skype, phone1, phone2, phone3, email1, email2, vk, fb, price, currency, workBegin, workEnd) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute(array($title, $customer, $skype, $phone1, $phone2, $phone3, $email1, $email2, $vk, $fb, $price, $currency, $workBegin, $workEnd));
@@ -628,22 +607,6 @@
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array());
             return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['allExp']; 
-        }
-        
-        /*
-        public function insert($table,$values) 
-        {
-            foreach ($values as $columnName => $columnValue) {
-                $columnArray[] = $columnName;
-                $valueArray[] = $columnValue;
-                $questionMark[] = '?';
-            }
-            
-            $sql = "INSERT INTO $table (".implode($columnArray,',').") VALUES (".implode($questionMark,',').")";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute(array($valueArray));
-        }
-        */
-        
+        }       
         
     } // <- end of class model 
