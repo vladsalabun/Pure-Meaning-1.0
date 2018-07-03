@@ -30,13 +30,13 @@
             'projects' => 'Projects',
             'fonts' => 'Fonts',
             //'backgrounds' => 'Backgrounds',
-            'colors' => 'Colors',
+            'color_sets' => 'Color Sets',
             'memes' => 'Memes',
             'objections' => 'Objections',
-            //'forms' => 'Forms',
-            //'tables' => 'Tables',
             'test' => 'Test',
             'helper' => '<span class="glyphicon glyphicon-question-sign" title="Help"></span>',
+            //'forms' => 'Forms',
+            //'tables' => 'Tables',
         );
         
         /*
@@ -59,6 +59,8 @@
             'font' => array('Шрифт','fonts'),
             'objection' => array('Возражения','objection'),
             'memegen' => array('memegen','memegen'),
+            'colors' => 'Colors',
+            'association' => 'Association',
         );        
                 
         // All tables:
@@ -491,6 +493,8 @@
             
             'add_new_color' => array('colors' => 'addNewColor'),
             'delete_color' => array('colors' => 'deleteColor'),
+            'add_new_color_set' => array('colors' => 'addNewColorSet'),
+            'make_set_favourite' => array('colors' => 'makeSetFavourite'),
             
             'add_new_font' => array('fonts' => 'addNewFont'),
             'make_font_favourite' => array('fonts' => 'makeFontFavourite'),

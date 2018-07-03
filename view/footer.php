@@ -16,7 +16,7 @@
 ?>
 
 </div>
-<div class="container">
+<div class="container-fluid">
 <?php 
     $myExp = $experience->allExp();
     foreach (configuration::LEVEL as $level => $levelExp) {
@@ -27,9 +27,9 @@
     
     if ($myLevel < 20) {
         $designerClass = 'Junior';
-    } else if ($myLevel < 40) {
+    } else if ($myLevel >= 20 and $myLevel < 40) {
         $designerClass = 'Middle';
-    } else if ($myLevel < 76) {
+    } else if ($myLevel >= 40 and $myLevel < 76) {
         $designerClass = 'Senior';
     } else {
         $designerClass = 'God';

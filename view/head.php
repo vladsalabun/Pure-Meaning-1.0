@@ -16,7 +16,7 @@ $start_time = microtime(true);
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-static-top">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu">
 				<span class="sr-only">XXX</span>
@@ -40,7 +40,7 @@ $start_time = microtime(true);
 		</div>
 	</div>
 </div>
-<div class="container">
+<div class="container-fluid">
 	<div id="navigation">
 
 	</div>

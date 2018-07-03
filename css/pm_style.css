@@ -98,3 +98,11 @@ table.table-mini> tfoot > tr > td
 ::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(255,0,0,0.4); 
 }
+
+.p18 { font-size: 18px; line-height: 80%; }
+.p17 { font-size: 17px; line-height: 80%; }
+.p17 { font-size: 17px; line-height: 80%; }
+.p16 { font-size: 16px; line-height: 80%; }
+.p15 { font-size: 15px; line-height: 80%; }
+.p14 { font-size: 14px; line-height: 80%; }
+.p13 { font-size: 13px; line-height: 80%; }

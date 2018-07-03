@@ -63,4 +63,54 @@
             );
             return $this->model->select($array, null);
         }
+        
+        public function getAllSets() 
+        {
+            $array = array(
+                "SELECT" => "*",
+                "FROM" => "pm_colorSets",
+                "WHERE" => "moderation < 2",
+                "ORDER" => "ID",
+                "SORT" => "DESC"
+            );
+            return $this->model->select($array, null);
+        }
+        
+        public function addNewColorSet() 
+        {
+            $pure = new pure;
+            $backgroundColor = $pure->verifyCss('background-color',$_POST['backgroundColor']);
+            $color = $pure->verifyCss('color',$_POST['textColor']);
+            
+            // TODO: what if empty?
+            //       add both colors to color table
+            
+            $array = array(
+                "INSERT INTO" => 'pm_colorSets',
+                "COLUMNS" => array(
+                    "ID" => $_POST['ID'],
+                    "backgroundColor" => $backgroundColor,
+                    "textColor" => $color
+                )
+            );
+            $this->model->insert($array);
+            $this->go->go('color_sets');
+        }
+        
+        public function makeSetFavourite() 
+        {
+            $array = array(
+                "UPDATE" => 'pm_colorSets',
+                "SET" => array(
+                    "moderation" => $_POST['moderation']
+                ),
+                "WHERE" => array(
+                    "ID" => $_POST['ID']
+                )
+            );
+                    
+            $this->model->update($array); 
+            $this->go->go('color_sets'); 
+        }
+        
     }

@@ -2,6 +2,7 @@
 	<div class="col-lg-8" style="overflow: hidden;">
     <?php 
     // TODO: editing colors in modal window
+    // TODO: add association to colors
     $colors = new colors;   
     
         $colorsArray = $colors->getAllColors();
