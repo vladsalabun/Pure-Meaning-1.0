@@ -495,6 +495,8 @@
             'delete_color' => array('colors' => 'deleteColor'),
             'add_new_color_set' => array('colors' => 'addNewColorSet'),
             'make_set_favourite' => array('colors' => 'makeSetFavourite'),
+            'update_color_set' => array('colors' => 'updateColorSet'),
+            'delete_color_set' => array('colors' => 'deleteColorSet'),
             
             'add_new_font' => array('fonts' => 'addNewFont'),
             'make_font_favourite' => array('fonts' => 'makeFontFavourite'),

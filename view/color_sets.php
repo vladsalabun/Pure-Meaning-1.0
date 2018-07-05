@@ -28,18 +28,22 @@
                 echo $form->hidden(array('name' => 'moderation','value' => 1))
                 .'<span class="glyphicon glyphicon-heart-empty" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
                 'ID'].'\').submit();"></span>';
-                echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
                 
             } else if ($setArray['moderation'] == 1 ) {
                 
                 echo $form->hidden(array('name' => 'moderation','value' => 0))
                 .'<span class="glyphicon glyphicon-heart" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
                 'ID'].'\').submit(); "></span>';
-                echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
                 
             }
+            
+            echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
+            echo modalLink('deleteSet'.$setArray['ID'], '<span class="glyphicon glyphicon-remove" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
+            
             echo $form->formEnd();
             // <--- FAVOURITE:
+            
+
 
         echo '</p>
         </div>
@@ -55,8 +59,28 @@
         #set'.$setID.' p {color:'.$setArray['textColor'].';}
         </style>';
         
+        $editSetModalBody = 
+         $form->formStart()
+        .$form->hidden(array('name' => 'action','value' => 'update_color_set'))
+        .$form->hidden(array('name' => 'ID','value' => $setArray['ID']))
+        .$table->tableStart(array('th' => array('Param:','Value:'),'class' => 'table table-sm table-mini'))
+        .$table->tr(array('background-color:',$form->text(array('name'=> 'backgroundColor','value'=> $setArray['backgroundColor'],'class'=>'txtfield'))))
+        .$table->tr(array('text-color:',$form->text(array('name'=> 'textColor','value'=> $setArray['textColor'],'class'=>'txtfield'))))
+        .$table->tr(array('',$form->submit(array('name'=> '','value'=> 'Update','class'=>'btn'))))
+        .$table->tableEnd()
+        .$form->formEnd();
+        
+        $deleteSetModalBody = 
+         $form->formStart()
+        .$form->hidden(array('name' => 'action','value' => 'delete_color_set'))
+        .$form->hidden(array('name' => 'ID','value' => $setArray['ID']))
+        .$form->submit(array('name'=> '','value'=> 'Delete','class'=>'btn'))
+        .$form->formEnd();
+        
+        
         // MODALS:
-        echo modalWindow('windowSet'.$setArray['ID'],'text in modal header','modal body');
+        echo modalWindow('windowSet'.$setArray['ID'],'Edit set #'.$setArray['ID'],$editSetModalBody);
+        echo modalWindow('deleteSet'.$setArray['ID'],'Delete set #'.$setArray['ID'],$deleteSetModalBody);
         
     }
     
