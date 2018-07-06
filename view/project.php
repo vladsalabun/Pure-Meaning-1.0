@@ -1,12 +1,18 @@
 <div class="row">
-	<div class="col-lg-12" align="left" style="font-size: 15px;">
-    Project ID: 
-<?php echo $_GET['id'];?>
-<br><a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">Live preview</a> 
-| todo: <a href="" target="blank">Client answers</a>
-| todo: <a href="" target="blank">My checklist</a>
-| todo: <a href="" target="blank">subPage 1</a>
+    <div class="col-lg-3">
+    <h4>Project ID: <?php echo $_GET['id'];?></h4>
+Name: <br>
+Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
+todo: <a href="" class="notcompleted" target="blank">Client answers</a><br>
+todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
+    <p>todo: insert elementing from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromCurrentTree">current tree</a> | <a class="notcompleted" href="">other tree</a> | <a href="" class="notcompleted">favourite</a> | <a href="" class="notcompleted">templates</a></p>
+        <p>todo: copy <a href="" class="notcompleted">brunch style</a></p>
+        <h4>Template:</h4>
+        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
+    </div>
 
+	<div class="col-lg-9" align="left" style="font-size: 15px;">
+    
 <?php 
     // TODO: log actions
     
@@ -21,12 +27,7 @@
     }
     
     if (count($htmlTree) > 0 ) {
-?> 
-    <h4>Template:</h4>
-        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
-        <p>Insert element from: <a href="" data-toggle="modal" data-target="#copyFromCurrentTree">current tree</a> | <a href="">other tree</a> | <a href="">favourite</a> | <a href="">templates</a></p>
-        <p>Copy: <a href="">brunch style</a></p>
-<?php 
+
         $currentCopyBody = '
                 <p align="left">Copy branch ID:</p>
                 <form method="POST" action="" autocomplete="OFF">
@@ -301,7 +302,7 @@
     echo $pure->modalHtml('ModalFisrtGrid','Add content:',$addNewRowForm);
     }
 ?>   
-    </div>
+    </div>    
 </div>
 <?php 
     
@@ -347,7 +348,7 @@
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
-        echo ' <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element"><span class="glyphicon glyphicon-edit"></span></a>';
+        echo ' <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element"><span class="glyphicon glyphicon-pencil"></span></a>';
     }
     function favourite() {
         echo ' <span class="glyphicon glyphicon-heart" title="Favourite"></span>';

@@ -120,6 +120,7 @@
  
         public function createDocumentTree($array, $str = NULL) 
         {
+            $fonts = new fonts;
             $styles = '<style>';
             // TODO: build div, buttons, forms, sliders and other
             
@@ -136,6 +137,16 @@
                         $elementStyle = json_decode($elementInfo['style'],true);
                         // check if there is some styles:
                         if (isset($elementStyle['css']) and count($elementStyle['css']) > 0) {
+                            
+                            // FONTS:
+                            if(isset($elementStyle['css']['font-family'])) {
+                                $fontFaceArray[] = $elementStyle['css']['font-family'];
+                                foreach ($fontFaceArray as $fontFaceName) {  
+                                    $fontFace = $fonts->getFontByName($fontFaceName);                              
+                                    $styles .= ' @font-face { font-family: '.$fontFace['fontFamily'].'; src: url('.configuration::MAIN_URL.'/uploads/fonts/'.$fontFace['fileName'].'); }';
+                                }
+                            } // <-- FONTS:
+
                             $styles .= '#'.$elementInfo['identifier']. '{';
                             
                             foreach ($elementStyle['css'] as $styleName => $styleValue) {
@@ -166,6 +177,17 @@
                         $elementStyle = json_decode($elementInfo['style'],true);
                         // check if there is some styles:
                         if (isset($elementStyle['css']) and count($elementStyle['css']) > 0) {
+                            
+                            // FONTS:
+                            if(isset($elementStyle['css']['font-family'])) {
+                                $fontFaceArray[] = $elementStyle['css']['font-family'];
+                                foreach ($fontFaceArray as $fontFaceName) {  
+                                    $fontFace = $fonts->getFontByName($fontFaceName);                              
+                                    $styles .= ' @font-face { font-family: '.$fontFace['fontFamily'].'; src: url('.configuration::MAIN_URL.'/uploads/fonts/'.$fontFace['fileName'].'); }';
+                                }
+                            } // <-- FONTS:
+                            
+                            
                             $styles .= '#'.$elementInfo['identifier']. '{';
                             
                             foreach ($elementStyle['css'] as $styleName => $styleValue) {

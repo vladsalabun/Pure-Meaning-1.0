@@ -26,19 +26,19 @@
             if ($setArray['moderation'] == 0 ) {
                 
                 echo $form->hidden(array('name' => 'moderation','value' => 1))
-                .'<span class="glyphicon glyphicon-heart-empty" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
+                .'<span class="glyphicon glyphicon-heart-empty" title="Fav set" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
                 'ID'].'\').submit();"></span>';
                 
             } else if ($setArray['moderation'] == 1 ) {
                 
                 echo $form->hidden(array('name' => 'moderation','value' => 0))
-                .'<span class="glyphicon glyphicon-heart" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
+                .'<span class="glyphicon glyphicon-heart" title="Unfav set" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
                 'ID'].'\').submit(); "></span>';
                 
             }
             
-            echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
-            echo modalLink('deleteSet'.$setArray['ID'], '<span class="glyphicon glyphicon-remove" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
+            echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" title="Edit set" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
+            echo modalLink('deleteSet'.$setArray['ID'], '<span class="glyphicon glyphicon-remove" title="Delete set" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
             
             echo $form->formEnd();
             // <--- FAVOURITE:
@@ -83,9 +83,7 @@
         echo modalWindow('deleteSet'.$setArray['ID'],'Delete set #'.$setArray['ID'],$deleteSetModalBody);
         
     }
-    
-    // glyphicon glyphicon-pencil
-    // glyphicon glyphicon-heart / glyphicon glyphicon-heart-empty
+
 ?>
     
     </div>

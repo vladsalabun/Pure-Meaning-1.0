@@ -26,6 +26,9 @@ h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9
 .glyphicon-remove-sign { color: #ff7373; }
 .glyphicon-arrow-up:hover { color: #444193; }
 .glyphicon-arrow-down:hover { color: #444193; }
+.glyphicon-eye-open { color: #009aff; }
+.glyphicon-eye-open:hover { color: #ff0000; }
+
 
 .glyphicon-remove:hover { color: #C70039; }
 
@@ -106,3 +109,7 @@ table.table-mini> tfoot > tr > td
 .p15 { font-size: 15px; line-height: 80%; }
 .p14 { font-size: 14px; line-height: 80%; }
 .p13 { font-size: 13px; line-height: 80%; }
+
+.classEditorLinks { background: #DAF7A6; padding: 10px; }
+
+.notcompleted { color: #FF6347; }

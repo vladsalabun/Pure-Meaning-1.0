@@ -1,7 +1,8 @@
 <div class="row">
 	<div class="col-lg-12">
     <p align="left"> ← <a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $_GET['projectId']; ?>">Back to project <?php echo $_GET['projectId']; ?></a></p>
-    [ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['projectId'];?>">body</a> ]
+    <br>
+    <span class="classEditorLinks"><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['projectId'];?>">body</a></span>
 <?php
     $classes = $pure->getAllClasses($_GET['projectId']);
     $json = $pure->getProjectStyle($_GET['projectId'])['globalStyles'];
@@ -11,8 +12,8 @@
     foreach ($classes as $ck => $classesArr) {
         if (strlen($classesArr['class']) > 0) {
 ?> 
-    [ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['projectId'];?>&class=<?php echo $classesArr['class'];?>">
-    <?php echo $classesArr['class']; ?></a> ]
+    <span class="classEditorLinks"><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['projectId'];?>&class=<?php echo $classesArr['class'];?>">
+    <?php echo $classesArr['class']; ?></a></span>
 <?php
         }
     }

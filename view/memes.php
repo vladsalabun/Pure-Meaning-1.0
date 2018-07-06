@@ -33,7 +33,7 @@
                 .$form->hidden(array('name'=> 'moderation','value'=> $moderation))
                 .$form->formEnd()
                 .'<span class="glyphicon '.$heart.'" title="Favourite" onclick="document.getElementById(\'meme_favourite'.$memeArray['ID'].'\').submit(); "></span>',
-                '<a href="'.configuration::MAIN_URL.'/?page=memegen&ID='.$memeArray['ID'].'">'.$memeArray['name'].'</a>',
+                '<a href="'.configuration::MAIN_URL.'?page=memegen&ID='.$memeArray['ID'].'">'.$memeArray['name'].'</a>',
                 date('Y-m-d H:i:s',$memeArray['time']),
                 modalLink('deleteMeme'.$memeArray['ID'], 'x')
             )

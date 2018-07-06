@@ -1,4 +1,10 @@
+<script type='text/javascript' src='js/screenshotter.js'></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type='text/javascript' src='js/jquery-editable-select.js'></script>
+<link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/jquery-editable-select.css" type="text/css" media="screen" />
 <?php 
+    
+    $fonts = new fonts;
     // get element info: 
     $element = $pure->getElementInfo($_GET['id']);
     // get projectId:
@@ -7,7 +13,6 @@
     $style = json_decode($element['style'],true);
 
     // TODO:
-    # 1. Таблицю стилей компактно
     # 2. Випадаючий список підказок
     # 3. Шрифти з випадаючого списку (пишеш букву і випадає підказка)
     # 4. Корні гілки, яку я зараз переглядаю
@@ -16,18 +21,10 @@
 <div class="row">
 	<div class="col-lg-12">
     
-    <p align="left">
-        ← <a href="<?php echo configuration::MAIN_URL;?>?page=project&id=<?php echo $element['projectId']; ?>">
-        Back to project <?php echo $element['projectId']; ?></a>
-    </p>
+<?php 
+    echo p('← <a href="'.configuration::MAIN_URL.'?page=project&id='.$element['projectId'].'">Back to project '.$element['projectId'].'</a>');
+?>
     <h4>Edit element: #<?php echo $element['ID']; ?></h4>
-    <p align="left">
-    + add 
-        <?php echo $mw->a(array('anchor'=>'other option','window'=>'other_option')); ?>
-     or
-        <?php echo $mw->a(array('anchor'=>'style','window'=>'add_new_style')); ?>
-    </p>
-    
 <?php     
     echo 
      $form->formStart()
@@ -43,7 +40,7 @@
      $table->tableStart(array('class'=>'table table-sm table-mini','th'=> array('Option','Value:')))
     .$table->tr(array('identifier',$form->text(array('name' => 'identifier','value' => $element['identifier'],'class'=>'txtfield')),''))
     .$table->tr(array('class',$form->text(array('name'=>'class','value' => $element['class'],'class'=>'txtfield')),''))
-    .$table->tr(array('<b>Other:</b>','',''));
+    .$table->tr(array('<b>Other:</b>',$mw->a(array('anchor'=>'Add other option','window'=>'other_option')),''));
     
     // show all other params:
     if (count($style['other']) > 0) {
@@ -56,14 +53,6 @@
                 )
             );
         }
-    } else {
-        echo $table->tr(
-            array(
-                $mw->a(array('anchor'=>'Add other option','window'=>'other_option')),
-                '',
-                ''
-            )
-        );
     }
     echo $table->tableEnd(); 
 ?>      
@@ -72,32 +61,50 @@
 <?php 
     echo 
      $table->tableStart(array('class'=>'table table-sm table-mini','th'=> array('','')))   
-    .$table->tr(array('<b>Style:</b>','',''));
+    .$table->tr(array('<b>Style:</b>',$mw->a(array('anchor'=>'Add new style','window'=>'add_new_style')),''));
 
     // show all styles:
     if (count($style['css']) > 0) {
-        foreach ($style['css'] as $cssParam => $cssValue) {  
-            echo $table->tr(
+        foreach ($style['css'] as $cssParam => $cssValue) {
+            
+            // font-family
+            if ($cssParam == 'font-family') {
+                echo $table->tr(
                 array(
                     $cssParam,
-                    '<input type="text" name="'.$cssParam.'" value="'.$cssValue.'" class="txtfield">',
+                    $form->fontSelectingForm($cssValue,$cssParam),
                     $mw->a(array('anchor'=>'x','window'=>'delete_'.$cssParam))
-                )
-            ); 
+                    )
+                ); 
+            } else {
+                echo $table->tr(
+                    array(
+                        $cssParam,
+                        $form->text(array('name'=> $cssParam,'value'=> $cssValue,'class'=>'txtfield')),
+                        $mw->a(array('anchor'=>'x','window'=>'delete_'.$cssParam))
+                    )
+                ); 
+            }
         } 
-    } else {
-        echo $table->tr(
-            array(
-                $mw->a(array('anchor'=>'add style','window'=>'add_new_style')),
-                '',
-                ''
-            )
-        );
     }
     
     echo 
      $table->tr(array('','',$form->submit(array('name' => 'submit','value' => 'Save','class' => 'submit_btn'))))
     .$table->tableEnd(); 
+    
+    if (count($style['css']) > 0) {
+        if(isset($style['css']['font-family'])) {
+                $fontFaceArray[] = $style['css']['font-family'];
+        }
+        echo '<style>';
+        // get fonts info by font name, and plug them:
+        foreach ($fontFaceArray as $fontFaceName){
+            $fontFace = $fonts->getFontByName($fontFaceName);        
+            echo ' @font-face { font-family: '.$fontFace['fontFamily'].'; src: url('.configuration::MAIN_URL.'/uploads/fonts/'.$fontFace['fileName'].'); }';
+        }
+        echo '</style>';
+    }
+    
 ?>       
     </div>    
 </div>    

@@ -67,7 +67,7 @@
             $array = array(
                 "SELECT" => "*",
                 "FROM" => "pm_fonts",
-                "WHERE" => "fontFamily = '$name'",
+                "WHERE" => "fontFamily = '$name' AND moderation < 2",
                 "fetch" => 1
             );
 
