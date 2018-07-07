@@ -25,10 +25,16 @@
                 $formID = '';
             }
             
+            if (isset($array['class'])) {
+                $formClass = 'class="'.$array['class'].'"';
+            } else {
+                $formClass = '';
+            }
+            
             if ($array == null) {
                 return '<!--- FORM ---><form method="post" action="" autocomplete="off">';
             } else {
-                return '<!--- FORM ---><form method="'.$method.'" '.$enctype.' action="'.$array['action'].'" autocomplete="'.$autocomplete.'" '.$formID.'>';
+                return '<!--- FORM ---><form method="'.$method.'" '.$enctype.' action="'.$array['action'].'" autocomplete="'.$autocomplete.'" '.$formID.' '.$formClass.'>';
             }
         }
         

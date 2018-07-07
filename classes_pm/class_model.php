@@ -294,13 +294,6 @@
             $stmt->bindParam(':ID', $branchId);
             $stmt->execute();
         }
-        
-        public function favElement($branchId)
-        {
-            $stmt = $this->conn->prepare("UPDATE pm_elements SET moderation = 1 WHERE ID = :ID");
-            $stmt->bindParam(':ID', $branchId);
-            $stmt->execute();
-        }
 
         public function changeProjectStyle($projectId,$styleJson)
         {

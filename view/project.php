@@ -25,58 +25,62 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
     if (is_array($branchArray)){
         asort($branchArray);
     }
-    
+ 
+        
     if (count($htmlTree) > 0 ) {
 
-        $currentCopyBody = '
-                <p align="left">Copy branch ID:</p>
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="current_tree_copy">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <table class="table table-striped">
-              <thead>
-                <tr>
-              <th scope="col">From id:</th>
-              <th scope="col">To id:</th>
-              <th scope="col"></th>
-              </tr>
-              </thead>
-                <tbody>
-                <tr>
-                <td>
-                <select name="copyFrom[]">';
-          
-          
-        $currentCopyBody .= '<option value="0">0</option>';
+        // clean them to make sure they are good for use:
+        $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
+       // var_dump($cleanArray);
+//substr($key,5)
+
+        # copy from current tree:
+        $currentCopyBody = 
+             $form->formStart()
+            .$form->hidden(array('name'=> 'action','value'=> 'current_tree_copy'))
+            .$form->hidden(array('name'=> 'id','value'=> $_GET['id']))     
+            .$table->tableStart(array('th' => array('From id:','To id:',''),'class' => 'table table-sm table-mini'));
+            
+            $selectCopyCurrentDOM1 = '<select name="copyFrom[]">';
+            $selectCopyCurrentDOM1 .= '<option value="0">...</option>';
                 foreach ($branchArray as $fromBranch) {
-                    $currentCopyBody .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
-                }
-                
-        $currentCopyBody .= '</select></td><td><select name="copyTo[]"><option value="0">0</option>';
+                    $selectCopyCurrentDOM1 .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
+                } 
+            $selectCopyCurrentDOM1 .= '</select>';
+        
+        
+            $selectCopyCurrentDOM2 = '<select name="copyTo[]"><option value="0">...</option>';
                 foreach ($branchArray as $fromBranch) {
-                    $currentCopyBody .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
+                    $selectCopyCurrentDOM2 .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
                 }
-                
-        $currentCopyBody .= '</select></td><td></td></tr></form>
-        <tr><td></td><td></td><td><input type="submit" name="submit" value="Copy" class="submit_btn"></td></tr>
-        </tbody>
-</table>';
+            $selectCopyCurrentDOM2 .= '</select>';       
+        
+        $currentCopyBody .= 
+             $table->tr(array(
+                $selectCopyCurrentDOM1,
+                $selectCopyCurrentDOM2,
+                $form->submit(array('name'=> '','value'=> 'Copy','class'=>'btn'))
+                )
+             )  
+            .$table->tableEnd()           
+            .$form->formEnd();
         
         echo $pure->modalHtml('copyFromCurrentTree','Copy from current tree',$currentCopyBody);
 
+        # <- /copy from current tree
 
 ?>   
     
     
     <h4>DOM Tree</h4>
 <?php       
-    // clean them to make sure they are good for use:
-    $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
- 
+
     function showDOM($array,$branchArray) {
-       
-        
+              
         $temp = new pure;
+        $form = new formGenerator;    
+        $table = new tableGenerator;
+        $mw = new modal;
 ?>   
 
 <ul align="left" style="list-style-type: none; line-height: 160%;" class="tree">
@@ -129,61 +133,58 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
                 }
                                 
                 // navigation buttons:
-                echo ' '.upArrow($blockId).downArrow($blockId);
-                if ($elementInfo['moderation'] == 1) { echo favourite(); }
-                echo editArrow($blockId, '');
+                echo ' '
+                .upArrow($blockId).downArrow($blockId)
+                .favourite($elementInfo['ID'],$elementInfo['moderation'])
+                .editArrow($blockId, '');
 
-                // generate title:
-                $modaTittle = 'Block #'.$blockId.'<br>'; 
+            #### generate title:
+                $modaTittle = generateModalTitle($elementInfo);
+            #### generate body 
+            
+                $modalBody = ''
+                .$table->tableStart(array('th' => array('','',''),'class' => 'table table-sm table-mini'));
                 
-                if (strlen($elementInfo['identifier']) > 0) {
-                    $modaTittle .= ' id: <b>'.$elementInfo['identifier'].'</b><br>';
-                } 
-                if (strlen($elementInfo['class']) > 0) {
-                    $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
-                }
+                    // get selection:
+                    $selectNewParent = '<select name="newparent[]">';
+                    
+                    $result = $temp->getBranch($array, 'block'.$blockId);
+                    $branchIDs = $temp->getBranchIDs($result);
+                    
+                    $result = array_diff($branchArray, $branchIDs);
+                    asort($result);
+                    
+                    $selectNewParent .= '<option value="0">root</option>';
+                    foreach ($result as $newParent) {
+                        $selectNewParent .= '<option value="'.$newParent.'">'.$newParent.'</option>';
+                    }
+                    
+                    $selectNewParent .= '</select>';
                 
-                $modalBody = '
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="change_parent">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p align="left">Change branch:
-                <select name="newparent[]">';
+                $modalBody .= 
                 
-                $result = $temp->getBranch($array, 'block'.$blockId);
-                $branchIDs = $temp->getBranchIDs($result);
+                 $table->tr(
+                    array(
+                        'Change branch:',
+                         $form->formStart()
+                        .$form->hidden(array('name' => 'action','value'=> 'change_parent'))
+                        .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
+                        .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
+                        .$selectNewParent,
+                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn'))
+                        .$form->formEnd()
+                    )
+                 )
                 
-                $result = array_diff($branchArray, $branchIDs);
-                asort($result);
+                .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
+                .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
+                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+                .$form->formEnd()
                 
-                $modalBody .= '<option value="0">0</option>';
-                foreach ($result as $newParent) {
-                    $modalBody .= '<option value="'.$newParent.'">'.$newParent.'</option>';
-                }
+                .$table->tableEnd();
                 
-                $modalBody .= '</select>
-                <input type="submit" name="submit" value="Change parent" class="submit_btn"></p>
-                ';
-                $modalBody .= '</form>';
-                
-                
-                $modalBody .= '
-                <p>Other options:
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="fav_element">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p align="left"><input type="submit" name="submit" value="Save to favourite" class="submit_btn">
-                </form>
-                
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="delete_element">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p align="left"><input type="submit" name="submit" value="Delete branch #'.$blockId.'" class="submit_btn"></a>
-                </form>
-                ';
+           #### <- /generate body    
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 
@@ -210,60 +211,58 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
                 echo ' '
                 .upArrow($blockId)
                 .downArrow($blockId)
+                .favourite($elementInfo['ID'],$elementInfo['moderation'])
                 .extendArrow($blockId,'')
                 .editArrow($blockId, '');
 
-                // generate title:
-                $modaTittle = 'Block #'.$blockId.'<br>'; 
+            #### generate title:
+                $modaTittle = generateModalTitle($elementInfo);
                 
-                if (strlen($elementInfo['identifier']) > 0) {
-                    $modaTittle .= ' id: <b>'.$elementInfo['identifier'].'</b><br>';
-                } 
-                if (strlen($elementInfo['class']) > 0) {
-                    $modaTittle .=' class: <b>'.$elementInfo['class'].'</b>';
-                }
+            #### generate body 
+            
+                $modalBody = ''
+                .$table->tableStart(array('th' => array('','',''),'class' => 'table table-sm table-mini'));
                 
-                $modalBody = '
-                <p align="left">Change branch:
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="change_parent">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <select name="newparent[]">';
+                    // get selection:
+                    $selectNewParent = '<select name="newparent[]">';
+                    
+                    $result = $temp->getBranch($array, 'block'.$blockId);
+                    $branchIDs = $temp->getBranchIDs($result);
+                    
+                    $result = array_diff($branchArray, $branchIDs);
+                    asort($result);
+                    
+                    $selectNewParent .= '<option value="0">root</option>';
+                    foreach ($result as $newParent) {
+                        $selectNewParent .= '<option value="'.$newParent.'">'.$newParent.'</option>';
+                    }
+                    
+                    $selectNewParent .= '</select>';
                 
+                $modalBody .= 
                 
-                $result = $temp->getBranch($array, 'block'.$blockId);
-                $branchIDs = $temp->getBranchIDs($result);
-                 
-                $result = array_diff($branchArray, $branchIDs);
-                asort($result);
+                 $table->tr(
+                    array(
+                        'Change branch:',
+                         $form->formStart()
+                        .$form->hidden(array('name' => 'action','value'=> 'change_parent'))
+                        .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
+                        .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
+                        .$selectNewParent,
+                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn'))
+                        .$form->formEnd()
+                    )
+                 )
                 
-                $modalBody .= '<option value="0">0</option>';
-                foreach ($result as $newParent) {
-                    $modalBody .= '<option value="'.$newParent.'">'.$newParent.'</option>';
-                }
+                .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
+                .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
+                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+                .$form->formEnd()
                 
-                $modalBody .= '</select>
-                <input type="submit" name="submit" value="Change parent" class="submit_btn"></p>
-                ';
-                $modalBody .= '</form>';
+                .$table->tableEnd();
                 
-                $modalBody .= '
-                <p>Other options:</p>
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="fav_element">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Save to favourite" class="submit_btn"></p>
-                </form>
-                
-                <form method="POST" action="" autocomplete="OFF">
-                <input type="hidden" name="action" value="delete_element">
-                <input type="hidden" name="id" value="'.$_GET['id'].'">
-                <input type="hidden" name="branch_id" value="'.$blockId.'">
-                <p><input type="submit" name="submit" value="Delete branch #'.$blockId.'" class="submit_btn"></p>
-                </form>
-                ';
+           #### <- /generate body 
                 
                 echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 echo '</li>';
@@ -306,7 +305,42 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
 </div>
 <?php 
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ### helpfull functions:
+    
     function upArrow($blockId) {
         echo '<form method="POST" id="form'.$blockId.'up" action="" autocomplete="OFF" style="float: left;">
         <input type="hidden" name="action" value="increase_priority">
@@ -350,8 +384,44 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
     function editArrow($blockId, $linkParam) {
         echo ' <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element"><span class="glyphicon glyphicon-pencil"></span></a>';
     }
-    function favourite() {
-        echo ' <span class="glyphicon glyphicon-heart" title="Favourite"></span>';
-    }   
+    function favourite($elementId,$mod) {
+        
+        $form = new formGenerator; 
+        
+        if ($mod == 1) {
+            $favIcon = 'glyphicon glyphicon-heart';
+            $moderation = 0;
+        } else if ($mod == 0) {
+            $favIcon = 'glyphicon glyphicon-heart-empty';
+            $moderation = 1;
+        }
+        
+        echo ' <span class="'.$favIcon.'" title="Favourite" onclick="document.getElementById(\'save_to_favourite'.$elementId.'\').submit(); "></span> ';
+        
+        echo
+         $form->formStart(array('id' => 'save_to_favourite'.$elementId, 'class' => 'floatLeft'))
+        .$form->hidden(array('name' => 'action','value'=> 'fav_element'))
+        .$form->hidden(array('name' => 'moderation','value'=> $moderation))
+        .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+        .$form->hidden(array('name' => 'branch_id','value'=> $elementId)) // <- elementID
+        .$form->formEnd();
+    }
+
+    function generateModalTitle($elementInfo) {
+
+        $string = '<p>Block #'.$elementInfo['ID'].' ';
+                
+        if (strlen($elementInfo['identifier']) > 0) {
+            $string .= ' id: <b>'.$elementInfo['identifier'].'</b> ';
+        } 
+        if (strlen($elementInfo['class']) > 0) {
+            $string .=' class: <b>'.$elementInfo['class'].'</b> ';
+        }
+
+        $string .= '<span class="deleteSpan" title="Delete branch" onclick="document.getElementById(\'delete_branch'.$elementInfo['ID'].'\').submit(); ">(delete)</span>
+        </p>';
+        
+        return $string;
+    }
     
 

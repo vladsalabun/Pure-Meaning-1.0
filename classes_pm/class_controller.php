@@ -434,16 +434,21 @@
         }
         
         public function favElement($post)
-        {
-            $this->model->favElement($post['branch_id']);
-            
-            $this->go->go(
-                array(
-                    'page'=>'project',
-                    'id' => $post['id'],
-                    'deleted' => $post['branch_id']
+        {           
+            // update in db:
+            $array = array(
+            "UPDATE" => 'pm_elements',
+            "SET" => array(
+                "moderation" => $_POST['moderation'],
+            ),
+                "WHERE" => array(
+                    "ID" => $_POST['branch_id']
                 )
             );
+                    
+            $this->model->update($array); 
+            
+            $this->go->go(array('page'=>'project','id' => $_POST['id']));
         }
 
         #

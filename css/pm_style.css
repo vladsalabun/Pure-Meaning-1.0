@@ -113,3 +113,6 @@ table.table-mini> tfoot > tr > td
 .classEditorLinks { background: #DAF7A6; padding: 10px; }
 
 .notcompleted { color: #FF6347; }
+.floatLeft { float: left; }
+.deleteSpan { color: #FF6347; }
+.deleteSpan:hover { cursor: pointer; text-decoration: underline; }
