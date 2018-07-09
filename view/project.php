@@ -5,7 +5,9 @@ Name: <br>
 Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
 todo: <a href="" class="notcompleted" target="blank">Client answers</a><br>
 todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
-    <p>todo: insert elementing from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromCurrentTree">current tree</a> | <a class="notcompleted" href="">other tree</a> | <a href="" class="notcompleted">favourite</a> | <a href="" class="notcompleted">templates</a></p>
+    <p>
+        Insert from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
+    </p>
         <p>todo: copy <a href="" class="notcompleted">brunch style</a></p>
         <h4>Template:</h4>
         <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
@@ -65,7 +67,7 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
             .$table->tableEnd()           
             .$form->formEnd();
         
-        echo $pure->modalHtml('copyFromCurrentTree','Copy from current tree',$currentCopyBody);
+        echo $pure->modalHtml('copyFromBuffer','Copy from buffer',$currentCopyBody);
 
         # <- /copy from current tree
 

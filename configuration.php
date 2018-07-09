@@ -236,6 +236,16 @@
                 "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
             ),
             
+            // Creating elementsBuffer:
+            "pm_elementsBuffer" => array ( 
+                "ID" => "INT( 11 ) AUTO_INCREMENT PRIMARY KEY",
+                "projectID" => "INT( 11 ) DEFAULT '0'",
+                "elementID" => "INT( 11 ) DEFAULT '0'",
+                "myNote" => "TEXT NULL",
+                "time" => "INT( 11 ) DEFAULT '0'",
+                "moderation" => "INT( 1 ) DEFAULT '0'" // 1 - good, 2 - bad, 3 - deleted
+            ),            
+            
         );
 
         const ELEMENTS = array(
