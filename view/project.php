@@ -1,9 +1,15 @@
+<?php 
+    $projects = new projects;
+    $projectArray = $projects->getProjectInfo($_GET['id']);
+    $projectName = $projectArray[0]['title'];   
+    $projectParent = $projectArray[0]['parentId'];  
+    $parentName = $projects->getProjectInfo($projectParent)[0]['title'];
+?>
 <div class="row">
     <div class="col-lg-3">
     <h4>Project ID: <?php echo $_GET['id'];?></h4>
-Name: <br>
+Name: <?php echo $parentName.' → '.$projectName; ?><br>
 Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
-todo: <a href="" class="notcompleted" target="blank">Client answers</a><br>
 todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
     <p>
         Insert from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
@@ -33,37 +39,37 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
 
         // clean them to make sure they are good for use:
         $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
-       // var_dump($cleanArray);
-//substr($key,5)
 
-        # copy from current tree:
+        
+        # copy from buffer modal:
         $currentCopyBody = 
              $form->formStart()
-            .$form->hidden(array('name'=> 'action','value'=> 'current_tree_copy'))
+            .$form->hidden(array('name'=> 'action','value'=> 'copy_from_buffer'))
             .$form->hidden(array('name'=> 'id','value'=> $_GET['id']))     
-            .$table->tableStart(array('th' => array('From id:','To id:',''),'class' => 'table table-sm table-mini'));
+            .$table->tableStart(array('th' => array('','projectID:','elementID:','MyNote:','time'),'class' => 'table table-sm table-mini'));
+
+        $buffer = $pure->getBuffer(10);   
+        
+        foreach ($buffer as $bufferArray) {   
+
+            if($bufferArray['projectID'] == $_GET['id']) {
+                $buffeProjectID = 'current';
+            } else {
+                $buffeProjectID = $projects->getProjectInfo($bufferArray['projectID'])[0]['title'];
+            }
             
-            $selectCopyCurrentDOM1 = '<select name="copyFrom[]">';
-            $selectCopyCurrentDOM1 .= '<option value="0">...</option>';
-                foreach ($branchArray as $fromBranch) {
-                    $selectCopyCurrentDOM1 .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
-                } 
-            $selectCopyCurrentDOM1 .= '</select>';
-        
-        
-            $selectCopyCurrentDOM2 = '<select name="copyTo[]"><option value="0">...</option>';
-                foreach ($branchArray as $fromBranch) {
-                    $selectCopyCurrentDOM2 .= '<option value="'.$fromBranch.'">'.$fromBranch.'</option>';
-                }
-            $selectCopyCurrentDOM2 .= '</select>';       
-        
-        $currentCopyBody .= 
+            $currentCopyBody .=
              $table->tr(array(
-                $selectCopyCurrentDOM1,
-                $selectCopyCurrentDOM2,
-                $form->submit(array('name'=> '','value'=> 'Copy','class'=>'btn'))
+                '<input type="checkbox" name="buffer[]" value="'.$bufferArray['ID'].'">',$buffeProjectID,$bufferArray['elementID'],$bufferArray['myNote'],date('H:i:s Y/m/d',$bufferArray['time'])
                 )
-             )  
+             ); 
+        }
+             
+        $currentCopyBody .=     
+             $table->tr(array(
+                '','','','',$form->submit(array('name'=> '','value'=> 'Insert','class'=>'btn'))
+                )
+             )             
             .$table->tableEnd()           
             .$form->formEnd();
         
@@ -183,6 +189,12 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
                 .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
                 .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
                 .$form->formEnd()
+                # -------------------------------------------
+                .$form->formStart(array('id' => 'copyToBuffer'.$elementInfo['ID']))
+                .$form->hidden(array('name' => 'action','value'=> 'copy_to_buffer'))
+                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+                .$form->formEnd()
                 
                 .$table->tableEnd();
                 
@@ -258,6 +270,12 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
                 
                 .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
                 .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
+                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+                .$form->formEnd()
+                # -------------------------------------------
+                .$form->formStart(array('id' => 'copyToBuffer'.$elementInfo['ID']))
+                .$form->hidden(array('name' => 'action','value'=> 'copy_to_buffer'))
                 .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
                 .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
                 .$form->formEnd()
@@ -422,6 +440,8 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
 
         $string .= '<span class="deleteSpan" title="Delete branch" onclick="document.getElementById(\'delete_branch'.$elementInfo['ID'].'\').submit(); ">(delete)</span>
         </p>';
+        
+        $string .= '<p><span class="spanLink" title="Copy to buffer" onclick="document.getElementById(\'copyToBuffer'.$elementInfo['ID'].'\').submit(); ">Copy to buffer</span></p>';
         
         return $string;
     }

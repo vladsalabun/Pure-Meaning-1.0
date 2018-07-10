@@ -122,7 +122,7 @@
         {
             $fonts = new fonts;
             $styles = '<style>';
-            // TODO: build div, buttons, forms, sliders and other
+            // TODO: build div, buttons, forms, spans, sliders and other
             
             foreach($array as $outer => $inner) {
                 // if div have inner elements: 
@@ -1197,6 +1197,94 @@
             unlink(configuration::SCREENSHOTS_DIR.$_POST['FilePng']);
             $this->go->go('memes');
         }
+        
+        public function copyToBuffer() 
+        {
+            // check if exitst
+            if ($this->checkElementInBuffer($_POST['id'],$_POST['branch_id']) == false) {
+                $array = array(
+                    "INSERT INTO" => 'pm_elementsBuffer',
+                    "COLUMNS" => array(
+                        "projectID" => $_POST['id'],
+                        "elementID" => $_POST['branch_id'],
+                        "time" => time()
+                    )
+                );
+                
+                $this->model->insert($array);
+                $this->go->go(array('page'=> 'project','id' => $_POST['id']));
+            } else {
+                // update in db:
+                $array = array(
+                    "UPDATE" => 'pm_elementsBuffer',
+                    "SET" => array(
+                        "time" => time()
+                    ),
+                    "WHERE" => array(
+                            "projectID" => $_POST['id'],
+                            "elementID" => $_POST['branch_id']
+                    )
+                );
+                        
+                $this->model->update($array);
+                $this->go->go(array('page'=> 'project','id' => $_POST['id']));
+            } 
+        }
+        
+        public function checkElementInBuffer($projectID,$elementID) 
+        {
+            $array = array(
+                "SELECT" => "*",
+                "FROM" => "pm_elementsBuffer",
+                "WHERE" => "projectID = '$projectID' AND elementID = '$elementID'",
+                "fetch" => 1
+            );
+            return $this->model->select($array, null);
+        }
+        
+        public function getBuffer($count) 
+        {
+            $array = array(
+                "SELECT" => "*",
+                "FROM" => "pm_elementsBuffer",
+                "WHERE" => "moderation < 2",
+                "ORDER" => "ID",
+                "SORT" => "DESC",
+                "LIMIT" => $count
+            );
+            return $this->model->select($array, null);
+        }
+        
+        public function copyFromBuffer() 
+        {
+            var_dump($_POST);
+            exit();
+        }
+        
+/*        
+        public function walkThroughElementIDs($array) 
+        {
+            $result = array();
+            foreach($array as $outer => $inner) {
+                // if div have inner elements: 
+                if (is_array($inner)) {
+                    // get parent element, and take element params:
+                    $result[] = substr($outer,5);
+                    // and move down:
+                    $result[] = $this->walkThroughElementIDs($inner); 
+                } else {
+                    // if div is empty:
+                    $result[] = substr($inner,5);
+                }
+            }
+            
+            return $result;
+        }
+*/       
+        
+        
+        
+        
         
     } // class pure end
     

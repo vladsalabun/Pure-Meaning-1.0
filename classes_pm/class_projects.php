@@ -19,6 +19,16 @@
             return $this->model->getAllSubProjects($projectId);
         }
         
+        public function getProjectInfo($projectId) 
+        {
+            $query = array(
+                "SELECT" => "*",
+                "FROM" => "pm_projects",
+                "WHERE" => "ID = '$projectId'"
+            );
+            return $this->model->select($query);
+        }
+        
         public function addNewProject()  
         {
             // insert new project to database and get last ID:

@@ -84,7 +84,7 @@
     
     echo $table->tableStart( array(
                 'class'=>'table table-striped',
-                'th'=> array('Title:','pdf','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
+                'th'=> array('Title:','Asnwers','pdf','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
                 )
             );
 
@@ -134,7 +134,7 @@
                 );            
         }
             // add new subproject icon:
-            $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject'.$project['ID'].'" title="Edt subproject"><span class="glyphicon glyphicon-plus" title="Add new subproject"></span></a></li>';
+            $showSub .= '<li><a href="" data-toggle="modal" data-target="#AddNewSubProject'.$project['ID'].'"><span class="glyphicon glyphicon-plus" title="Add new subproject"></span></a></li>';
             $showSub .= '</ul>';
 
 
@@ -159,6 +159,7 @@
                     '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>
                     <a href="" data-toggle="modal" data-target="#Edit'.$project['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
                     '.$showSub,
+                    'todo: <a href="" class="notcompleted" target="blank">Client answers</a>',
                     // TODO: generate PDF
                     'pdf',
                     $project['customer'],
