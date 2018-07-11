@@ -3,7 +3,7 @@
     // Setup:
     class configuration
     {    
-        const VER = 2.2;
+        const VER = 2.3;
         const HOST = 'localhost';
         const DB_NAME = 'pure_meaning';
         const DB_USER = 'mysql';

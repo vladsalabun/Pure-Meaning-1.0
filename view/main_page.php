@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-lg-8"> 
-        <p><a href="<?php echo configuration::MAIN_URL;?>?page=memegen">memegen</a></p>
+        <p>todo: <a href="" class="notcompleted" target="blank">My checklist</a><br></p>
         <p>Grab all ideas which you can! Remember them, and code them!</p>
         <p><b>Менеджер проектів:</b></p>
         <ol align="left">

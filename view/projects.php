@@ -68,8 +68,8 @@
                     array(
                         'name' => 'project_type', 
                         'value' => array(
-                            0 => 'WordPress',
-                            99 => 'Custom'
+                            99 => 'Custom',
+                            0 => 'WordPress'
                         ) 
                     )
                 )

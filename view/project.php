@@ -10,11 +10,10 @@
     <h4>Project ID: <?php echo $_GET['id'];?></h4>
 Name: <?php echo $parentName.' → '.$projectName; ?><br>
 Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
-todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
     <p>
         Insert from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
     </p>
-        <p>todo: copy <a href="" class="notcompleted">brunch style</a></p>
+        <?php // <p>todo: copy <a href="" class="notcompleted">brunch style</a></p> ?>
         <h4>Template:</h4>
         <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
     </div>
@@ -30,6 +29,7 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
     foreach ($htmlTree AS $singleElement) {
         $branchArray[] = $singleElement['ID'];
     }
+        
     if (is_array($branchArray)){
         asort($branchArray);
     }
@@ -75,7 +75,7 @@ todo: <a href="" class="notcompleted" target="blank">My checklist</a><br>
         
         echo $pure->modalHtml('copyFromBuffer','Copy from buffer',$currentCopyBody);
 
-        # <- /copy from current tree
+        # <- /copy from buffer
 
 ?>   
     
