@@ -11,7 +11,7 @@
 Name: <?php echo $parentName.' → '.$projectName; ?><br>
 Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
     <p>
-        Insert from: <a href="" class="notcompleted" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
+        Insert from: <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
     </p>
         <?php // <p>todo: copy <a href="" class="notcompleted">brunch style</a></p> ?>
         <h4>Template:</h4>

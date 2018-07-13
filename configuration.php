@@ -269,6 +269,14 @@
                 'type' => 'string',
                 'values' => array('url("?") no-repeat|repeat center|left|right')
             ),
+            'background-size' => array(
+                'type' => 'string',
+                'values' => array(
+                    'cover',
+                    'contain',
+                    'auto'
+                )
+            ),
             'background-color' => array(
                 'type' => 'string',
                 'values' => array('#')
@@ -276,7 +284,15 @@
             'border' => array(
                 'type' => 'string',
                 'values' => array('?px solid|dotted|dashed #?') //
-            ),            
+            ),
+            'border-bottom' => array(
+                'type' => 'string',
+                'values' => array('?px solid|dotted|dashed #?') //
+            ),
+            'border-top' => array(
+                'type' => 'string',
+                'values' => array('?px solid|dotted|dashed #?') //
+            ),             
             'color' => array(
                 'type' => 'string',
                 'values' => array('#')
@@ -374,7 +390,7 @@
                     'extra-expanded', 
                     'ultra-expanded'
                 )
-            ),  
+            )
         );
         
         const STYLEVALUES = array(
@@ -520,6 +536,7 @@
             'delete_project' => array('projects' => 'deleteProject'),
             'add_new_subproject' => array('projects' => 'addNewSubproject'),
             'edit_subproject' => array('projects' => 'editSubproject'),
+            'duplicate_project' => array('projects' => 'duplicateProject'),
             
             'add_new_objection_theme' => array('objections' => 'addNewObjectionTheme'),
             'delete_objection' => array('objections' => 'deleteObjection'),

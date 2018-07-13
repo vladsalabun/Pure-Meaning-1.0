@@ -114,6 +114,12 @@
             . $form->hidden(array('name' => 'projectId','value' => $subProject['ID']));
             $delSub .= $form->submit(array('name' => 'submit','value' => 'Delete project','class' => 'submit_btn'));
             $delSub .= $form->formEnd();
+            
+            $duplicateSub = $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'duplicate_project'))
+            . $form->hidden(array('name' => 'projectId','value' => $subProject['ID']));
+            $duplicateSub .= $form->submit(array('name' => 'submit','value' => 'Duplicate project','class' => 'submit_btn'));
+            $duplicateSub .= $form->formEnd();
 
             
             $editSubModalBody = '';
@@ -129,7 +135,7 @@
             // edit subproject modal:
             echo $pure->modalHtml(
                 'Edit'.$subProject['ID'],
-                'Edit '.$subProject['title'].':'.$delSub,
+                'Edit '.$subProject['title'].':'.$delSub.'<br><br>'.$duplicateSub,
                  $editSubModalBody
                 );            
         }
@@ -203,6 +209,12 @@
             . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
             $delProject .= $form->submit(array('name' => 'submit','value' => 'Delete project','class' => 'submit_btn'));
             $delProject .= $form->formEnd();
+
+            $duplicate_project = $form->formStart()
+            . $form->hidden(array('name' => 'action','value' => 'duplicate_project'))
+            . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
+            $duplicate_project .= $form->submit(array('name' => 'submit','value' => 'Duplicate project','class' => 'submit_btn'));
+            $duplicate_project .= $form->formEnd();
             
             
             $editModalBody .= $form->formStart()
@@ -267,7 +279,7 @@
             // edit project modal:
             echo $pure->modalHtml(
                 'Edit'.$project['ID'],
-                'Edit '.$project['title'].':'.$delProject,
+                'Edit '.$project['title'].':'.$delProject.'<br>'.$duplicate_project,
                  $editModalBody
                 );   
         }
