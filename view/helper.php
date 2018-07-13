@@ -34,6 +34,9 @@
     );
 ?>
     </pre>
+    <h3>HTML symbols:</h3>
+    ← → ⇽ ⇾ ↗ ↺ ↻ ⇄ ⇏ ⇔
+    <br> 
     <h3>Bootstrap:</h3>
     <b>.container-fluid</b> - контейнер на ширину екрану<br>  
     <p>Покраска фона:

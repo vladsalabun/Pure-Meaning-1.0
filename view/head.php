@@ -12,6 +12,7 @@ $start_time = microtime(true);
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
 <link href="<?php echo CONFIGURATION::MAIN_URL; ?>css/bootstrap.css" rel="stylesheet">
+<script src="<?php echo CONFIGURATION::MAIN_URL; ?>js/bootstrap.js"></script>
 <link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/pm_style.css" type="text/css" media="screen" />
 </head>
 <body>

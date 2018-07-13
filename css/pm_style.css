@@ -8,8 +8,21 @@ h4 { border-bottom: 1px solid #e5e5e5; text-align: left; padding: 5px; color: #9
 
 #meta {background: #F5F5F5; overflow:hidden; padding: 5px; border-bottom: 1px dotted #F5F5F5; color: #778899;}
 
-.txtfield {width: 100%; border: 1px #eee solid; padding: 2px;}
+.txtfield {width: 100%; border: 1px #eee solid; padding: 2px; border: 1px solid #e5e5e5;}
+.big_textarea { width: 100%; height: 200px; }
+.edit_element_textarea { width: 100%; height: 200px; border: 1px solid #e5e5e5;}
 .submit_btn { background: #009aff; color: #fff; border: 1px; padding: 3px; min-width: 40px;}
+input:focus { 
+    background-color: #fef65b;
+    border: 1px solid #FF7F50;
+    outline:none;
+}
+textarea:focus { 
+    background-color: #fef65b;
+    border: 1px solid #FF7F50;
+    outline:none;
+}
+
 
 .glyphicon {color: #ebebe0;}
 .glyphicon:hover { cursor: pointer;}
@@ -67,7 +80,6 @@ ul.tree, ul.tree ul {
 .col-lg-3,.col-lg-4,.col-lg-5,.col-lg-6,.col-lg-7,.col-lg-8,
 .col-lg-9,.col-lg-10,.col-lg-11,.col-lg-12 { text-align: left;}
 
-.big_textarea { width: 100%; height: 200px; }
 
 #level { width: 100%; background: #403f4d; color: #fff; height: 23px; text-align: center; position: relative; font-size: 17px;}
 
@@ -119,3 +131,11 @@ table.table-mini> tfoot > tr > td
 
 .spanLink { color: #009aff; }
 .spanLink:hover { cursor: pointer; text-decoration: underline; }
+
+.workspace { background: #f5f5e9; color: #160000; padding: 20px 0 20px 0; margin-top: 10px; border-top: 2px solid #e5e5e5; }
+.save_changes_right { text-align: right; padding-right: 60px; }
+.navigationbar { padding: 0 0 0 25px; }
+
+.dropdown-menu { text-align: right;}
+
+.dropdown-item { margin: 10px; }

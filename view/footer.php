@@ -43,6 +43,11 @@
 ?>    
 </div>
 <br>
+<div class="row">
+<p>Смисл цієї програми в економії часу та накопиченні знань.</p>
+<p> © 2018 Web Cybernetica<br> Пошта: <a href="mailto:salabunvlad@gmail.com">salabunvlad@gmail.com</a><br> Дякую за те, що відвідали мій сайт! </p>
+</div>
+<br>
 <?php 
 	
         $memory = (!function_exists('memory_get_usage')) ? '' : round(memory_get_usage()/1024/1024, 2);

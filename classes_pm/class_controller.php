@@ -1263,7 +1263,6 @@
         
         public function copyFromBuffer() 
         {
-
             foreach ($_POST['buffer'] as $key => $bufferID) {
                 $array = array(
                     "SELECT" => "*",
@@ -1309,10 +1308,59 @@
             }
         }
         
-        
+        public function walkThroughProject($copiedBranch,$parentID = 0,$nextProjectId) 
+        {
+             foreach ($copiedBranch as $key => $value) {
+                if(is_array($value)) {                  
+                    $tmpID = substr($key,5);
+                    // get current element info and insert to new element
+                    $elementInfo = $this->getElementInfo($tmpID);
+                    $nextParentID = $this->model->getNextAutoIncrement();
+                    
+                    $array = array(
+                        "INSERT INTO" => 'pm_elements',
+                        "COLUMNS" => array(
+                            "projectId" => $nextProjectId,
+                            "parentId" => $parentID,
+                            "type" => $elementInfo['type'],
+                            "identifier" => 'pm_element'.$nextParentID,
+                            "class" => $elementInfo['class'],
+                            "style" => $elementInfo['style'],
+                            "priority" => ($this->model->lastLowPriority($nextProjectId,$parentID)['priority'] - 1)
+                        )
+                    );
+                
+                    $this->model->insert($array);
+                    
+                    $this->walkThroughProject($value,$nextParentID,$nextProjectId);
+                } else {
+                    $tmpID = substr($value,5);
+                    // get current element info and insert to new element
+                    $elementInfo = $this->getElementInfo($tmpID);
+                    $nextParentID = $this->model->getNextAutoIncrement();
+                    
+                    $array = array(
+                        "INSERT INTO" => 'pm_elements',
+                        "COLUMNS" => array(
+                            "projectId" => $nextProjectId,
+                            "parentId" => $parentID,
+                            "type" => $elementInfo['type'],
+                            "identifier" => 'pm_element'.$nextParentID,
+                            "class" => $elementInfo['class'],
+                            "style" => $elementInfo['style'],
+                            "priority" => ($this->model->lastLowPriority($nextProjectId,$parentID)['priority'] - 1)
+                        )
+                    );
+                
+                    $this->model->insert($array);
+
+                }
+            }
+        }        
         
         public function insertBranchFromBuffer($parentID,$elementID) 
         {
+            
             $nextIndex = $this->model->getNextAutoIncrement();
             
             // copy his class, style and add low priority: 

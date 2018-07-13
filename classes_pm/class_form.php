@@ -126,6 +126,11 @@
             
             return $string;
         }
+        
+        public function button($array = null) 
+        {
+            return '<button type="button" class="'.$array['class'].'">'.$array['anchor'].'</button>';
+        }
  
  
 

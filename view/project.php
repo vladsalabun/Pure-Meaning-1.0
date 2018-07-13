@@ -6,20 +6,13 @@
     $parentName = $projects->getProjectInfo($projectParent)[0]['title'];
 ?>
 <div class="row">
-    <div class="col-lg-3">
-    <h4>Project ID: <?php echo $_GET['id'];?></h4>
-Name: <?php echo $parentName.' → '.$projectName; ?><br>
-Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a><br>
-    <p>
-        Insert from: <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a>
-    </p>
-        <?php // <p>todo: copy <a href="" class="notcompleted">brunch style</a></p> ?>
-        <h4>Template:</h4>
-        <p><a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Body and class editor</a></p>
+    <div class="col-lg-12">
+        <p>Project #<?php echo $_GET['id'];?> <?php echo $projectName;?> 
+        <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">
+        <span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a> 
+        </p>
     </div>
-
-	<div class="col-lg-9" align="left" style="font-size: 15px;">
-    
+	<div class="col-lg-12" align="left" style="font-size: 15px;">
 <?php 
     // TODO: log actions
     
@@ -80,7 +73,8 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
 ?>   
     
     
-    <h4>DOM Tree</h4>
+    <h4>DOM Tree <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
+        | <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a> ]</small></h4>
 <?php       
 
     function showDOM($array,$branchArray) {
@@ -134,7 +128,7 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
                 
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<a href="" class="identifierLink" data-toggle="modal" data-target="#ModalBlock'.$blockId.'"><b>'.$elementInfo['identifier'].'</b></a>';
+                    echo '<b><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</b></a>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b>';
@@ -179,7 +173,7 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
                         .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
                         .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
                         .$selectNewParent,
-                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn'))
+                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn btn-success'))
                         .$form->formEnd()
                     )
                  )
@@ -214,7 +208,7 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
                 
                 $elementInfo = $temp->getElementInfo($blockId);
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<a data-toggle="modal" class="identifierLink" data-target="#ModalBlock'.$blockId.'" href="" class="glyphicona"><b>'.$elementInfo['identifier'].'</b></a>';
+                    echo '<b><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</b></a>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <b>'.$elementInfo['class'].'</b> ';
@@ -263,7 +257,7 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
                         .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
                         .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
                         .$selectNewParent,
-                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn'))
+                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn btn-success'))
                         .$form->formEnd()
                     )
                  )
@@ -402,7 +396,8 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
-        echo ' <a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element"><span class="glyphicon glyphicon-pencil"></span></a>';
+        echo ' 
+        <a href="" class="identifierLink" data-toggle="modal" data-target="#ModalBlock'.$blockId.'"><span class="glyphicon glyphicon-pencil"></span></a>';
     }
     function favourite($elementId,$mod) {
         
@@ -441,7 +436,8 @@ Preview: <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<
         $string .= '<span class="deleteSpan" title="Delete branch" onclick="document.getElementById(\'delete_branch'.$elementInfo['ID'].'\').submit(); ">(delete)</span>
         </p>';
         
-        $string .= '<p><span class="spanLink" title="Copy to buffer" onclick="document.getElementById(\'copyToBuffer'.$elementInfo['ID'].'\').submit(); ">Copy to buffer</span></p>';
+        $string .= '<p><button type="button" title="Copy to buffer" onclick="document.getElementById(\'copyToBuffer'.$elementInfo['ID'].'\').submit(); " class="btn btn-info">Copy to buffer</button>
+        </p>';
         
         return $string;
     }

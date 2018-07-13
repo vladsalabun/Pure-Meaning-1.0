@@ -3,7 +3,7 @@
 <script type='text/javascript' src='js/jquery-editable-select.js'></script>
 <link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/jquery-editable-select.css" type="text/css" media="screen" />
 <?php 
-    
+
     $fonts = new fonts;
     // get element info: 
     $element = $pure->getElementInfo($_GET['id']);
@@ -12,19 +12,41 @@
     // make style array:
     $style = json_decode($element['style'],true);
 
+    // take all elements from database:
+    $htmlTree = $pure->getDocumentTree($projectId);
+    $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
+    
+    if (count($htmlTree) > 0 ) {
+        // clean them to make sure they are goot for use:
+        $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
+
+        // element array 
+        $currentBranchWithChildren = $pure->getBranch($cleanArray, 'block'.$_GET['id']);
+        //print_r($currentBranchWithChildren);
+    }
+
+    
+    $projects = new projects;
+    $projectArray = $projects->getProjectInfo($projectId);
+    $projectName = $projectArray[0]['title'];   
+    $projectParent = $projectArray[0]['parentId']; 
+    $parentName = $projects->getProjectInfo($projectParent)[0]['title'];
     // TODO:
     # 2. Випадаючий список підказок
-    # 3. Шрифти з випадаючого списку (пишеш букву і випадає підказка)
     # 4. Корні гілки, яку я зараз переглядаю
 
 ?>
 <div class="row">
 	<div class="col-lg-12">
-    
+    <div class="row navigationbar">
 <?php 
-    echo p('← <a href="'.configuration::MAIN_URL.'?page=project&id='.$element['projectId'].'">Back to project '.$element['projectId'].'</a>');
+    echo '<p>Project #'.$element['projectId'].': <a href="'.configuration::MAIN_URL.'?page=project&id='.$element['projectId'].'">'.$projectName.'</a></p>';
 ?>
-    <h4>Edit element: #<?php echo $element['ID']; ?></h4>
+    </div>
+    <div class="row navigationbar">
+    <?php //echo childrenNavigation($currentBranchWithChildren); ?>
+    </div>
+    
 <?php     
     echo 
      $form->formStart()
@@ -32,7 +54,7 @@
     .$form->hidden(array('name' => 'element_id','value' => $element['ID']))
     .$form->hidden(array('name' => 'id','value' => $_GET['projectId']))
 ?>
-<div class="row">
+<div class="row workspace">
 	<div class="col-lg-5 col-md-5">    
 <?php 
     
@@ -48,7 +70,7 @@
             echo $table->tr(
                 array(
                     $otherParam,
-                    $form->text(array('name'=>$otherParam,'value' => htmlentities($otherValue),'class'=>'txtfield')),
+                    $form->textarea(array('name'=>$otherParam,'value' => htmlentities($otherValue),'class'=>'edit_element_textarea')),
                     $mw->a(array('anchor'=>'x','window'=>'delete_'.$otherParam))
                 )
             );
@@ -88,9 +110,7 @@
         } 
     }
     
-    echo 
-     $table->tr(array('','',$form->submit(array('name' => 'submit','value' => 'Save','class' => 'submit_btn'))))
-    .$table->tableEnd(); 
+    echo $table->tableEnd(); 
     
     if (count($style['css']) > 0) {
         if(isset($style['css']['font-family'])) {
@@ -106,30 +126,31 @@
     }
     
 ?>       
-    </div>    
+    </div>   
 </div>    
+<div class="row workspace save_changes_right">
 <?php 
+    /*
+    echo
+     $table->tableStart(array('th' => array('',''),'class' => 'table table-sm table-mini'))
+    .$table->tr(array('',$form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'submit_btn'))))
+    .$table->tableEnd();
+    */
+    echo $form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'btn btn-success'));
     echo $form->formEnd();
-?>
+?> 
+</div> 
 
 <!--- LIVE PREVIEW --->
 
     <h4>Live preview:</h4>
     
 <?php 
-
-    // take all elements from database:
-    $htmlTree = $pure->getDocumentTree($projectId);
     
     if (count($htmlTree) > 0 ) {
-        // clean them to make sure they are goot for use:
-        $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
-
-        // element array 
-        $result = $pure->getBranch($cleanArray, 'block'.$_GET['id']);
 
         $HtmlFormatter = new HtmlFormatter;
-        $document = $pure->createDocumentTree($result, NULL);
+        $document = $pure->createDocumentTree($currentBranchWithChildren, NULL);
         
         // show template:
         echo HtmlFormatter::format($document);
@@ -166,7 +187,7 @@
     $styleBody .='</select></p>'
     .p('Enter value:')
     .p($form->text(array('name'=>'value','value' => '','class'=>'txtfield')))
-    .p($form->submit(array('name' => 'submit', 'value' => 'Add', 'class' => 'btn')))
+    .p($form->submit(array('name' => 'submit', 'value' => 'Add', 'class' => 'btn btn-success')))
     .$form->formEnd();
 
     echo $pure->modalHtml('add_new_style','Add style:',$styleBody);
@@ -195,7 +216,7 @@
        $otherBody .='</select></p>
        <p align="left">Enter value:</p>
        <p><input type="text" name="value" value="" class="txtfield"></p>
-       <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
+       <p><input type="submit" name="submit" value="Add" class="btn btn-success"></p>
        </form>';
         
        echo $pure->modalHtml('other_option','Add other option:',$otherBody);
@@ -212,7 +233,7 @@
             <input type="hidden" name="action" value="delete_css_option">
             <input type="hidden" name="id" value="'.$element['ID'].'">
             <input type="hidden" name="param" value="'.$cssParam.'">
-            <p><input type="submit" name="submit" value="Yes" class="submit_btn"></p>
+            <p><input type="submit" name="submit" value="Yes" class="btn btn-danger"></p>
             </form>';
                 
             echo $pure->modalHtml('delete_'.$cssParam,'Delete css option:',$modalBody);
@@ -227,9 +248,31 @@
             <input type="hidden" name="action" value="delete_other_option">
             <input type="hidden" name="id" value="'.$element['ID'].'">
             <input type="hidden" name="param" value="'.$otherParam.'">
-            <p><input type="submit" name="submit" value="Yes" class="submit_btn"></p>
+            <p><input type="submit" name="submit" value="Yes" class="btn btn-danger"></p>
             </form>';
                 
             echo $pure->modalHtml('delete_'.$otherParam,'Delete css option:',$modalBody);
+        }
+    }
+    
+    function childrenNavigation($array) {
+        if (count($array['block'.$_GET['id']]) > 0) {
+        //var_dump($array);
+        $str = '
+        <div class="dropdown show">
+        Parent 0 → Parent 1 → edit element: #'.$element['ID'].'(brothers) →
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">child elements</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+        foreach ($array['block'.$_GET['id']] as $key => $value) {
+            if (is_array($value)) {
+                $str .= '<li><a class="dropdown-item" href="#">'.$key . '</a></li>';
+            } else {
+                $str .= '<li><a class="dropdown-item" href="#">'.$value. '</a></li>';
+            }
+        }
+        
+        $str .= '</div></div>';
+        return $str;
         }
     }

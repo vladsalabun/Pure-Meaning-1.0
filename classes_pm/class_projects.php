@@ -81,7 +81,8 @@
             // get project info:
             $projectInfo = $this->getProjectInfo($_POST['projectId']);
             // copy and insert it: 
-/*            
+            $nextProjectId = $this->model->getNextProjectAutoIncrement();
+            
             $array = array(
                 "INSERT INTO" => 'pm_projects',
                 "COLUMNS" => array(
@@ -105,20 +106,16 @@
                     "globalStyles" => $projectInfo[0]['globalStyles']
                 )
             );
-            $this->model->insert($array);
-*/            
-            // copy elements
-            
+            $this->model->insert($array);       
+                     
             // take full tree:
             $htmlTree = $this->getDocumentTree($_POST['projectId']);
             // clean:
             $cleanArray = $this->cleanLeaves($this->createTreeArray($htmlTree));
-            
-            var_dump($cleanArray);
             // get copied branch:
-            //$copiedBranch = $this->getBranch($cleanArray, 'block'.$bufferElement['elementID']);
+            $this->walkThroughProject($cleanArray,$parentID = 0,$nextProjectId);
             
-            exit();
+            $this->go->go('projects');
         }
        
     }

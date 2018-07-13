@@ -385,6 +385,13 @@
             return $next['Auto_increment'];
         }
         
+        public function getNextProjectAutoIncrement() {
+            $stmt= $this->conn->query("SHOW TABLE STATUS LIKE 'pm_projects'");
+            $next = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $next['Auto_increment'];
+        }
+
+        
         public function globalStyles($projectId) 
         {
             $sql = "SELECT globalStyles FROM pm_projects WHERE ID = ?";
