@@ -1,4 +1,31 @@
 <div class="row">
+    <div class="col-lg-4">
+    <p>[ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=colors'; ?>">All colors</a> ] [ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=association'; ?>">All association</a> ]</p>
+<?php
+
+    echo
+     $form->formStart()
+    .$table->tableStart(array('th' => array('Param:','Value:'),'class' => 'table table-sm table-mini'))
+    .$form->hidden(array('name'=> 'action','value'=> 'add_new_color_set'))
+    .$table->tr(array(
+        'backgroundColor:',
+        $form->text(array('name'=> 'backgroundColor','value'=> '','class'=>'txtfield')),
+        
+    ))
+    .$table->tr(array(
+        'textColor:',
+        $form->text(array('name'=> 'textColor','value'=> '','class'=>'txtfield'))
+    ))    
+    .$table->tr(array(
+        '',
+        $form->submit(array('name'=> 'submit','value'=> 'Add set','class'=>'btn'))
+    )) 
+    .$table->tableEnd()
+    .$form->formEnd();
+    
+?>    
+    
+    </div>
 	<div class="col-lg-8" style="overflow: hidden;">
 <?php 
     $colors = new colors;
@@ -85,33 +112,6 @@
     }
 
 ?>
-    
-    </div>
-    <div class="col-lg-4">
-    <p>[ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=colors'; ?>">All colors</a> ] [ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=association'; ?>">All association</a> ]</p>
-<?php
-
-    echo
-     $form->formStart()
-    .$table->tableStart(array('th' => array('Param:','Value:'),'class' => 'table table-sm table-mini'))
-    .$form->hidden(array('name'=> 'action','value'=> 'add_new_color_set'))
-    .$table->tr(array(
-        'backgroundColor:',
-        $form->text(array('name'=> 'backgroundColor','value'=> '','class'=>'txtfield')),
-        
-    ))
-    .$table->tr(array(
-        'textColor:',
-        $form->text(array('name'=> 'textColor','value'=> '','class'=>'txtfield'))
-    ))    
-    .$table->tr(array(
-        '',
-        $form->submit(array('name'=> 'submit','value'=> 'Add set','class'=>'btn'))
-    )) 
-    .$table->tableEnd()
-    .$form->formEnd();
-    
-?>    
     
     </div>
 </div>
