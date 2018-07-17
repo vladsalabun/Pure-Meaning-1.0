@@ -1276,9 +1276,13 @@
                 $htmlTree = $this->getDocumentTree($bufferElement['projectID']);
                 // clean:
                 $cleanArray = $this->cleanLeaves($this->createTreeArray($htmlTree));
-                
+
                 // get copied branch:
                 $copiedBranch = $this->getBranch($cleanArray, 'block'.$bufferElement['elementID']);
+                
+                //var_dump($copiedBranch);
+                //exit();
+                
                 // walk through:
                 $this->walkThroughBranch($copiedBranch);
             }
@@ -1288,26 +1292,56 @@
         
         public function walkThroughBranch($copiedBranch,$parentID = 0) 
         {
+             $nextIndex = $this->model->getNextAutoIncrement();
+             
              foreach ($copiedBranch as $key => $value) {
                 if(is_array($value)) {
+                    // get element ID:
                     $tmpID = substr($key,5);
+                    
                     if (isset($parentID)){
-                        $parentID = $this->insertBranchFromBuffer($parentID,$tmpID);
+                        $this->insertBranchFromBuffer($parentID,$tmpID);
                     } else {
-                        $parentID = $this->insertBranchFromBuffer(0,$tmpID);
+                        $this->insertBranchFromBuffer(0,$tmpID);
                     }
-                    $this->walkThroughBranch($value,$parentID);
+                    // go down:
+                    $this->walkThroughBranch($value,$nextIndex);
                 } else {
                     $tmpID = substr($value,5);
                     if (isset($parentID)){
-                        $parentID = $this->insertBranchFromBuffer($parentID,$tmpID);
+                        $this->insertBranchFromBuffer($parentID,$tmpID);
                     } else {
-                        $parentID = $this->insertBranchFromBuffer(0,$tmpID);
+                        $this->insertBranchFromBuffer(0,$tmpID);
                     }
                 }
             }
         }
-        
+ 
+        public function insertBranchFromBuffer($parentID,$elementID) 
+        {
+            
+            $nextIndex = $this->model->getNextAutoIncrement();
+            
+            // copy his class, style and add low priority: 
+            $copiedElement = $this->model->getElementInfo($elementID);
+            
+            $array = array(
+                "INSERT INTO" => 'pm_elements',
+                "COLUMNS" => array(
+                    "projectId" => $_POST['id'],
+                    "parentId" => $parentID,
+                    "type" => $copiedElement['type'],
+                    "identifier" => 'pm_element'.$nextIndex,
+                    "class" => $copiedElement['class'],
+                    "style" => $copiedElement['style'],
+                    "priority" => ($this->model->lastLowPriority($_POST['id'],$parentID)['priority'] - 1)
+                )
+            );
+                
+            $this->model->insert($array);
+            
+        }
+ 
         public function walkThroughProject($copiedBranch,$parentID = 0,$nextProjectId) 
         {
              foreach ($copiedBranch as $key => $value) {
@@ -1357,32 +1391,6 @@
                 }
             }
         }        
-        
-        public function insertBranchFromBuffer($parentID,$elementID) 
-        {
-            
-            $nextIndex = $this->model->getNextAutoIncrement();
-            
-            // copy his class, style and add low priority: 
-            $copiedElement = $this->model->getElementInfo($elementID);
-            
-            $array = array(
-                "INSERT INTO" => 'pm_elements',
-                "COLUMNS" => array(
-                    "projectId" => $_POST['id'],
-                    "parentId" => $parentID,
-                    "type" => $copiedElement['type'],
-                    "identifier" => 'pm_element'.$nextIndex,
-                    "class" => $copiedElement['class'],
-                    "style" => $copiedElement['style'],
-                    "priority" => ($this->model->lastLowPriority($_POST['id'],$parentID)['priority'] - 1)
-                )
-            );
-                
-            $this->model->insert($array);
-            
-            return $nextIndex;
-        }
        
         #                                   #
         #             //  BUFFER            #
