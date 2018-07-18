@@ -4,15 +4,28 @@
     $projectName = $projectArray[0]['title'];   
     $projectParent = $projectArray[0]['parentId'];  
     $parentName = $projects->getProjectInfo($projectParent)[0]['title'];
+    $subProjectsArray = $projects->getAllSubProjects($projectParent);     
 ?>
 <div class="row">
-    <div class="col-lg-12">
-        <p>Project #<?php echo $_GET['id'];?> <?php echo $projectName;?> 
-        <a href="<?php echo configuration::MAIN_URL;?>?page=preview&projectId=<?php echo $_GET['id'];?>" target="blank">
-        <span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a> 
-        </p>
+<div class="col-lg-12">
+<p><a href="<?php echo configuration::MAIN_URL; ?>?page=projects">back</a></p>
+</div>
+    <div class="col-lg-3">
+    <h4><?php echo $parentName; ?></h4>
+    <ul class="tree">
+<?php 
+    foreach ($subProjectsArray as $subProject) {
+        if ($subProject['ID'] == $_GET['id']) {
+            echo '<li>'.$subProject['title'].' <a href="'.configuration::MAIN_URL.'?page=preview&projectId='.$_GET['id'].'" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a></li>';
+        } else {
+            echo '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
+        }
+    }
+?>
+    <li>+</li>
+    </ul>
     </div>
-	<div class="col-lg-12" align="left" style="font-size: 15px;">
+	<div class="col-lg-9" align="left" style="font-size: 15px;">
 <?php 
     // TODO: log actions
     
@@ -73,7 +86,7 @@
 ?>   
     
     
-    <h4>DOM Tree <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
+    <h4><?php echo $projectName ; ?> DOM Tree <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
         | <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a> ]</small></h4>
 <?php       
 

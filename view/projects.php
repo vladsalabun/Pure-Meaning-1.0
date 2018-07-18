@@ -84,7 +84,7 @@
     
     echo $table->tableStart( array(
                 'class'=>'table table-striped',
-                'th'=> array('Title:','Asnwers','pdf','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
+                'th'=> array('Projects:','Asnwers','pdf','Customer:','Skype:','Phones,emails:','VK / FB:','Price:','Start / End:','Day:')
                 )
             );
 
@@ -162,7 +162,7 @@
         // SHOW table:
         echo $table->tr(
              array(
-                    '<a href="'.configuration::MAIN_URL.'?page=project&id='.$project['ID'].'">'. $project['title'].'</a>
+                    '<b>'.$project['title'].'</b>: 
                     <a href="" data-toggle="modal" data-target="#Edit'.$project['ID'].'"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
                     '.$showSub,
                     'todo: <a href="" class="notcompleted" target="blank">Client answers</a>',
