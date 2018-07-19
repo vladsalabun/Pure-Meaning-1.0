@@ -14,7 +14,13 @@ setInterval("fresh()",10000);
 </script>
 <style>
 <?php 
-    // here i put generated CSS styles
+    /* 
+        TODO: 
+        here i put generated CSS styles
+        first: bootstrap, body, a
+        then: all project styles in DESC order
+    */
+    
 ?>
 </style>
 </head>

@@ -52,90 +52,99 @@
 
 <?php   
     if ($_GET['class']) {
-        ### CLASS:  ########################
 ?>        
-    <h4><?php echo $_GET['class']; ?></h4>  
-    <p align="left">+ <a href="" data-toggle="modal" data-target="#add_new_style">add new <?php echo $_GET['class'];?> style</a></p>    
-<?php 
-            $styleBody = '
-            <p align="left">Choose option:</p>
-            '.$form->formStart().'
-            <input type="hidden" name="action" value="add_new_class_style">
-            <input type="hidden" name="projectId" value="'.$_GET['projectId'].'">
-            <input type="hidden" name="className" value="'.$_GET['class'].'">
-            <p align="left"><select name="option[]">';
-            
-            if (is_array($bodyStylesArray[$_GET['class']])) {
-                $cssKeys = array_keys($bodyStylesArray[$_GET['class']]);
-            } else {
-                $cssKeys = array();
-            }
-            
-            foreach($styleParams as $styleOption) {
-                if (!in_array($styleOption,$cssKeys)) {
-                    $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
-                }
-            }
-            
-            $styleBody .='</select></p>
-            <p align="left">Enter value:</p>
-            <p><input type="text" name="value" value="" class="txtfield"></p>
-            <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
-            </form>'; 
-
-           echo $pure->modalHtml('add_new_style','Add '.$_GET['class'].' style:',$styleBody);
-?>    
-    <form method="POST" id="edit_element" action="" autocomplete="OFF">
-    <input type="hidden" name="action" value="edit_class_style">
-    <input type="hidden" name="projectId" value="<?php echo $_GET['projectId']; ?>"> 
-    <input type="hidden" name="className" value="<?php echo $_GET['class']; ?>"> 
-    <table class="table table-sm table-mini">
-    <thead><tr><th scope="col">Option</th><th scope="col">Value:</th></tr></thead>
-    <tbody>    
-<?php       
-        if (is_array($bodyStylesArray[$_GET['class']])) {
-            foreach ($bodyStylesArray[$_GET['class']] as $classParam => $classValue) {
-?> 
-    <tr>
-        <td><?php echo $classParam; ?></td>
-        <td>
-        <input type="text" name="<?php echo $classParam;?>" value="<?php echo $classValue; ?>" class="txtfield">
-        </td>
-        <td><a href="" data-toggle="modal" data-target="#<?php echo 'delete_'.$classParam; ?>">delete</a></td>
-    </tr>  
+<div class="row workspace">
+    <div class="col-lg-12">
 <?php
+    ### CLASS:  ########################
+
+     echo '<h4>Editing '.$_GET['class'].' style 
+     <small>[ '.modalLink('add_new_style', 'add new '.$_GET['class']).'</small> ]</h4>';         
+            
+        $styleBody = 
+         p('Choose option:')
+        .$form->formStart()
+        .$form->hidden(array('name'=> 'action','value'=> 'add_new_class_style'))
+        .$form->hidden(array('name'=> 'projectId','value'=> $_GET['projectId']))
+        .$form->hidden(array('name'=> 'className','value'=> $_GET['class']))
+        .'<p align="left"><select name="option[]">';
+        
+        if (is_array($bodyStylesArray[$_GET['class']])) {
+            $cssKeys = array_keys($bodyStylesArray[$_GET['class']]);
+        } else {
+            $cssKeys = array();
+        }
+        
+        foreach($styleParams as $styleOption) {
+            if (!in_array($styleOption,$cssKeys)) {
+                $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
             }
         }
+        
+        $styleBody .='</select></p>'
+        .p('Enter value:')
+        .p($form->text(array('name'=> 'value','value'=> '','class'=>'txtfield')))
+        .p($form->submit(array('name'=> 'submit','value'=> 'Add style','class'=>'btn btn-success')))
+        .$form->formEnd();
 
-?>
-    <tr>
-        <td></td>
-        <td></td>
-        <td><input type="submit" name="submit" value="Save" class="submit_btn"></td>
-    </tr>
-    </tbody>
-    </table>
-    </form>
-<?php
-               
+        echo $pure->modalHtml('add_new_style','Add '.$_GET['class'].' style:',$styleBody);
+           
+        echo 
+         $form->formStart(array('id' => 'edit_element'))
+        .$form->hidden(array('name'=> 'action','value'=> 'edit_class_style'))
+        .$form->hidden(array('name'=> 'projectId','value'=> $_GET['projectId']))
+        .$form->hidden(array('name'=> 'className','value'=> $_GET['class']))
+        .$table->tableStart(array('th' => array('Option','Value:'),'class' => 'table table-sm table-mini'));
+      
+        // workspace for class style editing
         if (is_array($bodyStylesArray[$_GET['class']])) {
-                
+            foreach ($bodyStylesArray[$_GET['class']] as $classParam => $classValue) {                
+                if ($classParam == 'font-family') {
+                    echo $table->tr(
+                    array(
+                        $classParam,
+                        $form->fontSelectingForm($classValue,$classParam),
+                        $mw->a(array('anchor'=>'x','window'=>'delete_'.$classParam))
+                        )
+                    );
+                } else {
+                    echo $table->tr(
+                    array(
+                        $classParam,
+                        $form->text(array('name' => $classParam,'value' => $classValue,'class' => 'txtfield')),
+                        $mw->a(array('anchor'=>'x','window'=>'delete_'.$classParam))
+                        )
+                    );
+                }
+            }
+        }
+        echo $table->tableEnd();
+?> 
+    </div>
+</div>
+<div class="row workspace save_changes_right">
+<?php
+    echo $form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'btn btn-success'));
+?>
+</div> 
+<?php
+     echo $form->formEnd();   
+        // modals for editing class style:       
+        if (is_array($bodyStylesArray[$_GET['class']])) {     
             foreach ($bodyStylesArray[$_GET['class']] as $classParam => $classValue) {
-                
                 $modalBody = '
                     <p align="left">Are you sure you want to delete '.$classParam.'?</p>
-                    <form method="POST" action="" autocomplete="OFF">
-                    <input type="hidden" name="action" value="delete_class_option">
-                    <input type="hidden" name="projectId" value="'.$_GET['projectId'].'">
-                    <input type="hidden" name="param" value="'.$classParam.'">
-                    <input type="hidden" name="className" value="'.$_GET['class'].'"> 
-                    <p><input type="submit" name="submit" value="Yes" class="submit_btn"></p>
-                    </form>';
+                    '.$form->formStart()
+                    .$form->hidden(array('name'=> 'action','value'=> 'delete_class_option'))
+                    .$form->hidden(array('name'=> 'projectId','value'=> $_GET['projectId']))
+                    .$form->hidden(array('name'=> 'param','value'=> $classParam))
+                    .$form->hidden(array('name'=> 'className','value'=> $_GET['class']))
+                    .p($form->submit(array('name'=> 'submit','value'=> 'Delete','class'=>'btn btn-danger')))
+                    .$form->formEnd();
                         
                 echo $pure->modalHtml('delete_'.$classParam,'Delete css option:',$modalBody);
             }
-        }
-    
+        }        
     } else {
         ### BODY:  ########################
 ?>
@@ -190,6 +199,7 @@
                         )
                     );
                 } else {
+                    // TODO: prepared styles
                     echo $table->tr(
                     array(
                         $bodyParam,
