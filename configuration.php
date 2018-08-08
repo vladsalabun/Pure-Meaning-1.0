@@ -277,6 +277,29 @@
                     'auto'
                 )
             ),
+            'background-position' => array(
+                'type' => 'string',
+                'values' => array(
+                    'top left',
+                    'top',
+                    'right top',
+                    'left',
+                    'center',
+                    'right',
+                    'bottom left',
+                    'bottom right'
+                )
+            ),     
+            'background-repeat' => array(
+                'type' => 'string',
+                'values' => array(
+                    'no-repeat',
+                    'repeat',
+                    'repeat-x',
+                    'repeat-y',
+                    'inherit'
+                )
+            ),
             'background-color' => array(
                 'type' => 'string',
                 'values' => array('#')

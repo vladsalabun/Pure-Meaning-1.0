@@ -102,7 +102,7 @@
                 echo $table->tr(
                     array(
                         $cssParam,
-                        $form->text(array('name'=> $cssParam,'value'=> $cssValue,'class'=>'txtfield')),
+                        $form->styleSelectingForm($cssParam,$cssValue),
                         $mw->a(array('anchor'=>'x','window'=>'delete_'.$cssParam))
                     )
                 ); 

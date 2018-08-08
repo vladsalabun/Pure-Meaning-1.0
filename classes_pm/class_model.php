@@ -324,7 +324,7 @@
         
         public function getAllClasses($projectId) 
         {
-            $sql = "SELECT DISTINCT(class) FROM pm_elements WHERE projectId = ?";
+            $sql = "SELECT DISTINCT(class) FROM pm_elements WHERE projectId = ? AND moderation < 2";
             $stmt = $this->conn->prepare($sql);    
             $stmt->execute(array($projectId));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);  

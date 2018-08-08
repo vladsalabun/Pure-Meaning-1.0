@@ -127,6 +127,35 @@
             return $string;
         }
         
+        public function styleSelectingForm($css,$lastValue) 
+        {
+            // if css type has more then 1 string prepared value:
+            if (configuration::STYLE[$css]['type'] == 'string' and count(configuration::STYLE[$css]['values']) > 1)
+            {
+                $values = configuration::STYLE[$css]['values'];
+                
+                $string = '<select id="editable-select-'.$css.'" name="'.$css.'">';
+                foreach ($values as $id => $value) {
+                    if ($value == $lastValue) {
+                        $selected = 'selected';
+                    } else {
+                        $selected = null;
+                    }
+                    $string .= '<option '.$selected.'>'.$value.'</option>';
+                }
+                $string .= '</select>
+                <script>
+                    $(\'#editable-select-'.$css.'\').editableSelect({ filter: false }); 
+                </script>';
+                
+                return $string;
+            } else {
+                // return usual textfield:
+                return $this->text(array('name' => $css,'value' => $lastValue,'class' => 'txtfield'));
+            }
+            return false;   
+        }
+        
         public function button($array = null) 
         {
             return '<button type="button" class="'.$array['class'].'">'.$array['anchor'].'</button>';

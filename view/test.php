@@ -1,12 +1,15 @@
 <div class="row">
 	<div class="col-lg-12">
     <?php 
-        
+
+    $css = 'text-align';
+    $lastValue = 'right';
+    
         // інформаційні елементи, які утворюють сайт як рекламний носій:
         $website = array(
             // поверх: (этаж)
-            'header' => array(),
-            'body' => array(),
+            'header' => array('navbar'),
+            'body' => array('breadcrumb','pagination'),
             'footer' => array(
                 'contacts' => array(
                     'email','phone','address','skype','vk','facebook','instagram'
@@ -16,17 +19,11 @@
             'common' => array(
                 'link',
                 'h1','h2','h3','h4',
-                'table',
-                ''
+                'table'
             )
         );
         
         // що являється управляючим елементом? а що не являється?
-        
-        #
-        //echo $pure->verifyCss('width','110% 11px');
-     
-        echo $pure->postRequest('get_json_style_config');
         
 /*
         $a = configuration::STYLE;
@@ -97,6 +94,90 @@
 
 ?>
     </div>
+</div>
+<?php
+    
+    $badge = '<button class="btn btn-primary" type="button">Messages <span class="badge">4</span> </button>';
+    
+    $labels = array(
+        '<span class="label label-default">Default</span>',
+        '<span class="label label-primary">Primary</span>',
+        '<span class="label label-success">Success</span>',
+        '<span class="label label-info">Info</span>',
+        '<span class="label label-warning">Warning</span>',
+        '<span class="label label-danger">Danger</span>'
+    );
+    
+    $alerts = array(
+        '<div class="alert alert-success" role="alert">...</div>',
+        '<div class="alert alert-info" role="alert">...</div>',
+        '<div class="alert alert-warning" role="alert">...</div>',
+        '<div class="alert alert-danger" role="alert">...</div>'
+    );
+    
+    $breadcrumb = '<ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Library</a></li>
+      <li class="active">Data</li>
+    </ol>';
+    
+    $listGroup = '<ul class="list-group">
+  <li class="list-group-item">Cras justo odio</li>
+  <li class="list-group-item">Dapibus ac facilisis in</li>
+  <li class="list-group-item">Morbi leo risus</li>
+  <li class="list-group-item">Porta ac consectetur ac</li>
+  <li class="list-group-item">Vestibulum at eros</li>
+</ul>';
+    
+    $panel = '<div class="panel panel-default">
+  <div class="panel-body">
+    Panel content
+  </div>
+  <div class="panel-footer">Panel footer</div>
+</div>';
+    
+    
+    $navbarType = array('navbar-inverse','navbar-default');
+    $navbarWhere = array('navbar-static-top','navbar-fixed-top','navbar-fixed-bottom');
+    $navbarID = 'responsive-menu';
+    
+    $logo = '<a class="navbar-brand" href="#">
+        <img alt="Brand" style="width:20px" src="https://images.all-free-download.com/images/graphicthumb/prey_logo_1_96164.jpg">
+      </a>';
+
+    $navbarText =  '<p class="navbar-text">Signed in as Mark Otto</p>';
+    $navbarRight = '<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">Mark Otto</a></p>';
+    $navbarBtn =  '<button type="button" class="btn btn-default navbar-btn">Sign in</button>';
+    
+    $navbarForm = '<form class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Search">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>';
+?>
+
+<div class="navbar <?php echo $navbarType[array_rand($navbarType)].' '.$navbarWhere[array_rand($navbarWhere)]; ?>">
+	<div class="container-fluid">
+    	<div class="navbar-header">
+            <?php echo $logo; ?>
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#<?php echo $navbarID; ?>">
+				<span class="sr-only">XXX</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+        </div>
+		<div class="collapse navbar-collapse" id="<?php echo $navbarID; ?>">
+			<ul class="nav navbar-nav"> 
+                <?php
+                    for ($i = 0; $i < 5; $i++) {
+                        echo '<li><a href="#" class="headerlink">Name '.$i.'</a></li>';
+                    }
+                ?>
+			</ul>
+		</div>
+	</div>
 </div>
 
 

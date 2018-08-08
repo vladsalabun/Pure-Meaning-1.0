@@ -111,7 +111,7 @@
                     echo $table->tr(
                     array(
                         $classParam,
-                        $form->text(array('name' => $classParam,'value' => $classValue,'class' => 'txtfield')),
+                        $form->styleSelectingForm($classParam,$classValue),
                         $mw->a(array('anchor'=>'x','window'=>'delete_'.$classParam))
                         )
                     );
@@ -199,11 +199,10 @@
                         )
                     );
                 } else {
-                    // TODO: prepared styles
                     echo $table->tr(
                     array(
                         $bodyParam,
-                        $form->text(array('name' => $bodyParam,'value' => $bodyValue,'class' => 'txtfield')),
+                        $form->styleSelectingForm($bodyParam,$bodyValue),
                         $mw->a(array('anchor'=>'x','window'=>'delete_'.$bodyParam))
                         )
                     );
