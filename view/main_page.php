@@ -1,5 +1,6 @@
 <div class="row">
 	<div class="col-lg-8">         
+        <p>Сайти робити я вмію, я не вмію робити бізнес! Треба підготувати собі все, щоб вести бізнес. Що я за 10 днів сайт не зроблю, чи шо?</p>
         <p>todo: <a href="" class="notcompleted" target="blank">My checklist</a><br></p>
         <p>Grab all ideas which you can! Remember them, and code them!</p>
         <p><b>Менеджер проектів:</b></p>
@@ -12,6 +13,7 @@
         <p>Суть проекту в тому, щоб створити базу для накопичення хороших візуальних даних.</p>
         <h3>Корисні посилання:</h3>
         <p><a target="_blank" href="https://webgradients.com/">Градієнти для фонів</a></p>
+        <p><a target="_blank" href="https://flatuicolors.com/">Fast UI color sets</a></p>
     </div>
 	<div class="col-lg-4">
     <h3>Турботливо, бо для себе :)</h3>

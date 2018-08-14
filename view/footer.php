@@ -3,7 +3,7 @@
         
     } else if ($_GET['page'] === 'edit_element') {
 ?>
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/jQuery_v1.12.4.js"></script>
 <script src="js/bootstrap.js"></script>
 <script>
 	$(document).ready(function()
@@ -56,7 +56,7 @@
     
 ?>
 
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/jQuery_v1.12.4.js"></script>
 <script src="js/bootstrap.js"></script>
 <script>
 	$(document).ready(function()

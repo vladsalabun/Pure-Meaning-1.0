@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-12">
     <p>[ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=colors'; ?>">All colors</a> ] [ <a href="<?php echo CONFIGURATION::MAIN_URL.'?page=association'; ?>">All association</a> ]</p>
 <?php
 
@@ -26,7 +26,7 @@
 ?>    
     
     </div>
-	<div class="col-lg-8" style="overflow: hidden;">
+	<div class="col-lg-12" style="overflow: hidden;">
 <?php 
     $colors = new colors;
     $sets = $colors->getAllSets();

@@ -14,6 +14,7 @@ $start_time = microtime(true);
 <link href="<?php echo CONFIGURATION::MAIN_URL; ?>css/bootstrap.css" rel="stylesheet">
 <script src="<?php echo CONFIGURATION::MAIN_URL; ?>js/bootstrap.js"></script>
 <link rel="stylesheet" href="<?php echo CONFIGURATION::MAIN_URL; ?>css/pm_style.css" type="text/css" media="screen" />
+<!--- <link href="https://fonts.googleapis.com/css?family=Alegreya|Merriweather|Old+Standard+TT|Roboto+Slab|Tinos" rel="stylesheet"> --->
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-static-top">
