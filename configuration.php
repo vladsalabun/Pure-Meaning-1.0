@@ -3,7 +3,7 @@
     // Setup:
     class configuration
     {    
-        const VER = 2.3;
+        const VER = 2.5;
         const HOST = 'localhost';
         const DB_NAME = 'pure_meaning';
         const DB_USER = 'mysql';
@@ -16,6 +16,8 @@
         const FONTS_DIR = 'uploads/fonts/';
         const SCREENSHOTS_DIR = 'img/screenShots/';
         const FONTS_TYPES = array('ttf','otf','woff','woff2');
+        
+        const CURRENCY = array('$','₽','₴',);
         
         const WORDPRESS_PAGES = array(
                 '404','footer','page','single','index','header'
@@ -614,3 +616,4 @@
         );
        
     }
+    

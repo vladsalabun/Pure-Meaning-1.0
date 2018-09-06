@@ -11,8 +11,6 @@
     }   
     
     $fonts = new fonts;
-    $form = new formGenerator;    
-    $table = new tableGenerator;    
 ?>
 <div class="row">
 	<div class="col-lg-3 col-sm-4">
@@ -22,7 +20,7 @@
     $font = $fonts->getFont($_GET['ID']);
         
         echo $table->tableStart( array(
-                'class'=>'table table-striped',
+                'class'=>'table table-middle',
                 'th'=> array('Param:','Value:')
                 )
             );
@@ -44,10 +42,10 @@
                 
                 if ($value == 0) {
                     $cyryllic .= $form->hidden(array('name' => 'cyrillic','value' => 1));
-                    $cyryllic .= '<span class="glyphicon glyphicon-remove-sign" title="Cyrillic" onclick="document.getElementById(\'cyrillic_font\').submit(); "></span>';
+                    $cyryllic .= $icon->showIcon('no','width20 pointer','Cyrillic','onclick="document.getElementById(\'cyrillic_font\').submit(); "');
                 } else if ($value == 1) {
-                    $cyryllic .= $form->hidden(array('name' => 'cyrillic','value' => 0));
-                    $cyryllic .= '<span class="glyphicon glyphicon-ok-sign" title="Cyrillic" onclick="document.getElementById(\'cyrillic_font\').submit(); "></span>';
+                    $cyryllic .= $form->hidden(array('name' => 'cyrillic','value' => 0));;
+                    $cyryllic .= $icon->showIcon('check','width20 pointer','Cyrillic','onclick="document.getElementById(\'cyrillic_font\').submit(); "');
                 }
                 
                 $cyryllic .= $form->formEnd();
@@ -62,10 +60,10 @@
                 
                 if ($value == 0) {
                     $latin .= $form->hidden(array('name' => 'latin','value' => 1));
-                    $latin .= '<span class="glyphicon glyphicon-remove-sign" title="Latin" onclick="document.getElementById(\'latin_font\').submit(); "></span>';
+                    $latin .= $icon->showIcon('no','width20 pointer','Latin','onclick="document.getElementById(\'latin_font\').submit(); "');
                 } else if ($value == 1) {
                     $latin .= $form->hidden(array('name' => 'latin','value' => 0));
-                    $latin .= '<span class="glyphicon glyphicon-ok-sign" title="Latin" onclick="document.getElementById(\'latin_font\').submit(); "></span>';
+                    $latin .= $icon->showIcon('check','width20 pointer','Latin','onclick="document.getElementById(\'latin_font\').submit(); "');
                 }
                 
                 $latin .= $form->formEnd();
@@ -80,11 +78,11 @@
             
                 if ($value == 1) {
                     $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 0));
-                    $favForm .= '<span class="glyphicon glyphicon-heart" title="Favourite" onclick="document.getElementById(\'make_font_favourite\').submit(); "></span>';
-                    
+                    $favForm .= $icon->showIcon('heart','width20 pointer','Favourite','onclick="document.getElementById(\'make_font_favourite\').submit(); "');
+                     
                 } else if ($value == 0) {
                     $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 1));
-                    $favForm .= '<span class="glyphicon glyphicon-heart-empty" title="Not favourite" onclick="document.getElementById(\'make_font_favourite\').submit(); "></span>';
+                    $favForm .= $icon->showIcon('empty-heart','width20 pointer','Favourite','onclick="document.getElementById(\'make_font_favourite\').submit(); "');
                 }
                 $favForm .= $form->formEnd();
                 $value = $favForm;
@@ -103,20 +101,20 @@
         echo $table->tr(
             array(
                 'font-size',
-                $fontSize .' <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.($fontSize + 1).'&h2='.$h2.'"><span class="glyphicon glyphicon-arrow-up"></span></a> : <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.($fontSize - 1).'&h2='.$h2.'"><span class="glyphicon glyphicon-arrow-down"></span></a> '
+                $fontSize .' <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.($fontSize + 1).'&h2='.$h2.'">'.$icon->showIcon('up_bold','width25 pointer','Збільшити шрифт').'</a> : <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.($fontSize - 1).'&h2='.$h2.'">'.$icon->showIcon('down_bold','width25 pointer','Зменшити шрифт').'</a> '
             )
         );        
         echo $table->tr(
             array(
                 'H2',
-                $h2 .' <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.$fontSize.'&h2='.($h2 + 1).'"><span class="glyphicon glyphicon-arrow-up"></span></a> 
+                $h2 .' <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.$fontSize.'&h2='.($h2 + 1).'">'.$icon->showIcon('up_bold','width25 pointer','Збільшити шрифт').'</a> 
                 : 
-                <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.$fontSize.'&h2='.($h2 - 1).'"><span class="glyphicon glyphicon-arrow-down"></span></a> '
+                <a href="'.CONFIGURATION::MAIN_URL.'?page=font&ID='.$_GET['ID'].'&font-size='.$fontSize.'&h2='.($h2 - 1).'">'.$icon->showIcon('down_bold','width25 pointer','Зменшити шрифт').'</a> '
             )
         );       
         echo $table->tr(
             array(
-                '<a href="" data-toggle="modal" data-target="#delete_font">Delete</a>',
+                '<a href="" data-toggle="modal" data-target="#delete_font">Видалити</a>',
                 ''
             )
         );         
@@ -125,10 +123,10 @@
         $fontDeleteForm .= $form->formStart(array('id'=>'delete_font'));
         $fontDeleteForm .= $form->hidden(array('name' => 'action','value' => 'delete_font'));
         $fontDeleteForm .= $form->hidden(array('name' => 'fontID','value' => $_GET['ID']));
-        $fontDeleteForm .= $form->submit(array('value'=> 'Delete'));
+        $fontDeleteForm .= $form->submit(array('value'=> 'Так, видалити!','class'=>'btn btn-danger'));
         $fontDeleteForm .= $form->formEnd();
         
-        echo $pure->modalHtml('delete_font','Do you want to delete font?',$fontDeleteForm);
+        echo modalWindow('delete_font','Ви справді хочете видалити цей шрифт?',$fontDeleteForm);
         
 ?>
     

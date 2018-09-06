@@ -12,8 +12,11 @@
         </ol>
         <p>Суть проекту в тому, щоб створити базу для накопичення хороших візуальних даних.</p>
         <h3>Корисні посилання:</h3>
+        <p><a target="_blank" href="https://mdbootstrap.com">Material Design for Bootstrap</a></p>
         <p><a target="_blank" href="https://webgradients.com/">Градієнти для фонів</a></p>
         <p><a target="_blank" href="https://flatuicolors.com/">Fast UI color sets</a></p>
+        <p><a target="_blank" href="https://colorhunt.co/">https://colorhunt.co/</a></p>
+        <p><a target="_blank" href="https://fontstorage.com/ru/">https://fontstorage.com/ru/</a></p>
     </div>
 	<div class="col-lg-4">
     <h3>Турботливо, бо для себе :)</h3>

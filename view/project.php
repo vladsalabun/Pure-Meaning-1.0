@@ -6,17 +6,18 @@
     $parentName = $projects->getProjectInfo($projectParent)[0]['title'];
     $subProjectsArray = $projects->getAllSubProjects($projectParent);     
 ?>
+
 <div class="row">
 <div class="col-lg-12">
 <p><a href="<?php echo configuration::MAIN_URL; ?>?page=projects">back</a></p>
 </div>
     <div class="col-lg-3">
-    <h4><?php echo $parentName; ?></h4>
+    <h4><?php echo $icon->showIcon('prototype','','').' '.$parentName; ?></h4>
     <ul class="tree">
 <?php 
     foreach ($subProjectsArray as $subProject) {
         if ($subProject['ID'] == $_GET['id']) {
-            echo '<li>'.$subProject['title'].' <a href="'.configuration::MAIN_URL.'?page=preview&projectId='.$_GET['id'].'" target="blank"><span class="glyphicon glyphicon-eye-open" title="Live preview"></span></a></li>';
+            echo '<li>'.$subProject['title'].' <a href="'.configuration::MAIN_URL.'?page=preview&projectId='.$_GET['id'].'" target="blank">'.$icon->showIcon('eye','width20','Перегляд').'</a></li>';
         } else {
             echo '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
         }
@@ -86,7 +87,7 @@
 ?>   
     
     
-    <h4><?php echo $projectName ; ?> DOM Tree <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
+    <h4><?php echo $icon->showIcon('tree','',''). ' DOM Tree: «'.$projectName ; ?>» <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
         | <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a> ]</small></h4>
 <?php       
 
@@ -96,6 +97,7 @@
         $form = new formGenerator;    
         $table = new tableGenerator;
         $mw = new modal;
+        $icon = new icon
 ?>   
 
 <ul align="left" style="list-style-type: none; line-height: 160%;" class="tree">
@@ -297,7 +299,7 @@
             }
         }
         
-        echo '<li><a href="" class="identifierLink" title="add new branch" data-toggle="modal" data-target="#AddMainRow'.$addId.'" title="Add branch"><span class="glyphicon glyphicon-menu-down"></span></a></li>';
+        echo '<li><a href="" class="identifierLink" title="add new branch" data-toggle="modal" data-target="#AddMainRow'.$addId.'" title="Add branch">'.$icon->showIcon('branch','width20','Додати нову гілку').'</a></li>';
         echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
         echo '</ul>';
     }
@@ -369,24 +371,32 @@
     ### helpfull functions:
     
     function upArrow($blockId) {
+        
+        $icon = new icon;
+        
         echo '<form method="POST" id="form'.$blockId.'up" action="" autocomplete="OFF" style="float: left;">
         <input type="hidden" name="action" value="increase_priority">
         <input type="hidden" name="block_id" value="'.$blockId.'">
         <input type="hidden" name="project_id" value="'.$_GET['id'].'">
-        </form>
-        <span onclick = \'document.getElementById("form'.$blockId.'up").submit()\' class="glyphicon glyphicon-upload" title="up"></span>';
+        </form>'
+        .$icon->showIcon('up-c','width20 pointer','Підняти','onclick = "document.getElementById(\'form'.$blockId.'up\').submit()"');
     }
     function downArrow($blockId) {
+        
+        $icon = new icon;
+        
         echo '<form method="POST" id="form'.$blockId.'down" action="" autocomplete="OFF" style="float: left;">
         <input type="hidden" name="action" value="decrease_priority">
         <input type="hidden" name="block_id" value="'.$blockId.'">
         <input type="hidden" name="project_id" value="'.$_GET['id'].'">
-        </form>
-        <span onclick = \'document.getElementById("form'.$blockId.'down").submit()\' class="glyphicon glyphicon-download" title="down"></span>';
+        </form>'
+        .$icon->showIcon('down-c','width20 pointer','Опустити','onclick = "document.getElementById(\'form'.$blockId.'down\').submit()"');
     }    
     function extendArrow($blockId) {
         $test = new pure;
-        echo ' <a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'" title="Add child element"><span class="glyphicon glyphicon-menu-down"></span></a>';
+        $icon = new icon;
+        
+        echo ' <a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'" title="Add child element">'.$icon->showIcon('leaves','width20','Додати дочірній елемент').'</a>';
         
         $formBody = '
         <p>How many leaves you want?</p>
@@ -409,22 +419,27 @@
         echo $test->modalHtml('AddLeaves'.$blockId,'Add leaves to branch: #'.$blockId,$formBody);
     }    
     function editArrow($blockId, $linkParam) {
+        $icon = new icon;
         echo ' 
-        <a href="" class="identifierLink" data-toggle="modal" data-target="#ModalBlock'.$blockId.'"><span class="glyphicon glyphicon-pencil"></span></a>';
+        <a href="" class="identifierLink" data-toggle="modal" data-target="#ModalBlock'.$blockId.'">'.$icon->showIcon('menu','width20','Редагувати').'</a>';
     }
     function favourite($elementId,$mod) {
         
         $form = new formGenerator; 
+        $icon = new icon; 
         
         if ($mod == 1) {
-            $favIcon = 'glyphicon glyphicon-heart';
+            $favIcon = 'heart';
             $moderation = 0;
         } else if ($mod == 0) {
-            $favIcon = 'glyphicon glyphicon-heart-empty';
+            $favIcon = 'empty-heart';
             $moderation = 1;
         }
         
-        echo ' <span class="'.$favIcon.'" title="Favourite" onclick="document.getElementById(\'save_to_favourite'.$elementId.'\').submit(); "></span> ';
+        echo $icon->showIcon($favIcon,'width20 pointer','Favourite','onclick="document.getElementById(\'save_to_favourite'.$elementId.'\').submit(); "');
+        
+        
+
         
         echo
          $form->formStart(array('id' => 'save_to_favourite'.$elementId, 'class' => 'floatLeft'))

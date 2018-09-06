@@ -18,7 +18,7 @@
     ))    
     .$table->tr(array(
         '',
-        $form->submit(array('name'=> 'submit','value'=> 'Add set','class'=>'btn'))
+        $form->submit(array('name'=> 'submit','value'=> 'Додати сет','class'=>'btn btn-success margin10'))
     )) 
     .$table->tableEnd()
     .$form->formEnd();
@@ -41,7 +41,7 @@
         <p class="p16">Красива деталь це вишенька зверху</p>
         <p class="p15">Молодість це ресурс, і він не безмежний</p>
         <p class="p14">background-color: '.$setArray['backgroundColor'].';</p>
-        <p class="p13">text-color: '.$setArray['textColor'].';</p>
+        <p class="p13">color: '.$setArray['textColor'].';</p>
         <p>';
         
             // FAVOURITE:
@@ -53,19 +53,19 @@
             if ($setArray['moderation'] == 0 ) {
                 
                 echo $form->hidden(array('name' => 'moderation','value' => 1))
-                .'<span class="glyphicon glyphicon-heart-empty" title="Fav set" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
-                'ID'].'\').submit();"></span>';
+                .$icon->showIcon('empty-heart','width20 pointer margin10','Fav set','onclick="document.getElementById(\'favourite_set'.$setArray[
+                'ID'].'\').submit();"');
                 
             } else if ($setArray['moderation'] == 1 ) {
                 
                 echo $form->hidden(array('name' => 'moderation','value' => 0))
-                .'<span class="glyphicon glyphicon-heart" title="Unfav set" style="color:'.$setArray['textColor'].';margin: 10px;" onclick="document.getElementById(\'favourite_set'.$setArray[
-                'ID'].'\').submit(); "></span>';
+                .$icon->showIcon('heart','width20 pointer margin10','Unfav set','onclick="document.getElementById(\'favourite_set'.$setArray[
+                'ID'].'\').submit();"');
                 
             }
             
-            echo modalLink('windowSet'.$setArray['ID'], '<span class="glyphicon glyphicon-pencil" title="Edit set" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
-            echo modalLink('deleteSet'.$setArray['ID'], '<span class="glyphicon glyphicon-remove" title="Delete set" style="color:'.$setArray['textColor'].';margin: 10px;"></span>');
+            echo modalLink('windowSet'.$setArray['ID'], $icon->showIcon('edit','width20','Редагувати'));
+            echo modalLink('deleteSet'.$setArray['ID'], $icon->showIcon('no','width20','Видалити'));
             
             echo $form->formEnd();
             // <--- FAVOURITE:
@@ -93,7 +93,7 @@
         .$table->tableStart(array('th' => array('Param:','Value:'),'class' => 'table table-sm table-mini'))
         .$table->tr(array('background-color:',$form->text(array('name'=> 'backgroundColor','value'=> $setArray['backgroundColor'],'class'=>'txtfield'))))
         .$table->tr(array('text-color:',$form->text(array('name'=> 'textColor','value'=> $setArray['textColor'],'class'=>'txtfield'))))
-        .$table->tr(array('',$form->submit(array('name'=> '','value'=> 'Update','class'=>'btn'))))
+        .$table->tr(array('',$form->submit(array('name'=> '','value'=> 'Update','class'=>'btn btn-success margin10'))))
         .$table->tableEnd()
         .$form->formEnd();
         
@@ -101,7 +101,7 @@
          $form->formStart()
         .$form->hidden(array('name' => 'action','value' => 'delete_color_set'))
         .$form->hidden(array('name' => 'ID','value' => $setArray['ID']))
-        .$form->submit(array('name'=> '','value'=> 'Delete','class'=>'btn'))
+        .$form->submit(array('name'=> '','value'=> 'Delete','class'=>'btn btn-danger margin10'))
         .$form->formEnd();
         
         

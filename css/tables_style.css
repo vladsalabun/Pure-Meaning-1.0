@@ -1,0 +1,21 @@
+﻿/*
+
+    Стилі для таблиць
+
+*/
+
+table.table-mini > thead > tr > th, 
+table.table-mini > tbody > tr > th, 
+table.table-mini > tfoot > tr > th, 
+table.table-mini > thead > tr > td, 
+table.table-mini > tbody > tr > td, 
+table.table-mini> tfoot > tr > td
+{ padding: 2px 10px 2px 10px; border: 0; }
+
+table.table-middle > thead > tr > th, 
+table.table-middle > tbody > tr > th, 
+table.table-middle > tfoot > tr > th, 
+table.table-middle > thead > tr > td, 
+table.table-middle > tbody > tr > td, 
+table.table-middle > tfoot > tr > td
+{ padding: 10px; border: 0; }

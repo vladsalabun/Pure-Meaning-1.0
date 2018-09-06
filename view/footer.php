@@ -16,7 +16,7 @@
 ?>
 
 </div>
-<div class="container-fluid">
+<div class="container-fluid margin60">
 <?php 
     $myExp = $experience->allExp();
     foreach (configuration::LEVEL as $level => $levelExp) {

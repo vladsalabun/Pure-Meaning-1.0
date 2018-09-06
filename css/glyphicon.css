@@ -1,0 +1,26 @@
+/*
+    
+    Мої, заздалегідь описати стилі, щоб було зручно і швидко
+
+*/
+
+.glyphicon {color: #ebebe0;}
+.glyphicon:hover { cursor: pointer;}
+.glyphicon-upload:hover { color: #5cd65c; }
+.glyphicon-download:hover { color: #ff704d; }
+.glyphicon-heart {color: #ff1a1a;}
+.glyphicon-edit { color: #4d94ff; }
+.glyphicon-menu-down { color: #4d94ff; }
+.glyphicon-edit:hover { color: #0066ff; }
+.glyphicon-menu-down:hover { color: #0066ff; }
+.glyphicon-plus:hover { color: #0066ff; }
+.glyphicon-pencil:hover { color: #0066ff; }
+.glyphicon-ok-sign { color: #a4c73c; }
+.glyphicon-remove-sign { color: #ff7373; }
+.glyphicon-arrow-up:hover { color: #444193; }
+.glyphicon-arrow-down:hover { color: #444193; }
+.glyphicon-eye-open { color: #009aff; }
+.glyphicon-eye-open:hover { color: #ff0000; }
+
+
+.glyphicon-remove:hover { color: #C70039; }

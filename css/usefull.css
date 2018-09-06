@@ -1,0 +1,105 @@
+/*
+    
+    Мої, заздалегідь описати стилі, щоб було зручно і швидко
+
+*/
+.font {
+    font-family: Roboto-Light; 
+}
+.fontL {
+    font-family: 'RobotoCondensed-Light'; 
+}
+.fontB{
+    font-family: 'RobotoCondensed-Bold'; 
+}
+.pointer:hover {
+    cursor: pointer;
+}
+
+.center {
+    text-align: center;
+}
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
+/* */
+.margin10 {
+    margin: 10px 0 10px 0;
+}
+.margin20 {
+    margin: 20px 0 20px 0;
+}
+.margin30 {
+    margin: 30px 0 30px 0;
+}
+.margin60 {
+    margin: 60px 0 60px 0;
+}
+.margin120 {
+    margin: 120px 0 120px 0;
+}
+/* */
+.padding10 {
+    padding: 10px 0 10px 0;
+}
+.padding20 {
+    padding: 20px 0 20px 0;
+}
+.padding30 {
+    padding: 30px 0 30px 0;
+}
+.padding60 {
+    padding: 60px 0 60px 0;
+}
+.padding120 {
+    padding: 120px 0 120px 0;
+}
+.border-bottom {
+    border-bottom: 1px solid #000;
+}
+.red {
+    color: #bb1e2e;
+}
+.green {
+    color: #3CB371;
+}
+
+.icon20 {
+    width: 20px;
+}
+.icon30 {
+    width: 30px;
+}
+.icon40 {
+    width: 40px;
+}
+.icon50 {
+    width: 50px;
+}
+.width10 {
+    width: 10px;
+}
+.width15 {
+    width: 15px;
+}
+.width20 {
+    width: 20px;
+}
+.width22 {
+    width: 22px;
+}
+.width23 {
+    width: 23px;
+}
+.width24 {
+    width: 24px;
+}
+.width25 {
+    width: 25px;
+}
+.width30 {
+    width: 30px;
+}

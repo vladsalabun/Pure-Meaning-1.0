@@ -1,12 +1,11 @@
 <?php 
-    $fonts = new fonts;
-    $form = new formGenerator;    
-    $table = new tableGenerator;    
+    $fonts = new fonts;   
 ?>
 <div class="row">
 	<div class="col-lg-8 col-sm-9">
     <?php 
         $fontsArray = $fonts->getAllFonts();
+        
         echo $table->tableStart( array(
                 'class'=>'table table-striped',
                 'th'=> array('ID:','Fav:','Family:','Cyr:','Lat','Type:')
@@ -23,25 +22,26 @@
             // Favourite:
             if ($font['myFavourite'] == 0) {
                 $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 1));
-                $favForm .= '<span class="glyphicon glyphicon-heart-empty" title="Not favourite" onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit(); "></span>';
+                $favForm .= $icon->showIcon('empty-heart','width20 pointer','Not favourite','onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit();"');
             } else if ($font['myFavourite'] == 1) {
                 $favForm .= $form->hidden(array('name' => 'myFavourite','value' => 0));
-                $favForm .= '<span class="glyphicon glyphicon-heart" title="Favourite" onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit(); "></span>';
+                $favForm .= $icon->showIcon('heart','width20 pointer','Favourite','onclick="document.getElementById(\'make_font_favourite'.$font['ID'].'\').submit(); "');
+                
             }
             $favForm .= $form->formEnd();
-            
+ // check          
             // Cyrillic:
             if ($font['cyrillic'] == 0) {
-                $cyr = '<span class="glyphicon glyphicon-remove-sign" title="Cyrillic"></span>';
+                $cyr = $icon->showIcon('no','width20 pointer','Cyrillic');
             } else if ($font['cyrillic'] == 1) {
-                $cyr = '<span class="glyphicon glyphicon-ok-sign" title="Cyrillic"></span>';
+                $cyr = $icon->showIcon('check','width20 pointer','Cyrillic');
             }
             
             // Latin:
             if ($font['latin'] == 0) {
-                $latin = '<span class="glyphicon glyphicon-remove-sign" title="Latin"></span>';
+                $latin = $icon->showIcon('no','width20 pointer','Latin');
             } else if ($font['latin'] == 1) {
-                $latin = '<span class="glyphicon glyphicon-ok-sign" title="Latin"></span>';
+                $latin = $icon->showIcon('check','width20 pointer','Latin');
             }   
 
             // SHOW table:
@@ -76,7 +76,7 @@
         )
      .$table->tr(
             array(
-                $form->submit(array('name' => 'submit','value' => 'Add font','class' => 'submit_btn'))
+                $form->submit(array('name' => 'submit','value' => 'Завантажити шрифт','class' => 'btn btn-success margin10'))
             )
       )
        
