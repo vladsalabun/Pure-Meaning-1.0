@@ -10,17 +10,17 @@
     <p>← <a href="<?php echo CONFIGURATION::MAIN_URL; ?>?page=objections">Objections</a></p>
     <?php $theme = $objection->getObjection($_GET['parentId']); ?>
     <h3><?php echo $theme['objection']; ?></h3>
-    <p><a href="" data-toggle="modal" data-target="#add_objection">add new objection</a></p>
+    <p><a href="" data-toggle="modal" data-target="#add_objection">Додати заперечення</a></p>
 <?php
         $addObjection = $form->formStart();
         $addObjection .= $table->tableStart( array(
                 'class'=>'table table-striped',
-                'th'=> array('answerUkr:','answerRu'),
+                'th'=> array('Українською:','Російською:'),
                 )
             );
         $addObjection .= $form->hidden(array('name' => 'action','value' => 'add_objection'));
         $addObjection .= $form->hidden(array('name' => 'parentId','value' => $_GET['parentId']));
-        $addObjection .= '<p><b>Objection:</b></p>';
+        $addObjection .= p('<span class="fontB">Заперечення:</span>');
         $addObjection .= $form->text(array('name' => 'objection','value' => '', 'class' => 'txtfield'));
         $addObjection .= $table->tr(
                 array(
@@ -31,22 +31,22 @@
         $addObjection .= $table->tr(   
                 array(
                     '',
-                    $form->submit(array('value'=> 'Add objection')) 
+                    $form->submit(array('value'=> 'Додати заперечення','class' => 'btn btn-success margin10')) 
                 )
         );         
         
         $addObjection .= $table->tableEnd();
         $addObjection .= $form->formEnd();
     
-    echo $pure->modalHtml('add_objection','Add new objection:',$addObjection); 
+    echo modalWindow('add_objection','Додати заперечення:',$addObjection); 
 
     # OBJECTIONS TABLE: #
         
     $objectionsArray = $objection->getObjectionBranch($_GET['parentId']);
     
     echo $table->tableStart( array(
-                'class'=>'table table-striped',
-                'th'=> array('Objection:','Answer:'),
+                'class'=>'table table-striped table-mini',
+                'th'=> array('<span class="fontB">Заперечення:</span>','<span class="fontB">Відповідь:</span>'),
                 )
             );
     foreach($objectionsArray as $objection) {

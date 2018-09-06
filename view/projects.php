@@ -62,7 +62,7 @@
             .$form->formEnd(),'right');
 
 
-            $editSubModalBody = '<div class="col-sm margin20">'.
+            $editSubModalBody = '<div class="row"><div class="col-lg-6 margin20">'.
              $form->formStart()
             .$form->hidden(array('name' => 'action','value' => 'edit_subproject'))
             .$form->hidden(array('name' => 'projectId','value' => $subProject['ID']))
@@ -71,13 +71,12 @@
             .$form->submit(array('name' => 'submit','value' => 'Зберегти','class' => 'btn btn-success margin10'))
             .$form->formEnd()
             .'</div>'
-            .'<div class="col-sm margin20">'.$delSub.$duplicateSub.'</div>';
+            .'<div class="col-lg-6 margin20">'.$delSub.$duplicateSub.'</div></div>';
 
             // edit subproject modal:
             echo modalWindow(
                 'Edit'.$subProject['ID'],
-                'Редагування проекту:<br>
-                «'.$subProject['title'].'»',
+                'Редагування проекту: «'.$subProject['title'].'»',
                  $editSubModalBody
                 );
         }
@@ -123,14 +122,15 @@
             $subprojectModalBody .= $form->formStart()
             . $form->hidden(array('name' => 'action','value' => 'add_new_subproject'))
             . $form->hidden(array('name' => 'projectId','value' => $project['ID']))
+            . p('Введіть назву сторінки:')
             . $form->text(array('name' => 'title','class' => 'txtfield'))
             . '<br><br>'
-            . $form->submit(array('name' => 'submit','value' => 'Add subproject','class' => 'submit_btn'))
+            . $form->submit(array('name' => 'submit','value' => 'Створити сторінку','class' => 'btn btn-success margin10'))
             . $form->formEnd();
 
-            echo $pure->modalHtml(
+            echo modalWindow(
                 'AddNewSubProject'.$project['ID'],
-                'Add subproject to project #'.$project['ID'].':',
+                'Створити нову сторінку у проекті <span class="fontB">'.$project['title'].'</span>:',
                 $subprojectModalBody
             );
 
@@ -147,13 +147,13 @@
             $delProject = $form->formStart()
             . $form->hidden(array('name' => 'action','value' => 'delete_project'))
             . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
-            $delProject .= $form->submit(array('name' => 'submit','value' => 'Delete project','class' => 'submit_btn'));
+            $delProject .= $form->submit(array('name' => 'submit','value' => 'Видалити проект','class' => 'btn btn-danger margin10'));
             $delProject .= $form->formEnd();
 
             $duplicate_project = $form->formStart()
             . $form->hidden(array('name' => 'action','value' => 'duplicate_project'))
             . $form->hidden(array('name' => 'projectId','value' => $project['ID']));
-            $duplicate_project .= $form->submit(array('name' => 'submit','value' => 'Duplicate project','class' => 'submit_btn'));
+            $duplicate_project .= $form->submit(array('name' => 'submit','value' => 'Копіювати проект','class' => 'btn btn-warning margin10'));
             $duplicate_project .= $form->formEnd();
 
 
@@ -163,8 +163,8 @@
 
             $editModalBody .= $table->tableStart(
                     array(
-                        'class'=>'table table-striped',
-                        'th'=> array('Question:','Answer:')
+                        'class'=>'table table-striped table-mini',
+                        'th'=> array('<span class="fontB">Питання:</span>','<span class="fontB">Відповідь:</span>')
                     )
                 );
 
@@ -213,14 +213,19 @@
 
             $editModalBody .= $table->tableEnd();
 
-            $editModalBody .= $form->submit(array('name' => 'submit','value' => 'Edit project','class' => 'submit_btn'));
+            $editModalBody .= p($form->submit(array('name' => 'submit','value' => 'Зберегти зміни','class' => 'btn btn-success margin10')),'center');
             $editModalBody .= $form->formEnd();
 
             // edit project modal:
-            echo $pure->modalHtml(
+            echo modalWindow(
                 'Edit'.$project['ID'],
-                'Edit '.$project['title'].':'.$delProject.'<br>'.$duplicate_project,
-                 $editModalBody
+                'Редагування проекту <span class="fontB">'.$project['title'].'</span>',
+                '<div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 right">
+                '.$delProject.' '.$duplicate_project.'</div></div>
+                <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                '.$editModalBody.'</div></div>'
                 );
         }
 
@@ -303,7 +308,7 @@
                 )
             );
         $formBody .= $table->tableEnd();
-        $formBody .= p($form->submit(array('value' => 'Створити новий проект','class' => 'submit_btn')),'center');
+        $formBody .= p($form->submit(array('value' => 'Створити новий проект','class' => 'btn btn-success margin10')),'center');
         $formBody .= $form->formEnd();
 
         echo modalWindow('AddNewProject','Створення нового проекту:',$formBody);

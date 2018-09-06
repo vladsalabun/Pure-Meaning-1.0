@@ -76,8 +76,8 @@
         </div>
         <style>
         #set'.$setID.' {
-            float:left; margin: 2px;  
-            width:300px; height:235px; text-align: center;
+            float:left; margin: 25px 1px 45px 1px; border: 1px solid #000; padding: 5px;
+            width:300px; height:220px; text-align: center;
             background:'.$setArray['backgroundColor'].'; 
             color:'.$setArray['textColor'].';
         }

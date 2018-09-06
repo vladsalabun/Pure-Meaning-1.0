@@ -20,7 +20,7 @@
     \$form->uploadFile(array('name'=> ''));
     \$form->select(array('name'=> '','value'=> array('key'=>'value')));
     \$form->datetime(array('name'=> '','value'=> ''))
-    \$form->submit(array('name'=> '','value'=> '','class'=>'btn'));
+    \$form->submit(array('name'=> '','value'=> '','class'=>'btn btn-success'));
     \$form->formEnd();
     
     # Вибір шрифтa:
@@ -38,6 +38,7 @@
     ← → ⇽ ⇾ ↗ ↺ ↻ ⇄ ⇏ ⇔
     <br> 
     <h3>Bootstrap:</h3>
+    <b>col-sm-12 col-md-12 col-lg-12 col-xl-12</b> <br>  
     <b>.container-fluid</b> - контейнер на ширину екрану<br>  
     <p>Покраска фона:
         <b>.success</b> - зелений<br> 

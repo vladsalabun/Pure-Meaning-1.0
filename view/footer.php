@@ -16,8 +16,10 @@
 ?>
 
 </div>
-<div class="container-fluid margin60">
+<div class="container-fluid workspace">
+
 <?php 
+
     $myExp = $experience->allExp();
     foreach (configuration::LEVEL as $level => $levelExp) {
         if ($myExp > $levelExp) {
@@ -37,17 +39,15 @@
     
     $delta = $myExp - configuration::LEVEL[$myLevel];
     $needExp = configuration::LEVEL[($myLevel + 1)];
-    echo '<div id="level">'.$designerClass.' Designer: <b>'.$myLevel.'</b> lvl, '.round(($delta / $needExp * 100),2).'%<div id="level_complete" style="margin-top: -24px; background: #306eba; width: '.round(($delta / $needExp * 100),2).'%; height: 23px;"></div>';
-    echo '<p align="left">';
+    echo '<div id="level">'.$designerClass.' Designer: <span class="fontB">'.$myLevel.'</span> lvl, '.round(($delta / $needExp * 100),2).'%<div id="level_complete" style="margin-top: -21px; background: #306eba; width: '.round(($delta / $needExp * 100),2).'%; height: 23px;"></div></div>';
+    echo '';
     
 ?>    
-</div>
-<br>
-<div class="row">
+<p align="left">
+
 <p>Смисл цієї програми в економії часу та накопиченні знань.</p>
 <p> © 2018 Web Cybernetica<br> Пошта: <a href="mailto:salabunvlad@gmail.com">salabunvlad@gmail.com</a><br> Дякую за те, що відвідали мій сайт! </p>
 </div>
-<br>
 <?php 
 	
         $memory = (!function_exists('memory_get_usage')) ? '' : round(memory_get_usage()/1024/1024, 2);

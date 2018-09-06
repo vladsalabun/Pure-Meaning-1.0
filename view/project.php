@@ -17,7 +17,10 @@
 <?php 
     foreach ($subProjectsArray as $subProject) {
         if ($subProject['ID'] == $_GET['id']) {
-            echo '<li>'.$subProject['title'].' <a href="'.configuration::MAIN_URL.'?page=preview&projectId='.$_GET['id'].'" target="blank">'.$icon->showIcon('eye','width20','Перегляд').'</a></li>';
+            echo '<li><span class="fontB">'.$subProject['title'].'</span> 
+            <a href="'.configuration::MAIN_URL.'?page=preview&projectId='.$_GET['id'].'" target="blank">
+            '.$icon->showIcon('eye','width20','Перегляд').'</a>
+            </li>';
         } else {
             echo '<li><a href="'.configuration::MAIN_URL.'?page=project&id='.$subProject['ID'].'">'.$subProject['title'].'</a></li>';
         }
@@ -27,10 +30,16 @@
     </ul>
     </div>
 	<div class="col-lg-9" align="left" style="font-size: 15px;">
+    
+    
+    
+    
+    
+    
 <?php 
     // TODO: log actions
     
-    // take all elements from database:
+    // Беру всі елементи з бази даних:
     $htmlTree = $pure->getDocumentTree($_GET['id']);
 
     foreach ($htmlTree AS $singleElement) {
@@ -47,7 +56,6 @@
         // clean them to make sure they are good for use:
         $cleanArray = $pure->cleanLeaves($pure->createTreeArray($htmlTree));
 
-        
         # copy from buffer modal:
         $currentCopyBody = 
              $form->formStart()
@@ -60,7 +68,7 @@
         foreach ($buffer as $bufferArray) {   
 
             if($bufferArray['projectID'] == $_GET['id']) {
-                $buffeProjectID = 'current';
+                $buffeProjectID = 'поточна сторінка';
             } else {
                 $buffeProjectID = $projects->getProjectInfo($bufferArray['projectID'])[0]['title'];
             }
@@ -74,22 +82,25 @@
              
         $currentCopyBody .=     
              $table->tr(array(
-                '','','','',$form->submit(array('name'=> '','value'=> 'Insert','class'=>'btn'))
+                '','','','',$form->submit(array('name'=> '','value'=> 'Insert','class'=>'btn btn-success'))
                 )
              )             
             .$table->tableEnd()           
             .$form->formEnd();
         
-        echo $pure->modalHtml('copyFromBuffer','Copy from buffer',$currentCopyBody);
+        echo modalWindow('copyFromBuffer','Копіювання з буфера:',$currentCopyBody);
 
         # <- /copy from buffer
 
 ?>   
     
     
-    <h4><?php echo $icon->showIcon('tree','',''). ' DOM Tree: «'.$projectName ; ?>» <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Classes editor</a>
-        | <a href="" data-toggle="modal" data-target="#copyFromBuffer">buffer</a> ]</small></h4>
+    <h4><?php echo $icon->showIcon('tree','',''). ' DOM Tree: «'.$projectName ; ?>» <small>[ <a href="<?php echo configuration::MAIN_URL;?>?page=classes_editor&projectId=<?php echo $_GET['id'];?>">Редагування класів</a>
+        | <a href="" data-toggle="modal" data-target="#copyFromBuffer">Буфер</a> ]</small></h4>
 <?php       
+
+
+    ### ЗАПУСК ФУНКЦІЇ ВІДОБРАЖЕННЯ ДЕРЕВА:
 
     function showDOM($array,$branchArray) {
               
@@ -100,8 +111,12 @@
         $icon = new icon
 ?>   
 
-<ul align="left" style="list-style-type: none; line-height: 160%;" class="tree">
+<ul align="left" style="list-style-type: none;" class="tree">
 <?php 
+
+
+    // ДОДАВАННЯ НОВИХ ГІЛОК:
+    
     $keysArray = array_keys($array);
     if (is_array($array[$keysArray[0]])) {
         $addId = $keysArray[0];
@@ -109,58 +124,59 @@
         $addId = $array[$keysArray[0]];
     }
     
-    $addBody = '
-    <p>How many elements you want: </p>
-    <form method="POST" action="" autocomplete="OFF">
-    <p>
-    <select name="type[]">';
+    $addBody = p('Скільки елементів потрібно створити:')
+    .$form->formStart()
+    .'<p><select name="type[]">';
     
     foreach(configuration::ELEMENTS as $elementIdentifier => $elementName) {
         $addBody .= '<option value="'.$elementIdentifier.'">'.$elementName.'</option>';
     }
     
-    $addBody .='</select></p>
-	<input type="hidden" name="action" value="add_new_element">
-	<input type="hidden" name="id" value="'.$_GET['id'].'">
-	<input type="hidden" name="branch_id" value="'.$addId.'">
-	<p><input type="number" name="rows" placeholder="0" value="1" class="txtfield"></p>
-	<p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>
-    <p><input type="submit" name="submit" value="Add" class="submit_btn"></p>
-    </form>'; 
-?>
-<?php
+    $addBody .='</select></p>'
+	.$form->hidden(array('name'=> 'action','value'=> 'add_new_element'))
+	.$form->hidden(array('name'=> 'id','value'=> $_GET['id']))
+	.$form->hidden(array('name'=> 'branch_id','value'=> $addId))
 
+	.'<p><input type="number" name="rows" placeholder="0" value="1" class="txtfield"></p>
+	<p><input type="text" name="class_name" placeholder="class_name (default: row)" class="txtfield"></p>' // TODO: тут потрібні підказки по назвам класів
+    .$form->submit(array('name'=> 'submit','value'=> 'Додати','class'=>'btn btn-success'))
+    .$form->formEnd();
+    
+        echo modalWindow('AddMainRow'.$addId,'Додавання нових гілок до гілки: '.substr($addId,5), $addBody);
+    
+     // <--- ДОДАВАННЯ НОВИХ ГІЛОК:
+
+
+ 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
 
                 $blockId = substr($key,5);
 
-                echo '
-                
-                <!--- Element --->
-                <li>#'.$blockId.' ';               
-                
-                
                 $elementInfo = $temp->getElementInfo($blockId);
+                
+                echo '
+                <!--- Element --->
+                <li><span class="fontB">'.configuration::ELEMENTS[$elementInfo['type']].'</span>: #'.$blockId.' ';               
+ 
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<b><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</b></a>';
+                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
-                    echo ' class: <b>'.$elementInfo['class'].'</b>';
+                    echo ' class: <span class="fontB">'.$elementInfo['class'].'</span>';
                 }
                                 
                 // navigation buttons:
                 echo ' '
                 .upArrow($blockId).downArrow($blockId)
-                .favourite($elementInfo['ID'],$elementInfo['moderation'])
+                //.favourite($elementInfo['ID'],$elementInfo['moderation'])
                 .editArrow($blockId, '');
 
             #### generate title:
                 $modaTittle = generateModalTitle($elementInfo);
             #### generate body 
             
-                $modalBody = ''
-                .$table->tableStart(array('th' => array('','',''),'class' => 'table table-sm table-mini'));
+                $modalBody = '';
                 
                     // get selection:
                     $selectNewParent = '<select name="newparent[]">';
@@ -178,55 +194,31 @@
                     
                     $selectNewParent .= '</select>';
                 
-                $modalBody .= 
-                
-                 $table->tr(
-                    array(
-                        'Change branch:',
-                         $form->formStart()
-                        .$form->hidden(array('name' => 'action','value'=> 'change_parent'))
-                        .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
-                        .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
-                        .$selectNewParent,
-                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn btn-success'))
-                        .$form->formEnd()
-                    )
-                 )
-                
-                .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
-                .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
-                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
-                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
-                .$form->formEnd()
-                # -------------------------------------------
-                .$form->formStart(array('id' => 'copyToBuffer'.$elementInfo['ID']))
-                .$form->hidden(array('name' => 'action','value'=> 'copy_to_buffer'))
-                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
-                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
-                .$form->formEnd()
-                
-                .$table->tableEnd();
-                
+                $modalBody .= generateElementModalMenuBody($elementInfo,$selectNewParent);
+
            #### <- /generate body    
                 
-                echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
+                echo modalWindow('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 
+                ### РЕКУРСІЯ:
                 showDOM($value,$branchArray);
                 
             } else {
+                
                 $blockId = substr($value,5);
 
-                echo '
-                
-                <!--- Element --->
-                <li>#'.$blockId.' ';
-                
                 $elementInfo = $temp->getElementInfo($blockId);
+                
+                echo '
+                <!--- Element --->
+                <li><span class="fontB">'.configuration::ELEMENTS[$elementInfo['type']].'</span>: #'.$blockId.' ';
+                
+                
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<b><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</b></a>';
+                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span>';
                 }
                 if (strlen($elementInfo['class']) > 0) {
-                    echo ' class: <b>'.$elementInfo['class'].'</b> ';
+                    echo ' class: <span class="fontB">'.$elementInfo['class'].'</span> ';
                 }
 
                 
@@ -234,7 +226,7 @@
                 echo ' '
                 .upArrow($blockId)
                 .downArrow($blockId)
-                .favourite($elementInfo['ID'],$elementInfo['moderation'])
+                //.favourite($elementInfo['ID'],$elementInfo['moderation'])
                 .extendArrow($blockId,'')
                 .editArrow($blockId, '');
 
@@ -243,8 +235,8 @@
                 
             #### generate body 
             
-                $modalBody = ''
-                .$table->tableStart(array('th' => array('','',''),'class' => 'table table-sm table-mini'));
+                $modalBody = '';
+                
                 
                     // get selection:
                     $selectNewParent = '<select name="newparent[]">';
@@ -262,57 +254,34 @@
                     
                     $selectNewParent .= '</select>';
                 
-                $modalBody .= 
-                
-                 $table->tr(
-                    array(
-                        'Change branch:',
-                         $form->formStart()
-                        .$form->hidden(array('name' => 'action','value'=> 'change_parent'))
-                        .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
-                        .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
-                        .$selectNewParent,
-                         $form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn btn-success'))
-                        .$form->formEnd()
-                    )
-                 )
-                
-                .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
-                .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
-                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
-                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
-                .$form->formEnd()
-                # -------------------------------------------
-                .$form->formStart(array('id' => 'copyToBuffer'.$elementInfo['ID']))
-                .$form->hidden(array('name' => 'action','value'=> 'copy_to_buffer'))
-                .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
-                .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
-                .$form->formEnd()
-                
-                .$table->tableEnd();
+                $modalBody .= generateElementModalMenuBody($elementInfo,$selectNewParent);
                 
            #### <- /generate body 
                 
-                echo $temp->modalHtml('ModalBlock'.$blockId,$modaTittle,$modalBody);
+                echo modalWindow('ModalBlock'.$blockId,$modaTittle,$modalBody);
                 echo '</li>';
 
             }
         }
         
         echo '<li><a href="" class="identifierLink" title="add new branch" data-toggle="modal" data-target="#AddMainRow'.$addId.'" title="Add branch">'.$icon->showIcon('branch','width20','Додати нову гілку').'</a></li>';
-        echo $temp->modalHtml('AddMainRow'.$addId,'Add new element to branch: '.$addId, $addBody);
+        
         echo '</ul>';
     }
 
         showDOM($cleanArray,$branchArray);
 
     } else {
+        
+       # Якщо ще немає DOM HTML: 
+        
 ?>
-<p>DOM is empty. You can <a href="" data-toggle="modal" data-target="#ModalFisrtGrid">add new element</a>.</p>
+    <h4><?php echo $icon->showIcon('tree','',''); ?> DOM is empty <small>[ <a href="" data-toggle="modal" data-target="#ModalFisrtGrid">Створити елемент</a> ]</small></h4>
 <?php
+    
     // if there is no content blocks:
-    $addNewRowForm = '
-    <p>How many rows you want: </p>
+    $addNewRowForm = 
+    p('Скільки елементів створити?').'
     <form method="POST" action="" autocomplete="OFF">
 	<input type="hidden" name="action" value="add_content_block">
 	<input type="hidden" name="id" value="'.$_GET['id'].'">
@@ -342,24 +311,13 @@
     
     
     
+    /* -------------------------------------------------------------------------------------- */
     
     
+                      # Далі йдуть функції для генерації коду!          
+      
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /* -------------------------------------------------------------------------------------- */
     
     
     
@@ -452,7 +410,7 @@
 
     function generateModalTitle($elementInfo) {
 
-        $string = '<p>Block #'.$elementInfo['ID'].' ';
+        $string = 'Блок #'.$elementInfo['ID'];
                 
         if (strlen($elementInfo['identifier']) > 0) {
             $string .= ' id: <b>'.$elementInfo['identifier'].'</b> ';
@@ -460,14 +418,41 @@
         if (strlen($elementInfo['class']) > 0) {
             $string .=' class: <b>'.$elementInfo['class'].'</b> ';
         }
-
-        $string .= '<span class="deleteSpan" title="Delete branch" onclick="document.getElementById(\'delete_branch'.$elementInfo['ID'].'\').submit(); ">(delete)</span>
-        </p>';
-        
-        $string .= '<p><button type="button" title="Copy to buffer" onclick="document.getElementById(\'copyToBuffer'.$elementInfo['ID'].'\').submit(); " class="btn btn-info">Copy to buffer</button>
-        </p>';
         
         return $string;
     }
     
-
+    function generateElementModalMenuBody($elementInfo,$selectNewParent) {
+        
+        $form = new formGenerator; 
+        
+        return '<div class="row">
+            <div class="col-sm-6 col-md-9 col-lg-9 col-xl-6 left">
+            Змінити гілку:'
+            .$form->formStart()
+            .$form->hidden(array('name' => 'action','value'=> 'change_parent'))
+            .$form->hidden(array('name' => 'id','value'=> $_GET['id']))
+            .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID']))
+            .$selectNewParent
+            .p($form->submit(array('name'=> '','value'=> 'Change parent','class'=>'btn btn-success')),'center')
+            .$form->formEnd()
+        
+            .$form->formStart(array('id' => 'delete_branch'.$elementInfo['ID']))
+            .$form->hidden(array('name' => 'action','value'=> 'delete_element'))
+            .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+            .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+            .$form->formEnd()
+            # -------------------------------------------
+            .$form->formStart(array('id' => 'copyToBuffer'.$elementInfo['ID']))
+            .$form->hidden(array('name' => 'action','value'=> 'copy_to_buffer'))
+            .$form->hidden(array('name' => 'id','value'=> $_GET['id'])) // <- projectID
+            .$form->hidden(array('name' => 'branch_id','value'=> $elementInfo['ID'])) // <- elementID
+            .$form->formEnd().'
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-6 right">'
+            .p('<span class="deleteSpan" title="Delete branch" onclick="document.getElementById(\'delete_branch'.$elementInfo['ID'].'\').submit(); ">Видалити</span>')
+            .p('<button type="button" title="Copy to buffer" onclick="document.getElementById(\'copyToBuffer'.$elementInfo['ID'].'\').submit(); " class="btn btn-info">Copy to buffer</button>').'
+            </div>
+            </div>';
+            
+    }

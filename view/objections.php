@@ -5,7 +5,7 @@
     $themes = $objections->getObjectionsTheme();
     
     echo $table->tableStart( array(
-                'class'=>'table table-striped',
+                'class'=>'table table-striped table-mini',
                 'th'=> array('Theme:','Objections:','del'),
                 )
             );
@@ -16,16 +16,16 @@
         $DeleteObjectionTheme .= '<p>'.$theme['objection'].'</p>';
         $DeleteObjectionTheme .= $form->hidden(array('name' => 'action','value' => 'delete_objection_theme'));
         $DeleteObjectionTheme .= $form->hidden(array('name' => 'objection','value' => $theme['ID']));
-        $DeleteObjectionTheme .= $form->submit(array('value'=> 'Delete'));
+        $DeleteObjectionTheme .= $form->submit(array('value'=> 'Видалити','class' => 'btn btn-danger margin10'));
         $DeleteObjectionTheme .= $form->formEnd();
         
-        echo $objections->modalHtml('delete_objection_theme'.$theme['ID'],'Do you want to delete objection ID:'.$theme['ID'].'?',$DeleteObjectionTheme);
+        echo modalWindow('delete_objection_theme'.$theme['ID'],'Ви справді хочете видалити заперечення ID:'.$theme['ID'].'?',$DeleteObjectionTheme);
     
         echo $table->tr(
                 array(
                     '<a href="'.CONFIGURATION::MAIN_URL.'?page=objection&parentId='.$theme['ID'].'">'.$theme['objection'].'</a>',
                     $objections->objectionsThemeCount($theme['ID']),
-                    '<a href="" data-toggle="modal" data-target="#delete_objection_theme'.$theme['ID'].'">Delete</a>'
+                    '<a href="" data-toggle="modal" data-target="#delete_objection_theme'.$theme['ID'].'">Видалити</a>'
                 )
             );
     }
@@ -48,7 +48,7 @@
         )
      .$table->tr(
             array(
-                $form->submit(array('name' => 'submit','value' => 'Add theme','class' => 'submit_btn')),
+                $form->submit(array('name' => 'submit','value' => 'Add theme','class' => 'btn btn-success margin10')),
                 ''
             )
       )

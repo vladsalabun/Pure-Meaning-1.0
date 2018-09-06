@@ -128,17 +128,20 @@
 ?>       
     </div>   
 </div>    
-<div class="row workspace save_changes_right">
-<?php 
-    /*
-    echo
-     $table->tableStart(array('th' => array('',''),'class' => 'table table-sm table-mini'))
-    .$table->tr(array('',$form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'submit_btn'))))
-    .$table->tableEnd();
-    */
-    echo $form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'btn btn-success'));
-    echo $form->formEnd();
-?> 
+<div class="row workspace center">
+    <div class="container-fluid center">
+    <?php 
+        /*
+        echo
+         $table->tableStart(array('th' => array('',''),'class' => 'table table-sm table-mini'))
+        .$table->tr(array('',$form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'submit_btn'))))
+        .$table->tableEnd();
+        */
+
+        echo p($form->submit(array('name' => 'submit','value' => 'Save changes','class' => 'btn btn-success')),'center');
+        echo $form->formEnd();
+    ?> 
+    </div> 
 </div> 
 
 <!--- LIVE PREVIEW --->

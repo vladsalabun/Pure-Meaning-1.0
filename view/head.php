@@ -1,5 +1,16 @@
 <?php
 memory_get_usage();
+
+
+    $exp = rand(configuration::EXPERIENCE['LOAD']['min'],configuration::EXPERIENCE['LOAD']['max']);
+    $experience = new experience;
+    $experience->addExp($exp);
+
+    $form = new formGenerator;
+    $table = new tableGenerator;
+    $mw = new modal;
+    $icon = new icon;
+
 $start_time = microtime(true);
     if($_GET['page'] === 'preview') {
 
@@ -70,14 +81,3 @@ $start_time = microtime(true);
 <div class="container-fluid margin30">
 
     <?php } ?>
-<?php
-    $exp = rand(configuration::EXPERIENCE['LOAD']['min'],configuration::EXPERIENCE['LOAD']['max']);
-    $experience = new experience;
-    $experience->addExp($exp);
-
-    $form = new formGenerator;
-    $table = new tableGenerator;
-    $mw = new modal;
-    $icon = new icon;
-    //$html = new htmlTemplate;
-?>

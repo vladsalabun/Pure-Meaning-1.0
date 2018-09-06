@@ -1417,6 +1417,7 @@
     require 'classes_pm/class_screenShot.php';
     require 'classes_pm/class_html.php';
     require 'classes_pm/class_icons.php';
+    require 'classes_pm/EMT.php';
     
     // USEFULL FUNCTIONS: 
     
@@ -1437,7 +1438,7 @@
                 <div class="modal-header">
                     <h3 class="center" id="exampleModalLongTitle">'.$modalTitle.'</h3>
                 </div>
-                <div class="modal-body">'.$modalBody.'</div>
+                <div class="modal-body workspace-modal">'.$modalBody.'</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
                 </div>

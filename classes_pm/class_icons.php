@@ -21,6 +21,7 @@
             'branch' => 'branch.png',
             'down-c' => 'down-c.png',
             'up-c' => 'up-c.png',
+            'help' => 'help.png',
         );
         
         public function showIcon($name,$class,$title,$js = null) {

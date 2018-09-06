@@ -83,7 +83,7 @@ ul.tree, ul.tree ul {
 .col-lg-9,.col-lg-10,.col-lg-11,.col-lg-12 { text-align: left;}
 
 
-#level { width: 100%; background: #403f4d; color: #fff; height: 23px; text-align: center; position: relative; font-size: 17px;}
+#level { width: 100%; background: #403f4d; color: #fff; height: 23px; text-align: center; position: relative; font-size: 14px;}
 
 
 .memetextarea { width: 100%; height: 150px; font-size: 11px;}
@@ -91,17 +91,17 @@ ul.tree, ul.tree ul {
 
 
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
 }
 
 ::-webkit-scrollbar-thumb {
 
 
-    background: rgba(255,0,0,0.8);
+    background: #FFD152;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 ::-webkit-scrollbar-thumb:window-inactive {
@@ -127,6 +127,10 @@ ul.tree, ul.tree ul {
 .spanLink:hover { cursor: pointer; text-decoration: underline; }
 
 .workspace { background: #f5f5e9; color: #160000; padding: 20px 0 20px 0; margin-top: 10px; border-top: 2px solid #e5e5e5; }
+.workspace-modal { background: #f5f5e9; color: #160000; padding: 20px; }
+
+
+
 .save_changes_right { text-align: right; padding-right: 60px; }
 .navigationbar { padding: 0 0 0 25px; }
 
