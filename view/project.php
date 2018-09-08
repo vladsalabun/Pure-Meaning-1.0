@@ -160,10 +160,10 @@
                 <li><span class="fontB">'.configuration::ELEMENTS[$elementInfo['type']].'</span>: #'.$blockId.' ';               
  
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span>';
+                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span> ';
                 }
                 if (strlen($elementInfo['class']) > 0) {
-                    echo ' class: <span class="fontB">'.$elementInfo['class'].'</span>';
+                    echo ' class: <span class="fontB">'.$elementInfo['class'].'</span> ';
                 }
                                 
                 // navigation buttons:
@@ -215,7 +215,7 @@
                 
                 
                 if (strlen($elementInfo['identifier']) > 0) {
-                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span>';
+                    echo '<span class="fontB"><a href="'.configuration::MAIN_URL.'?page=edit_element&id='.$blockId.'" title="Edit element">'.$elementInfo['identifier'].'</a></span> ';
                 }
                 if (strlen($elementInfo['class']) > 0) {
                     echo ' class: <span class="fontB">'.$elementInfo['class'].'</span> ';
@@ -354,7 +354,7 @@
         $test = new pure;
         $icon = new icon;
         
-        echo ' <a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'" title="Add child element">'.$icon->showIcon('leaves','width20','Додати дочірній елемент').'</a>';
+        echo '<a href="" data-toggle="modal" data-target="#AddLeaves'.$blockId.'" title="Add child element">'.$icon->showIcon('leaves','width20','Додати дочірній елемент').'</a>';
         
         $formBody = '
         <p>How many leaves you want?</p>
