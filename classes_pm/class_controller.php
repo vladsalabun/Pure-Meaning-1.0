@@ -118,6 +118,8 @@
             return substr(configuration::FISH,0,$max);
         }      
  
+        /*     СТВОРЕННЯ ДЕРЕВА HTML     */
+ 
         public function createDocumentTree($array, $str = NULL) 
         {
             $fonts = new fonts;
@@ -130,8 +132,6 @@
                     // get parent element, and take element params:
                     $elementInfo = $this->getElementInfo(substr($outer,5));
 
-                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
-                    
                     if ($elementInfo['style'] != null) {
                         // get style array:
                         $elementStyle = json_decode($elementInfo['style'],true);
@@ -156,21 +156,42 @@
                         }
                         // check other options:
                         if (isset($elementStyle['other']) and count($elementStyle['other']) > 0) {
+                            
+                            // перевіряю рибу:
                             if (isset($elementStyle['other']['fish'])) {
-                                $str .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
+                                $tempINNER .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
                             }
+                            
+                            // перевіряю вміст:
                             if (isset($elementStyle['other']['text'])) {
-                                $str .= $elementStyle['other']['text'];
+                                $tempINNER .= $elementStyle['other']['text'];
                             }
+                            
+                            // перевіряю лейбли тегів:
+                            if (isset($elementStyle['other']['labels'])) {
+                                $currentLabels = ' '.$elementStyle['other']['labels'];
+                            }
+                            
                         }
                     }
                     
+                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'"'.$currentLabels.'>';
+                    
+                    $str .= $tempINNER;
+                    
+                    // видаляю лейбли, щоб не дублювались в наступних тегах:
+                    unset($currentLabels);
+                    unset($tempINNER);
+                    
                     // and move down:
                     $str .= $this->createDocumentTree($inner, NULL); 
+                    
+                    // <--- зовнішній елемент
                 } else {
+                    
                     // if div is empty:
                     $elementInfo = $this->getElementInfo(substr($inner,5));
-                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'">';
+                    
                     
                     if ($elementInfo['style'] != null) {
                         // get style array:
@@ -197,21 +218,52 @@
                         }
                         // check other options:
                         if (isset($elementStyle['other']) and count($elementStyle['other']) > 0) {
+                            
+                            // перевіряю рибу:
                             if (isset($elementStyle['other']['fish'])) {
-                                $str .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
+                                // беру вміст у тимчасову змінну:
+                                $tempINNER .= substr(configuration::FISH,0,$elementStyle['other']['fish']);
                             }
+                            
+                            // перевіряю вміст:
                             if (isset($elementStyle['other']['text'])) {
-                                $str .= $elementStyle['other']['text'];
+                                // беру вміст у тимчасову змінну:
+                                $tempINNER .= $elementStyle['other']['text'];
+                            }
+                            
+                            // перевіряю лейбли тегів:
+                            if (isset($elementStyle['other']['labels'])) {
+                                $currentLabels = ' '.$elementStyle['other']['labels'];
                             }
                         }
                     }
                     
+                    $str .= '<'.configuration::ELEMENTS[$elementInfo['type']].' id="'.$elementInfo['identifier'].'" class="'.$elementInfo['class'].'"'.$currentLabels.'>';
+                    // Вставляю вміст:
+                    $str .= $tempINNER;
+                    unset($tempINNER);
+                    // видаляю лейбли, щоб не дублювались в наступних тегах:
+                    unset($currentLabels);
+                    
                 }
+                
+                // закриваю зовнішній елемент:
                 $str .= '</'.configuration::ELEMENTS[$elementInfo['type']].'>'; 
-            }
+                
+            } // <--- перебір елементів 
+            
             $styles .= '</style>';
+            
+            // якщо стилей нема, то не печатаю їх:
+            if($styles == '<style></style>') {
+                $styles = '';
+            }
+            
             return $str.$styles; 
         }
+       
+        /*  <------   СТВОРЕННЯ ДЕРЕВА HTML     */
+       
        
         public function globalStyles($projectId) 
         {
@@ -393,7 +445,7 @@
        
         public function addContentBlock($post) 
         {
-            $count = $this->model->addContentBlock($post['rows'],$post['id'],$post['type'][0]);
+            $count = $this->model->addContentBlock($post['rows'],$post['id'],$post['type'][0],$post['class']);
             
             $this->go->go(
                 array(
@@ -525,7 +577,7 @@
         #
         
         public function changingStyles($actionType,$actionWith,$whatToAdd,$projectId = null,$elementId = null,$cssName = null ,$cssValue = null,$page,$className = NULL)
-        {
+        {           
             if ($actionType == 'add') {
                 if ($actionWith == 'body') {
                     
@@ -544,16 +596,33 @@
                     $this->model->changeProjectStyle($projectId,json_encode($styleArray));
                     $this->go->go(array('page' => $page,'projectId' => $projectId));
                 } else if ($actionWith == 'identifier') {
-                    
-                    # ADD NEW IDENTIFIER STYLE:
+                                        
+                    # ADD NEW IDENTIFIER STYLE: 
+                    // ?page=edit_element&id=...
                     $style = $this->model->getElementInfo($elementId)['style'];
                     $styleArray = json_decode($style, true);
                     
+                    /*
                     // verify css: 
                     if (in_array($cssName,array_keys(configuration::STYLE))) {
                         $cssValue = $this->verifyCss($cssName,$cssValue);
                     }
                     $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    */
+                    
+                    // додаю обрані стилі з чекбокса:
+                    if(isset($_POST['checkbox'])) {
+                        foreach ($_POST['checkbox'] as $key => $value) {   
+                            $styleArray[$whatToAdd][array_keys(configuration::STYLE)[$value]] = '';
+                        }
+                    } else {
+                        // А якщо чекбокса немає, тоді це додаткові стилі other (text,fish)
+                        // verify css: 
+                        if (in_array($cssName,array_keys(configuration::STYLE))) {
+                            $cssValue = $this->verifyCss($cssName,$cssValue);
+                        }
+                        $styleArray[$whatToAdd][$cssName] = $cssValue;
+                    }
                     
                     // save to db:
                     $this->model->deleteElementStyle($elementId,json_encode($styleArray));

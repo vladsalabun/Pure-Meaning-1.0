@@ -75,7 +75,8 @@
             
             $currentCopyBody .=
              $table->tr(array(
-                '<input type="checkbox" name="buffer[]" value="'.$bufferArray['ID'].'">',$buffeProjectID,$bufferArray['elementID'],$bufferArray['myNote'],date('H:i:s Y/m/d',$bufferArray['time'])
+                '
+                <input class="form-check-input" type="checkbox" name="buffer[]" value="'.$bufferArray['ID'].'" id="'.$bufferArray['ID'].'">','<label class="form-check-label" for="'.$bufferArray['ID'].'">'.$buffeProjectID.'</label>',$bufferArray['elementID'],$bufferArray['myNote'],date('H:i:s Y/m/d',$bufferArray['time'])
                 )
              ); 
         }

@@ -84,7 +84,23 @@
             
             $sting .= '</select>';
             return $sting;
-        }       
+        } 
+
+        public function checkbox($array) {
+            
+            foreach ($array as $key => $value) {
+                $sting .=
+                '<div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="'.$value.'" id="'.$value.'">
+                  <label class="form-check-label" for="'.$value.'">
+                    '.$key.'
+                  </label>
+                </div>';
+            }
+            
+            return $sting;
+        }
+        
  
         public function datetime($array = null)
         {
@@ -130,8 +146,8 @@
         public function styleSelectingForm($css,$lastValue) 
         {
             // if css type has more then 1 string prepared value:
-            if (configuration::STYLE[$css]['type'] == 'string' and count(configuration::STYLE[$css]['values']) > 1)
-            {
+            if (configuration::STYLE[$css]['type'] == 'string' and count(configuration::STYLE[$css]['values']) > 1) {
+
                 $values = configuration::STYLE[$css]['values'];
                 
                 $string = '<select id="editable-select-'.$css.'" name="'.$css.'">';

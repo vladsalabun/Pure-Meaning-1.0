@@ -83,7 +83,7 @@
 <?php 
     echo 
      $table->tableStart(array('class'=>'table table-sm table-mini','th'=> array('','')))   
-    .$table->tr(array('<b>Style:</b>',$mw->a(array('anchor'=>'Add new style','window'=>'add_new_style')),''));
+    .$table->tr(array('<b>Style:</b>',$mw->a(array('anchor'=>'Додати стилі','window'=>'add_new_style')),''));
 
     // show all styles:
     if (count($style['css']) > 0) {
@@ -168,32 +168,28 @@
     </div>
 </div>
 <?php 
-    // MODALS: 
-    $styleBody = '<p align="left">Choose css option:</p>'
+    // ДОДАВАННЯ НОВОГО СТИЛЮ:
+    $styleBody = '<p align="left">Оберіть css стилі:</p>'
     .$form->formStart()
     .$form->hidden(array('name' => 'action','value' => 'add_css_option'))
-    .$form->hidden(array('name' => 'id','value' => $element['ID'])).'
-    <p align="left"><select name="option[]">';
-
-    if (is_array($style['css'])) {
-        $cssKeys = array_keys($style['css']);
-    } else {
-        $cssKeys = array();
-    }
-
-    foreach(configuration::STYLE as $styleOption => $styleParams) {
-        if (!in_array($styleOption,$cssKeys)) {
-            $styleBody .= '<option value="'.$styleOption.'">'.$styleOption.'</option>';
-        }
-    }
-
-    $styleBody .='</select></p>'
-    .p('Enter value:')
-    .p($form->text(array('name'=>'value','value' => '','class'=>'txtfield')))
-    .p($form->submit(array('name' => 'submit', 'value' => 'Add', 'class' => 'btn btn-success')))
+    .$form->hidden(array('name' => 'id','value' => $element['ID']))
+    .p('
+    <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        '.$form->checkbox(array_flip(array_keys(configuration::STYLE))).'
+    </div>
+    </div>
+    ')
+    .p('
+    <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+        '.$form->submit(array('name' => 'submit', 'value' => 'Додати', 'class' => 'btn btn-success')).'
+    </div>
+    </div>
+    ')
     .$form->formEnd();
 
-    echo $pure->modalHtml('add_new_style','Add style:',$styleBody);
+    echo modalWindow('add_new_style','Додавання стилей:',$styleBody,1,1);
 
     if (count(configuration::OTHER) > count($style['other'])) {
 

@@ -139,3 +139,8 @@ ul.tree, ul.tree ul {
 .dropdown-item { margin: 10px; }
 
 .margin-left5 { margin-left: 5px; }
+
+.style_list_in_modal {
+    float: left;
+    min-width: 200px;
+}

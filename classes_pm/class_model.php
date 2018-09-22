@@ -238,10 +238,12 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);   
         }
         
-        public function addContentBlock($rows,$projectId,$type)
+        public function addContentBlock($rows,$projectId,$type,$class)
         {
             // TODO:
-            $class = 'container';
+            if ($class == '') {
+                $class = configuration::BOOTSTRAP[0];
+            }
             $count = 0;
             $priority = $this->lastLowPriority($projectId,0)['priority']; // <- last low priority
    
@@ -270,20 +272,184 @@
         
         public function addNewElement($rows,$projectId,$branchId,$class,$type) 
         {
-            // get parentId by ID
-            $elementId = substr($branchId,5);
-            $parentId = $this->getElementInfo($elementId)['parentId'];
-            $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
             
-            for ($i = 0; $i < $rows; $i++) {
+            // якщо це header, то вставляю дефолтний навбар:
+            if($type == 150) {
+                
+                // TODO: оптимізуй КОД!!!! Влад, ну що це за шляпа?
+                
+                /*
+                    header > nav > button > span
+                                 > div > ul > li
+                */
+                
+                
+                # ДОДАЮ HEADER:
+                if ($class == '') {
+                    $class = 'header';
+                }
+                
+                $elementId = substr($branchId,5);
+                $parentId = $this->getElementInfo($elementId)['parentId'];
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
                 $priority = $priority - 1;
 
                 // get next index ID:
-                $identifier = 'pm_element'.$this->getNextAutoIncrement();
+                $identifier = $this->getNextAutoIncrement();
+                $headerIdentifier = 'header'.$identifier;
                 
                 $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute(array($projectId,$parentId,$type,$identifier,$class,$priority));
+                $stmt->execute(array($projectId,$parentId,$type,$headerIdentifier,$class,$priority));
+                
+                
+                
+                # ДОДАЮ NAV
+                
+                $class = 'navbar navbar-expand-lg navbar-light bg-light';
+                $type = 200;
+                
+                $elementId = $identifier;
+                $parentId = $identifier;
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = $this->getNextAutoIncrement();
+                $navID = $identifier;
+                $navIdentifier = 'nav'.$identifier;
+                
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$navIdentifier,$class,$priority));
+                
+                // Додаю стилі:
+                $styleArray['other']['text'] = '<a class="navbar-brand" href=".">Лого</a>';
+                $this->deleteElementStyle($identifier,json_encode($styleArray));
+                unset($styleArray);
+
+                
+                
+                # ДОДАЮ BUTTON
+               
+                $elementId = $identifier;
+                $parentId = $identifier;
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = $this->getNextAutoIncrement();
+                $buttonIdentifier = 'button'.$identifier;
+                $class = 'navbar-toggler';
+                $type = 30;
+                $buttonID = 'navbarSupportedContent'.$identifier;
+                
+                
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$buttonIdentifier,$class,$priority));
+                
+                // Додаю стилі:
+                $styleArray['other']['text'] = '<span class="navbar-toggler-icon"></span>';
+                $styleArray['other']['labels'] = 'type="button" data-toggle="collapse" data-target="#'.$buttonID.'" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"';
+                $this->deleteElementStyle($identifier,json_encode($styleArray));    
+                unset($styleArray);                
+                
+                
+                
+                # ДОДАЮ DIV 
+                $class = 'collapse navbar-collapse';
+                $type = 2;
+                
+                $elementId = $identifier;
+                $parentId = $navID;
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = $this->getNextAutoIncrement();
+                $divIdentifier = $buttonID;
+                
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$divIdentifier,$class,$priority));
+                
+                
+ 
+                # ДОДАЮ UL 
+                $class = 'navbar-nav mr-auto';
+                $type = 15;
+                
+                $elementId = $identifier;
+                $parentId = $identifier;
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = $this->getNextAutoIncrement();
+                $ulIdentifier = 'ul'.$identifier;
+                
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$ulIdentifier,$class,$priority));
+ 
+ 
+
+                # ДОДАЮ LI 
+                $class = '';
+                $type = 17;
+                
+                $elementId = $identifier;
+                $parentId = $identifier;
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                $priority = $priority - 1;
+
+                // get next index ID:
+                $identifier = $this->getNextAutoIncrement();
+                $liIdentifier = 'li'.$identifier;
+                
+                $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute(array($projectId,$parentId,$type,$liIdentifier,$class,$priority));
+                
+                $styleArray['other']['text'] = '<a href="." class="nav-link">Ссылка</a>';
+                $this->deleteElementStyle($identifier,json_encode($styleArray));
+ 
+                //var_dump($_POST);
+                //exit();
+              
+
+              // <-------- якщо це header, то вставляю дефолтний навбар:
+            } else {
+                // УСІ ІНШІ ВИПАДКИ:
+                // get parentId by ID
+                $elementId = substr($branchId,5);
+                $parentId = $this->getElementInfo($elementId)['parentId'];
+                $priority = $this->lastLowPriority($projectId,$parentId)['priority']; // <- last low priority
+                
+                for ($i = 0; $i < $rows; $i++) {
+                    $priority = $priority - 1;
+
+                    // get next index ID:
+                    $identifier = 'pm_element'.$this->getNextAutoIncrement();
+                    
+                    $sql = "INSERT INTO pm_elements (projectId,parentId,type,identifier,class,priority) VALUES (?,?,?,?,?,?)";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute(array($projectId,$parentId,$type,$identifier,$class,$priority));
+                }
+                
             }
             
         }

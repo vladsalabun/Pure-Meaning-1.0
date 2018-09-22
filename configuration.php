@@ -8,7 +8,7 @@
     class configuration
     {    
                 
-        const VER = 2.5;
+        const VER = 2.6;
         const HOST = 'localhost';
         const DB_NAME = 'pure_meaning';
         const DB_USER = 'mysql';
@@ -17,6 +17,7 @@
         const REINSTALL = 0; // set 1 to create database, set 2 to wipe database
         
         const HOUR_PRICE = 6; // USD
+        const TAG_PRICE = 0.05; // USD
         
         const FONTS_DIR = 'uploads/fonts/';
         const SCREENSHOTS_DIR = 'img/screenShots/';
@@ -39,6 +40,9 @@
             2 => 'div',
             5 => 'span',
             10 => 'p',
+            15 => 'ul',
+            16 => 'ol',
+            17 => 'li',
             20 => 'blockquote',
             30 => 'button',
             100 => 'h1',
@@ -52,12 +56,19 @@
             150 => 'header',
             160 => 'footer',
             170 => 'aside',
+            200 => 'nav'
         );
         
         const OTHER = array(
             'text',
             'fish',
-                
+            'labels',   
+        );
+        
+        const BOOTSTRAP = array(
+            'container-fluid',
+            'container',
+            'row',
         );
         
         const STYLE = array(

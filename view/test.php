@@ -157,28 +157,144 @@
 </form>';
 ?>
 
-<div class="navbar <?php echo $navbarType[array_rand($navbarType)].' '.$navbarWhere[array_rand($navbarWhere)]; ?>">
-	<div class="container-fluid">
-    	<div class="navbar-header">
-            <?php echo $logo; ?>
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#<?php echo $navbarID; ?>">
-				<span class="sr-only">XXX</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-        </div>
-		<div class="collapse navbar-collapse" id="<?php echo $navbarID; ?>">
-			<ul class="nav navbar-nav"> 
-                <?php
-                    for ($i = 0; $i < 5; $i++) {
-                        echo '<li><a href="#" class="headerlink">Name '.$i.'</a></li>';
-                    }
-                ?>
-			</ul>
-		</div>
-	</div>
-</div>
+<!--- FORM ---><form method="post" action="" autocomplete="off"><input type="hidden" name="action" value="add_css_option"><input type="hidden" name="id" value="392"><p>
+    
+    <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+    <div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="0" id="0">
+                  <label class="form-check-label" for="0">
+                    background
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="1" id="1">
+                  <label class="form-check-label" for="1">
+                    background-image
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="2" id="2">
+                  <label class="form-check-label" for="2">
+                    background-size
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="3" id="3">
+                  <label class="form-check-label" for="3">
+                    background-position
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="4" id="4">
+                  <label class="form-check-label" for="4">
+                    background-repeat
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="5" id="5">
+                  <label class="form-check-label" for="5">
+                    background-color
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="6" id="6">
+                  <label class="form-check-label" for="6">
+                    border
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="7" id="7">
+                  <label class="form-check-label" for="7">
+                    border-bottom
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="8" id="8">
+                  <label class="form-check-label" for="8">
+                    border-top
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="9" id="9">
+                  <label class="form-check-label" for="9">
+                    color
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="10" id="10">
+                  <label class="form-check-label" for="10">
+                    display
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="11" id="11">
+                  <label class="form-check-label" for="11">
+                    float
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="12" id="12">
+                  <label class="form-check-label" for="12">
+                    font-size
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="13" id="13">
+                  <label class="form-check-label" for="13">
+                    font-weight
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="14" id="14">
+                  <label class="form-check-label" for="14">
+                    font-style
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="15" id="15">
+                  <label class="form-check-label" for="15">
+                    font-family
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="16" id="16">
+                  <label class="form-check-label" for="16">
+                    padding
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="17" id="17">
+                  <label class="form-check-label" for="17">
+                    margin
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="18" id="18">
+                  <label class="form-check-label" for="18">
+                    text-align
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="19" id="19">
+                  <label class="form-check-label" for="19">
+                    width
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="20" id="20">
+                  <label class="form-check-label" for="20">
+                    height
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="21" id="21">
+                  <label class="form-check-label" for="21">
+                    line-height
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="22" id="22">
+                  <label class="form-check-label" for="22">
+                    text-decoration
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="23" id="23">
+                  <label class="form-check-label" for="23">
+                    word-break
+                  </label>
+                </div><div class="form-check style_list_in_modal">
+                  <input class="form-check-input" type="checkbox" name="checkbox[]" value="24" id="24">
+                  <label class="form-check-label" for="24">
+                    font-stretch
+                  </label>
+                </div>
+    
+    </div>
+    
+    </p>
+    </div>
+    <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 "><input type="submit" name="submit" value="Додати" class="btn btn-success"></div></form><!--- /FORM --->
+    </div>
 
 
 
