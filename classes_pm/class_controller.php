@@ -34,7 +34,8 @@
                     // check method:
                     if (method_exists($this, $allowed_methods[$_POST['action']])) {
                         // and use it:
-                        $this->$allowed_methods[$_POST['action']]($_POST);
+                        $fname = $allowed_methods[$_POST['action']]; // php 7.1 fix
+                        $this->$fname($_POST);
                     } else {
                         // if method don't exist, redirect to main url:
                         $this->go->go();
