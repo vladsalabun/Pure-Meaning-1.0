@@ -21,7 +21,7 @@
 
 ![Screenshot](https://github.com/vladsalabun/Pure-Meaning-2.5/raw/master/shot5.png)
 
-<h1>Плітра шрифтів:</h1>
+<h1>Палітра шрифтів:</h1>
 
 ![Screenshot](shot2.png)
 
